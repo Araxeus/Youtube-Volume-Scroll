@@ -15,7 +15,7 @@ Meanwhile you can install this as unpacked extension
 
 ## Install
 
-Download the latest release and load as unpacked extension in your chromium browser
+Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases/tag/v0.6.0) and load as unpacked extension in your chromium browser
 
  <details>
 <summary><b>Chrome Example</b></summary>
