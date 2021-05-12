@@ -8,7 +8,7 @@
 
 >  Chromium Extension that enable scrolling mousewheel to control volume on Youtube and Youtube Music
 
-### 🏠 [Homepage]()
+### 🏠 [Homepage](https://github.com/Araxeus/Youtube-Volume-Scroll#welcome-to-youtube-volume-scroll-)
 
 Sadly it cost 5$ to publish an extension to chrome webstore.
 Meanwhile you can install this as unpacked extension
