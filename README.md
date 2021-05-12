@@ -17,13 +17,18 @@ Meanwhile you can install this as unpacked extension
 
 Download the latest release and load as unpacked extension in your chromium browser
 
-#### Chrome Example:
+ <details>
+<summary><b>Chrome Example</b></summary>
 
 ![ChromeUnpacked](images/ChromeUnpacked.png)
+</details>
 
-#### Edge Example:
+ <details>
+  <summary><b>Edge Example</b></summary>
 
 ![EdgeUnpacked](images/EdgeUnpacked.png)
+</details>
+
 
 ## Usage
 
