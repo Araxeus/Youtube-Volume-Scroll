@@ -19,11 +19,11 @@ Download the latest release and load as unpacked extension in your chromium brow
 
 #### Chrome Example:
 
-![ChromeUnpacked](images\ChromeUnpacked.png)
+![ChromeUnpacked](images/ChromeUnpacked.png)
 
 #### Edge Example:
 
-![EdgeUnpacked](images\EdgeUnpacked.png)
+![EdgeUnpacked](images/EdgeUnpacked.png)
 
 ## Usage
 
