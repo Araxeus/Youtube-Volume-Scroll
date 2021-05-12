@@ -1,8 +1,5 @@
 const selectors = {
-    youtube_music: {
-        video: "#song-video",
-        noVideo: "ytmusic-search-box.ytmusic-nav-bar"
-    },
+    youtube_music: "#song-video",
     youtube: ".html5-video-container"
 }
 
@@ -28,9 +25,7 @@ function injectVolumeHud(isMusic) {
     }
 
     const elementSelector = isMusic ?
-        document.querySelector(selectors.youtube_music.video)?.computedStyleMap().get("display").value !== "none" ?
-            selectors.youtube_music.video :
-            selectors.youtube_music.noVideo :
+        selectors.youtube_music :
         selectors.youtube;
 
     const position = `top: ${isMusic ? "10px" : "5px"}; ${isMusic ? "left: 10px" : "right: 5px"}; z-index: 999; position: absolute;`;
