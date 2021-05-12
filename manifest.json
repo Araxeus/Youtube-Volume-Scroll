@@ -1,0 +1,19 @@
+{
+  "name": "Youtube Volume Scroll",
+  "short_name": "YoutubeVolumeScroll",
+  "version": "0.6.0",
+  "description": "Enable scrolling mousewheel to control volume on Youtube and Youtube Music",
+  "content_scripts": [{
+      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"],
+      "js": ["index.js"],
+      "run_at": "document_idle"
+  }],
+  "icons": { 
+  		"16": "images/icon16.png",
+  		"32": "images/icon32.png",
+           "48": "images/icon48.png",
+          "128": "images/icon128.png",
+          "512": "images/icon512.png"
+  },
+  "manifest_version": 3
+}
