@@ -7,6 +7,9 @@
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
+   <a href="https://github.com/Araxeus/custom-electron-prompt" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  </a>
 </p>
 
 >  Chromium Extension that enable scrolling mousewheel to control volume on Youtube and Youtube Music
