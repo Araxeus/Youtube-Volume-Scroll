@@ -3,12 +3,14 @@ const selectors = {
     youtube: ".html5-video-container"
 }
 
-function getVolumeHud () { 
-    let volumeHud = document.getElementById('volumeHud');
+const $ = document.querySelector.bind(document);
+
+function getVolumeHud() {
+    let volumeHud = $("#volumeHud");
     if (volumeHud === null) {
         injectVolumeHud(window.location.href.includes("music.youtube"));
-        volumeHud = document.getElementById('volumeHud');
-    } 
+        volumeHud = $("#volumeHud");
+    }
     if (volumeHud === null) {
         console.err("Cannot Create BetterYoutubeVolume HUD");
         return null;
@@ -17,11 +19,10 @@ function getVolumeHud () {
 }
 
 function injectVolumeHud(isMusic) {
-    console.log("registering BetterYoutubeVolume HUD");
-    if (document.getElementById('volumeHud')) return;
+    if ($("#volumeHud")) return;
 
     if (!isMusic) {
-        document.querySelector(".ytp-cards-button-icon").style.display = "none";
+        $(".ytp-cards-button-icon").style.display = "none";
     }
 
     const elementSelector = isMusic ?
@@ -31,7 +32,7 @@ function injectVolumeHud(isMusic) {
     const position = `top: ${isMusic ? "10px" : "5px"}; ${isMusic ? "left: 10px" : "right: 5px"}; z-index: 999; position: absolute;`;
     const mainStyle = "font-size: xxx-large; padding: 10px; transition: opacity 0.6s; webkit-text-stroke: 1px black; font-weight: 600;";
 
-    document.querySelector(elementSelector).insertAdjacentHTML('afterend', `<span id="volumeHud" style="${position + mainStyle}"></span>`)
+    $(elementSelector).insertAdjacentHTML('afterend', `<span id="volumeHud" style="${position + mainStyle}"></span>`)
 }
 
 let fadeTimeout;
@@ -59,17 +60,17 @@ function register() {
 
 function setVideoVolumeOnwheel(isMusic) {
     (isMusic ?
-        document.querySelector("#main-panel") :  
-        document.querySelector(".html5-video-player")
+        $("#main-panel") :
+        $(".html5-video-player")
     ).onwheel = event => {
         event.preventDefault();
-		// Event.deltaY < 0 means wheel-up
-		changeVolume(event.deltaY < 0, event.shiftKey);
+        // Event.deltaY < 0 means wheel-up
+        changeVolume(event.deltaY < 0, event.shiftKey);
     };
 }
 
 function changeVolume(toIncrease, shiftHeld = false) {
-    const vid = document.querySelector("video");
+    const vid = $("video");
     const step = shiftHeld ? 0.05 : 0.01;
     vid.volume = toIncrease ?
         Math.min(vid.volume + step, 1) :
@@ -87,23 +88,31 @@ function setup() {
     const isMusic = url.includes("music.youtube");
 
     setVideoVolumeOnwheel(isMusic);
-  
+
     injectVolumeHud(isMusic);
 
-    document.querySelector('video').addEventListener('volumechange', 
-        event => { 
-            const percentage = Math.round(event.target.volume * 100);
-            showVolume(percentage);
-            isMusic ?
-                document.querySelector("#volume-slider").value = percentage :
-                document.querySelector(".ytp-volume-slider-handle").style.left = Math.round(event.target.volume * 40)+"px";
-         }
+    if (isMusic) {
+        $('video').addEventListener('volumechange',
+            event => {
+                const percentage = Math.round(event.target.volume * 100);
+                showVolume(percentage);
+                $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
+                $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
+            }
+        );
+    } else {
+        $('video').addEventListener('volumechange',
+        event => {
+            showVolume(Math.round(event.target.volume * 100));
+            $(".ytp-volume-slider-handle").style.left = Math.round(event.target.volume * 40) + "px";
+        }
     );
+    }
 }
 
 window.addEventListener('load', () => {
     try {
-    setup();
+        setup();
     } catch {
         setTimeout(setup, 2000);
     }
