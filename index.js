@@ -1,3 +1,6 @@
+let savedVolume;
+let isMusic;
+
 const selectors = {
     youtube_music: "#song-video",
     youtube: ".html5-video-container"
@@ -8,7 +11,7 @@ const $ = document.querySelector.bind(document);
 function getVolumeHud() {
     let volumeHud = $("#volumeHud");
     if (volumeHud === null) {
-        injectVolumeHud(window.location.href.includes("music.youtube"));
+        injectVolumeHud();
         volumeHud = $("#volumeHud");
     }
     if (volumeHud === null) {
@@ -18,7 +21,7 @@ function getVolumeHud() {
     return volumeHud;
 }
 
-function injectVolumeHud(isMusic) {
+function injectVolumeHud() {
     if ($("#volumeHud")) return;
 
     if (!isMusic) {
@@ -54,11 +57,11 @@ function showVolume(volume) {
 function register() {
     const url = window.location.href;
     if (url.includes("youtube")) {
-        injectVolumeHud(url.includes("music.youtube"));
+        injectVolumeHud();
     }
 }
 
-function setVideoVolumeOnwheel(isMusic) {
+function setVideoVolumeOnwheel() {
     (isMusic ?
         $("#main-panel") :
         $(".html5-video-player")
@@ -75,40 +78,84 @@ function changeVolume(toIncrease, shiftHeld = false) {
     vid.volume = toIncrease ?
         Math.min(vid.volume + step, 1) :
         Math.max(vid.volume - step, 0);
+
+    const percentage = Math.round(vid.volume * 100);
+    showVolume(percentage);
+
+    if (isMusic) {
+        $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
+        $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
+    } else {
+        $(".ytp-volume-slider-handle").setAttribute("left", Math.round(vid.volume * 40) + "px");
+    }
+}
+
+function setupVolumeChangeListener() {
+    $('video').addEventListener('volumechange',
+        event => {
+            saveVolume(Math.round(event.target.volume * 100))
+        }
+    );
 }
 
 
 function setup() {
     const url = window.location.href;
     if (!url.includes("youtube")) {
-        console.error("trying to load BetterYoutubeVolume outside of youtube domains");
+        console.error("trying to load Youtube-Volume-Scroll outside of youtube domains");
         return;
     }
 
-    const isMusic = url.includes("music.youtube");
+    isMusic = url.includes("music.youtube");
 
-    setVideoVolumeOnwheel(isMusic);
+    setVideoVolumeOnwheel();
 
-    injectVolumeHud(isMusic);
+    injectVolumeHud();
 
-    if (isMusic) {
-        $('video').addEventListener('volumechange',
-            event => {
-                const percentage = Math.round(event.target.volume * 100);
-                showVolume(percentage);
-                $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
-                $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
-            }
-        );
-    } else {
-        $('video').addEventListener('volumechange',
-        event => {
-            showVolume(Math.round(event.target.volume * 100));
-            $(".ytp-volume-slider-handle").style.left = Math.round(event.target.volume * 40) + "px";
-        }
-    );
+    setupVolumeChangeListener();
+
+    $('video').addEventListener("canplay", () => {
+        overrideVideoVolume();
+    });
+
+    overrideVideoVolume();
+
+    console.log("loaded Youtube-Volume-Scroll");
+}
+
+function overrideVideoVolume() {
+    const video = $('video');
+
+    if ((savedVolume || savedVolume === 0) && video.volume !== savedVolume) {
+        const newVolume = parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
+        video.volume = newVolume;
+        // fix youtube sometimes overriding the override
+        setTimeout(() => {
+            video.volume = newVolume;
+        }, 1000);
     }
 }
+
+let saveTimeout;
+
+function saveVolume(percentage) {
+    if (savedVolume !== percentage) {
+        savedVolume = percentage;
+    }
+
+    if (saveTimeout) clearTimeout(saveTimeout);
+
+    saveTimeout = setTimeout(() => {
+        chrome.storage.sync.set({ savedVolume: percentage });
+        saveTimeout = null;
+    }, 4000)
+}
+
+chrome.storage.sync.get("savedVolume", data => {
+    if (data && (data.savedVolume || data.savedVolume === 0)) {
+        savedVolume = data.savedVolume
+    }
+});
 
 window.addEventListener('load', () => {
     try {
@@ -117,9 +164,3 @@ window.addEventListener('load', () => {
         setTimeout(setup, 2000);
     }
 }, { once: true });
-
-/*
-function test() {
-    showVolume(Math.floor(Math.random() * 100));
-}
-*/
