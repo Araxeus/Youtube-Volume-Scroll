@@ -8,6 +8,40 @@ const selectors = {
 
 const $ = document.querySelector.bind(document);
 
+chrome.storage.sync.get("savedVolume", data => {
+    if (data && (data.savedVolume || data.savedVolume === 0)) {
+        savedVolume = data.savedVolume
+    }
+});
+
+window.addEventListener('load', () => {
+    try {
+        setup();
+    } catch {
+        setTimeout(setup, 2000);
+    }
+}, { once: true });
+
+function setup() {
+    const url = window.location.href;
+    if (!url.includes("youtube")) {
+        console.error("trying to load Youtube-Volume-Scroll outside of youtube domains");
+        return;
+    }
+
+    isMusic = url.includes("music.youtube");
+
+    setVideoVolumeOnwheel();
+
+    injectVolumeHud();
+
+    setupVolumeChangeListener();
+
+    overrideVideoVolume();
+
+    console.log("loaded Youtube-Volume-Scroll");
+}
+
 function getVolumeHud() {
     let volumeHud = $("#volumeHud");
     if (volumeHud === null) {
@@ -54,13 +88,6 @@ function showVolume(volume) {
     }, 1500);
 }
 
-function register() {
-    const url = window.location.href;
-    if (url.includes("youtube")) {
-        injectVolumeHud();
-    }
-}
-
 function setVideoVolumeOnwheel() {
     (isMusic ?
         $("#main-panel") :
@@ -95,43 +122,21 @@ function setVolumeSliderPosition(volume) {
 }
 
 function setupVolumeChangeListener() {
-    $('video').addEventListener('volumechange',
-        event => {
-            saveVolume(Math.round(event.target.volume * 100))
-        }
+    $('video').addEventListener('volumechange', event =>
+        saveVolume(Math.round(event.target.volume * 100))
     );
 
-    $('video').addEventListener(isMusic ? "canplay" : "loadeddata", () => {
-        overrideVideoVolume();
-    });
-}
-
-
-function setup() {
-    const url = window.location.href;
-    if (!url.includes("youtube")) {
-        console.error("trying to load Youtube-Volume-Scroll outside of youtube domains");
-        return;
-    }
-
-    isMusic = url.includes("music.youtube");
-
-    setVideoVolumeOnwheel();
-
-    injectVolumeHud();
-
-    setupVolumeChangeListener();
-
-    overrideVideoVolume();
-
-    console.log("loaded Youtube-Volume-Scroll");
+    $('video').addEventListener(isMusic ? "canplay" : "loadeddata", () =>
+        overrideVideoVolume()
+    );
 }
 
 function overrideVideoVolume() {
     const video = $('video');
 
     if ((savedVolume || savedVolume === 0) && video.volume !== savedVolume) {
-        const newVolume = parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
+        const newVolume = savedVolume === 100 ? 1 :
+            parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
         video.volume = newVolume;
         setVolumeSliderPosition(newVolume);
         // fix youtube sometimes overriding the override
@@ -158,17 +163,3 @@ function saveVolume(percentage) {
         saveTimeout = null;
     }, 2000)
 }
-
-chrome.storage.sync.get("savedVolume", data => {
-    if (data && (data.savedVolume || data.savedVolume === 0)) {
-        savedVolume = data.savedVolume
-    }
-});
-
-window.addEventListener('load', () => {
-    try {
-        setup();
-    } catch {
-        setTimeout(setup, 2000);
-    }
-}, { once: true });
