@@ -79,14 +79,18 @@ function changeVolume(toIncrease, shiftHeld = false) {
         Math.min(vid.volume + step, 1) :
         Math.max(vid.volume - step, 0);
 
-    const percentage = Math.round(vid.volume * 100);
-    showVolume(percentage);
+    showVolume(Math.round(vid.volume * 100));
 
+    setVolumeSliderPosition(vid.volume);
+}
+
+function setVolumeSliderPosition(volume) {
+    const percentage = Math.round(volume * 100);
     if (isMusic) {
         $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
         $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
     } else {
-        $(".ytp-volume-slider-handle").setAttribute("left", Math.round(vid.volume * 40) + "px");
+        $(".ytp-volume-slider-handle").style.left = Math.round(volume * 40) + "px";
     }
 }
 
@@ -97,7 +101,7 @@ function setupVolumeChangeListener() {
         }
     );
 
-    $('video').addEventListener("canplay", () => {
+    $('video').addEventListener(isMusic ? "canplay" : "loadeddata", () => {
         overrideVideoVolume();
     });
 }
@@ -129,10 +133,14 @@ function overrideVideoVolume() {
     if ((savedVolume || savedVolume === 0) && video.volume !== savedVolume) {
         const newVolume = parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
         video.volume = newVolume;
+        setVolumeSliderPosition(newVolume);
         // fix youtube sometimes overriding the override
-        setTimeout(() => {
-            video.volume = newVolume;
-        }, 1000);
+        if (!isMusic) {
+            const volumeOverrideInterval = setInterval(() => {
+                video.volume = newVolume;
+            }, 4);
+            setTimeout(clearInterval, 500, volumeOverrideInterval);
+        }
     }
 }
 
@@ -148,7 +156,7 @@ function saveVolume(percentage) {
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ savedVolume: percentage });
         saveTimeout = null;
-    }, 4000)
+    }, 2000)
 }
 
 chrome.storage.sync.get("savedVolume", data => {
