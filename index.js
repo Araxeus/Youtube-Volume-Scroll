@@ -122,11 +122,13 @@ function setVolumeSliderPosition(volume) {
 }
 
 function setupVolumeChangeListener() {
-    $('video').addEventListener('volumechange', event =>
+    const video = $('video');
+
+    video.addEventListener('volumechange', event =>
         saveVolume(Math.round(event.target.volume * 100))
     );
 
-    $('video').addEventListener(isMusic ? "canplay" : "loadeddata", () =>
+    video.addEventListener(isMusic ? "canplay" : "loadeddata", () =>
         overrideVideoVolume()
     );
 }
@@ -160,7 +162,6 @@ function saveVolume(percentage) {
 
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ savedVolume: percentage });
-        console.log("setting volume")
         saveTimeout = null;
     }, 1500)
 }
