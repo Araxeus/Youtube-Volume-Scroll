@@ -96,6 +96,10 @@ function setupVolumeChangeListener() {
             saveVolume(Math.round(event.target.volume * 100))
         }
     );
+
+    $('video').addEventListener("canplay", () => {
+        overrideVideoVolume();
+    });
 }
 
 
@@ -113,10 +117,6 @@ function setup() {
     injectVolumeHud();
 
     setupVolumeChangeListener();
-
-    $('video').addEventListener("canplay", () => {
-        overrideVideoVolume();
-    });
 
     overrideVideoVolume();
 
