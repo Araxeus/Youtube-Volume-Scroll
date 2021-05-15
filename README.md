@@ -13,7 +13,8 @@
 </p>
 
 >  Chromium Extension that enable scrolling mousewheel to control volume on Youtube and Youtube Music
->  Also enable a big volume boost on youtube.com by default (only with scrollwheel, vanilla volume bar works the same)
+ 
+>  Enables a big volume boost on youtube.com by default (from 40% to 100% - only with scrollwheel, vanilla volume bar works the same)
 
 ### 🏠 [Homepage](https://github.com/Araxeus/Youtube-Volume-Scroll#welcome-to-youtube-volume-scroll-)
 
