@@ -147,7 +147,10 @@ function overrideVideoVolume() {
             const volumeOverrideInterval = setInterval(() => {
                 video.volume = newVolume;
             }, 4);
-            setTimeout(clearInterval, 500, volumeOverrideInterval);
+            setTimeout((interval) => {
+                setVolumeSliderPosition(newVolume);
+                clearInterval(interval);
+            }, 500, volumeOverrideInterval);
         }
     }
 }
