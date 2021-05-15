@@ -60,6 +60,7 @@ function injectVolumeHud() {
 
     if (!isMusic) {
         $(".ytp-cards-button-icon").style.display = "none";
+        $(".ytp-chrome-top-buttons").style.display = "none";
     }
 
     const elementSelector = isMusic ?
