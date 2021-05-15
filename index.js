@@ -160,6 +160,7 @@ function saveVolume(percentage) {
 
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ savedVolume: percentage });
+        console.log("setting volume")
         saveTimeout = null;
-    }, 2000)
+    }, 1500)
 }
