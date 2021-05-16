@@ -113,8 +113,9 @@ function changeVolume(toIncrease, shiftHeld = false) {
 }
 
 function setVolumeSliderPosition(volume) {
-    const percentage = Math.round(volume * 100);
+    let percentage = Math.round(volume * 100);
     if (isMusic) {
+        if (percentage < 5 && percentage > 0) percentage = 5;
         $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
         $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
     } else {
@@ -142,8 +143,6 @@ function overrideVideoVolume() {
             parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
         video.volume = newVolume;
         setVolumeSliderPosition(newVolume);
-        // fix youtube sometimes overriding the override
-        if (!isMusic) {
             const volumeOverrideInterval = setInterval(() => {
                 video.volume = newVolume;
             }, 4);
@@ -151,7 +150,6 @@ function overrideVideoVolume() {
                 setVolumeSliderPosition(newVolume);
                 clearInterval(interval);
             }, 500, volumeOverrideInterval);
-        }
     }
 }
 
