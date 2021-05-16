@@ -111,14 +111,15 @@ function changeVolume(toIncrease, shiftHeld = false) {
     if (!isMusic && (
         (newVolume <= 0 && !vid.muted) ||
         (newVolume > 0 && vid.muted))) {
-            $(".ytp-mute-button").click();
-        }
+        $(".ytp-mute-button").click();
+    }
+
+    setVolumeSliderPosition(newVolume);
 
     vid.volume = newVolume;
 
     showVolume(Math.round(vid.volume * 100));
 
-    setVolumeSliderPosition(vid.volume);
 }
 
 function setVolumeSliderPosition(volume) {
