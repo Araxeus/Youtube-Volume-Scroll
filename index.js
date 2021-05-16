@@ -138,9 +138,8 @@ function setupVolumeChangeListener() {
 function overrideVideoVolume() {
     const video = $('video');
 
-    if ((savedVolume || savedVolume === 0) && video.volume !== savedVolume) {
-        const newVolume = savedVolume === 100 ? 1 :
-            parseFloat("0." + (savedVolume < 10 ? "0" + savedVolume : savedVolume));
+    if ((savedVolume || savedVolume === 0)) {
+        const newVolume = savedVolume / 100;
         video.volume = newVolume;
         setVolumeSliderPosition(newVolume);
             const volumeOverrideInterval = setInterval(() => {
