@@ -103,9 +103,18 @@ function setVideoVolumeOnwheel() {
 function changeVolume(toIncrease, shiftHeld = false) {
     const vid = $("video");
     const step = shiftHeld ? 0.05 : 0.01;
-    vid.volume = toIncrease ?
+    let newVolume = (toIncrease ?
         Math.min(vid.volume + step, 1) :
-        Math.max(vid.volume - step, 0);
+        Math.max(vid.volume - step, 0)).toFixed(2);
+
+    // Have to manually mute/unmute on youtube.com
+    if (!isMusic && (
+        (newVolume <= 0 && !vid.muted) ||
+        (newVolume > 0 && vid.muted))) {
+            $(".ytp-mute-button").click();
+        }
+
+    vid.volume = newVolume;
 
     showVolume(Math.round(vid.volume * 100));
 
@@ -142,13 +151,13 @@ function overrideVideoVolume() {
         const newVolume = savedVolume / 100;
         video.volume = newVolume;
         setVolumeSliderPosition(newVolume);
-            const volumeOverrideInterval = setInterval(() => {
-                video.volume = newVolume;
-            }, 4);
-            setTimeout((interval) => {
-                setVolumeSliderPosition(newVolume);
-                clearInterval(interval);
-            }, 500, volumeOverrideInterval);
+        const volumeOverrideInterval = setInterval(() => {
+            video.volume = newVolume;
+        }, 4);
+        setTimeout((interval) => {
+            setVolumeSliderPosition(newVolume);
+            clearInterval(interval);
+        }, 500, volumeOverrideInterval);
     }
 }
 
