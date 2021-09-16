@@ -16,8 +16,9 @@
  
 ### 🏠 [Homepage](https://github.com/Araxeus/Youtube-Volume-Scroll#welcome-to-youtube-volume-scroll-)
 
-Sadly it cost 5$ to publish an extension to chrome webstore.
-Meanwhile you can install this as unpacked extension
+  <a href="https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk" target="_blank">
+    <img alt="Chromestore" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
+  </a>
 
 ## Install
 
