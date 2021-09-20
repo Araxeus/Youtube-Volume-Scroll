@@ -10,11 +10,11 @@
       "run_at": "document_idle"
   }],
   "icons": { 
-  		"16": "images/icon16.png",
-  		"32": "images/icon32.png",
-           "48": "images/icon48.png",
-          "128": "images/icon128.png",
-          "512": "images/icon512.png"
+  		"16": "images/icon16x16.png",
+  		"32": "images/icon32x32.png",
+           "48": "images/BigIcon48x48.png",
+          "128": "images/BigIcon128x128.png",
+          "512": "images/BigIcon512x512.png"
   },
   "manifest_version": 3
 }
