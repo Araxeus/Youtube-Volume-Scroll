@@ -173,6 +173,20 @@ function saveVolume(percentage) {
 
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ savedVolume: percentage });
+        if (!isMusic) saveNativeVolume(percentage);
         saveTimeout = null;
     }, 1500)
+}
+
+//this function saves the volume to a native cookie used by youtube.com
+//this eliminate some bugs that happened because youtube sometimes tried to "force" the value from this cookie
+function saveNativeVolume(percentage) {
+    let ytVolume = window.localStorage.getItem("yt-player-volume");
+    if (!ytVolume) return;
+    ytVolume = JSON.parse(ytVolume);
+    ytVolume.data = {
+        volume: percentage,
+        muted: percentage <= 0
+    }
+    window.localStorage.setItem("yt-player-volume", JSON.stringify(ytVolume));
 }
