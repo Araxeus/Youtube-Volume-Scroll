@@ -16,10 +16,16 @@
  
 ### 🏠 [Homepage](https://github.com/Araxeus/Youtube-Volume-Scroll#welcome-to-youtube-volume-scroll-)
 
-Sadly it cost 5$ to publish an extension to chrome webstore.
-Meanwhile you can install this as unpacked extension
+ <a href="https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk" target="_blank">
+    <img alt="Chromestore" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
+  </a>
 
-## Install
+## Usage
+
+1. Install from [Chromestore](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
+2. Use Mousewheel on the video player on [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
+
+## Install without chromestore instructions:
 
 Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases) and load as unpacked extension in your chromium browser
 
@@ -34,11 +40,6 @@ Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/r
 
 ![EdgeUnpacked](images/EdgeUnpacked.png)
 </details>
-
-
-## Usage
-
-Use Mousewheel on the video player in [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
 
 ## Author
 
