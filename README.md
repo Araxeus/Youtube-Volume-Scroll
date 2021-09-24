@@ -2,7 +2,7 @@
 <p>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/releases" target="_blank">
     <img alt="Version" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg" />
-    <!––-<img alt="Version" src="https://img.shields.io/badge/version-0.9.1-blue.svg?cacheSeconds=2592000" />
+    <!––-<img alt="Version" src="https://img.shields.io/badge/version-0.9.2-blue.svg?cacheSeconds=2592000" />
   </a>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
