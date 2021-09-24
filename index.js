@@ -149,7 +149,6 @@ function overrideVideoVolume() {
     const video = $('video');
 
     if ((savedVolume || savedVolume === 0)) {
-        saveVolume(savedVolume); // eliminate stupid bugs on youtube.com
         const newVolume = savedVolume / 100;
         video.volume = newVolume;
         setVolumeSliderPosition(newVolume);
