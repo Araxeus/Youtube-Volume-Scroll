@@ -178,15 +178,23 @@ function saveVolume(percentage) {
     }, 1500)
 }
 
-//this function saves the volume to a native cookie used by youtube.com
+//this function saves the volume to a native cookies used by youtube.com
 //this eliminate some bugs that happened because youtube sometimes tried to "force" the value from this cookie
 function saveNativeVolume(percentage) {
-    let ytVolume = window.localStorage.getItem("yt-player-volume");
-    if (!ytVolume) return;
-    ytVolume = JSON.parse(ytVolume);
-    ytVolume.data = {
+    const data = {
         volume: percentage,
         muted: percentage <= 0
     }
-    window.localStorage.setItem("yt-player-volume", JSON.stringify(ytVolume));
+    let localYtVolume = window.localStorage.getItem("yt-player-volume");
+    if (localYtVolume) {
+        localYtVolume = JSON.parse(localYtVolume);
+        localYtVolume.data = data;
+        window.localStorage.setItem("yt-player-volume", JSON.stringify(localYtVolume));
+    }
+    let sessionYtVolume = window.sessionStorage.getItem("yt-player-volume");
+    if (!sessionYtVolume) return;
+    sessionYtVolume = JSON.parse(sessionYtVolume);
+    sessionYtVolume.data = data;
+    window.sessionStorage.setItem("yt-player-volume", JSON.stringify(sessionYtVolume));
 }
+window.sessionStorage.getItem("yt-player-volume")
