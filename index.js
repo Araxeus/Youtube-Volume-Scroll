@@ -136,18 +136,17 @@ function setVolumeSliderPosition(volume) {
 function setupVolumeChangeListener() {
     const video = $('video');
 
-    video.addEventListener('volumechange', event =>
-        saveVolume(Math.round(event.target.volume * 100))
-    );
-
-    video.addEventListener(isMusic ? "canplay" : "loadeddata", () =>
-        overrideVideoVolume()
+        video.addEventListener("loadeddata", () => {
+            overrideVideoVolume();
+            video.addEventListener('volumechange', event =>
+                saveVolume(Math.round(event.target.volume * 100))
+            );
+        }
     );
 }
 
 function overrideVideoVolume() {
     const video = $('video');
-
     if ((savedVolume || savedVolume === 0)) {
         const newVolume = savedVolume / 100;
         video.volume = newVolume;
@@ -158,13 +157,18 @@ function overrideVideoVolume() {
         setTimeout((interval) => {
             setVolumeSliderPosition(newVolume);
             clearInterval(interval);
-        }, 500, volumeOverrideInterval);
+        }, 1500, volumeOverrideInterval);
     }
 }
 
 let saveTimeout;
 
 function saveVolume(percentage) {
+    if (percentage === 100 && $('video').currentTime < 1) {
+        // youtube bug
+        $('video').volume = savedVolume / 100;
+        return;
+    }
     if (savedVolume !== percentage) {
         savedVolume = percentage;
     }
