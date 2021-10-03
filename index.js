@@ -37,8 +37,6 @@ function setup() {
 
     setupVolumeChangeListener();
 
-    overrideVideoVolume();
-
     console.log("loaded Youtube-Volume-Scroll");
 }
 
@@ -134,41 +132,14 @@ function setVolumeSliderPosition(volume) {
 }
 
 function setupVolumeChangeListener() {
-    const video = $('video');
-
-        video.addEventListener("loadeddata", () => {
-            overrideVideoVolume();
-            video.addEventListener('volumechange', event =>
-                saveVolume(Math.round(event.target.volume * 100))
-            );
-        }
+    $('video').addEventListener('volumechange', event =>
+        saveVolume(Math.round(event.target.volume * 100))
     );
-}
-
-function overrideVideoVolume() {
-    const video = $('video');
-    if ((savedVolume || savedVolume === 0)) {
-        const newVolume = savedVolume / 100;
-        video.volume = newVolume;
-        setVolumeSliderPosition(newVolume);
-        const volumeOverrideInterval = setInterval(() => {
-            video.volume = newVolume;
-        }, 4);
-        setTimeout((interval) => {
-            setVolumeSliderPosition(newVolume);
-            clearInterval(interval);
-        }, 1500, volumeOverrideInterval);
-    }
 }
 
 let saveTimeout;
 
 function saveVolume(percentage) {
-    if (percentage === 100 && $('video').currentTime < 1) {
-        // youtube bug
-        $('video').volume = savedVolume / 100;
-        return;
-    }
     if (savedVolume !== percentage) {
         savedVolume = percentage;
     }
@@ -179,16 +150,16 @@ function saveVolume(percentage) {
         chrome.storage.sync.set({ savedVolume: percentage });
         if (!isMusic) saveNativeVolume(percentage);
         saveTimeout = null;
-    }, 1500)
+    }, 1000)
 }
 
 //this function saves the volume to a native cookies used by youtube.com
 //this eliminate some bugs that happened because youtube sometimes tried to "force" the value from this cookie
 function saveNativeVolume(percentage) {
-    const data = {
+    const data = JSON.stringify({
         volume: percentage,
         muted: percentage <= 0
-    }
+    })
     let localYtVolume = window.localStorage.getItem("yt-player-volume");
     if (localYtVolume) {
         localYtVolume = JSON.parse(localYtVolume);
@@ -201,4 +172,3 @@ function saveNativeVolume(percentage) {
     sessionYtVolume.data = data;
     window.sessionStorage.setItem("yt-player-volume", JSON.stringify(sessionYtVolume));
 }
-window.sessionStorage.getItem("yt-player-volume")
