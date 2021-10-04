@@ -1,18 +1,10 @@
-let savedVolume;
 let isMusic;
-
-const selectors = {
-    youtube_music: "#song-video",
-    youtube: ".html5-video-container"
-}
 
 const $ = document.querySelector.bind(document);
 
-chrome.storage.sync.get("savedVolume", data => {
-    if (data && (data.savedVolume || data.savedVolume === 0)) {
-        savedVolume = data.savedVolume
-    }
-});
+// save volume after a delay to avoid throttle limit
+// https://developer.chrome.com/docs/extensions/reference/storage/#storage-and-throttling-limits
+let saveTimeout;
 
 window.addEventListener('load', () => {
     try {
@@ -24,73 +16,52 @@ window.addEventListener('load', () => {
 
 function setup() {
     const url = window.location.href;
-    if (!url.includes("youtube")) {
-        console.error("trying to load Youtube-Volume-Scroll outside of youtube domains");
+    if (!url.includes('youtube')) {
+        console.error('trying to load Youtube-Volume-Scroll outside of youtube domains');
         return;
     }
 
-    isMusic = url.includes("music.youtube");
+    isMusic = url.includes('music.youtube');
+
+    if (chrome.extension.inIncognitoContext) {
+        chrome.storage.sync.get('savedVolume', data => {
+            if (data && (data.savedVolume !== undefined)) {
+                window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
+                    incognito: true,
+                    savedVolume: data.savedVolume
+                }));
+            }
+        });
+    }
+
+    loadPageAccess();
 
     setVideoVolumeOnwheel();
 
-    injectVolumeHud();
+    window.addEventListener('message', (event) => {
+        if (event.data.type && event.data.type === 'Youtube-Volume-Scroll' &&
+            event.data.newVolume !== null && typeof event.data.newVolume === 'number') {
+            saveVolume(event.data.newVolume)
+        }
+    })
 
-    setupVolumeChangeListener();
+    console.log('loaded Youtube-Volume-Scroll');
 
-    console.log("loaded Youtube-Volume-Scroll");
 }
 
-function getVolumeHud() {
-    let volumeHud = $("#volumeHud");
-    if (volumeHud === null) {
-        injectVolumeHud();
-        volumeHud = $("#volumeHud");
-    }
-    if (volumeHud === null) {
-        console.err("Cannot Create BetterYoutubeVolume HUD");
-        return null;
-    }
-    return volumeHud;
-}
-
-function injectVolumeHud() {
-    if ($("#volumeHud")) return;
-
-    if (!isMusic) {
-        $(".ytp-cards-button-icon").style.display = "none";
-        $(".ytp-chrome-top-buttons").style.display = "none";
-    }
-
-    const elementSelector = isMusic ?
-        selectors.youtube_music :
-        selectors.youtube;
-
-    const position = `top: ${isMusic ? "10px" : "5px"}; ${isMusic ? "left: 10px" : "right: 5px"}; z-index: 999; position: absolute;`;
-    const mainStyle = "font-size: xxx-large; padding: 10px; transition: opacity 0.6s; webkit-text-stroke: 1px black; font-weight: 600;";
-
-    $(elementSelector).insertAdjacentHTML('afterend', `<span id="volumeHud" style="${position + mainStyle}"></span>`)
-}
-
-let fadeTimeout;
-
-function showVolume(volume) {
-    let volumeHud = getVolumeHud();
-    if (volumeHud === null) return;
-
-    volumeHud.textContent = volume + '%';
-    volumeHud.style.opacity = 1;
-
-    if (fadeTimeout) clearTimeout(fadeTimeout);
-    fadeTimeout = setTimeout(() => {
-        volumeHud.style.opacity = 0;
-        fadeTimeout = null;
-    }, 1500);
+function loadPageAccess() {
+    let pageAccess = document.createElement('script');
+    pageAccess.src = chrome.runtime.getURL('pageAccess.js');
+    pageAccess.onload = function () {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(pageAccess);
 }
 
 function setVideoVolumeOnwheel() {
     (isMusic ?
-        $("#main-panel") :
-        $(".html5-video-player")
+        $('#main-panel') :
+        $('.html5-video-player')
     ).onwheel = event => {
         event.preventDefault();
         // Event.deltaY < 0 means wheel-up
@@ -99,76 +70,15 @@ function setVideoVolumeOnwheel() {
 }
 
 function changeVolume(toIncrease, shiftHeld = false) {
-    const vid = $("video");
-    const step = shiftHeld ? 0.05 : 0.01;
-    let newVolume = (toIncrease ?
-        Math.min(vid.volume + step, 1) :
-        Math.max(vid.volume - step, 0)).toFixed(2);
-
-    // Have to manually mute/unmute on youtube.com
-    if (!isMusic && (
-        (newVolume <= 0 && !vid.muted) ||
-        (newVolume > 0 && vid.muted))) {
-        $(".ytp-mute-button").click();
-    }
-
-    setVolumeSliderPosition(newVolume);
-
-    vid.volume = newVolume;
-
-    showVolume(Math.round(vid.volume * 100));
-
+    //post new volume to pageAccess.js
+    window.postMessage({ type: 'Youtube-Volume-Scroll', steps: shiftHeld ? 5 : 1, toIncrease: toIncrease }, '*');
 }
 
-function setVolumeSliderPosition(volume) {
-    let percentage = Math.round(volume * 100);
-    if (isMusic) {
-        if (percentage < 5 && percentage > 0) percentage = 5;
-        $("tp-yt-paper-slider#volume-slider.volume-slider").setAttribute("value", percentage);
-        $("tp-yt-paper-slider#expand-volume-slider.expand-volume-slider").setAttribute("value", percentage);
-    } else {
-        $(".ytp-volume-slider-handle").style.left = Math.round(volume * 40) + "px";
-    }
-}
-
-function setupVolumeChangeListener() {
-    $('video').addEventListener('volumechange', event =>
-        saveVolume(Math.round(event.target.volume * 100))
-    );
-}
-
-let saveTimeout;
-
-function saveVolume(percentage) {
-    if (savedVolume !== percentage) {
-        savedVolume = percentage;
-    }
-
+function saveVolume(newVolume) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        chrome.storage.sync.set({ savedVolume: percentage });
-        if (!isMusic) saveNativeVolume(percentage);
+        chrome.storage.sync.set({ savedVolume: newVolume });
         saveTimeout = null;
     }, 1000)
-}
-
-//this function saves the volume to a native cookies used by youtube.com
-//this eliminate some bugs that happened because youtube sometimes tried to "force" the value from this cookie
-function saveNativeVolume(percentage) {
-    const data = JSON.stringify({
-        volume: percentage,
-        muted: percentage <= 0
-    })
-    let localYtVolume = window.localStorage.getItem("yt-player-volume");
-    if (localYtVolume) {
-        localYtVolume = JSON.parse(localYtVolume);
-        localYtVolume.data = data;
-        window.localStorage.setItem("yt-player-volume", JSON.stringify(localYtVolume));
-    }
-    let sessionYtVolume = window.sessionStorage.getItem("yt-player-volume");
-    if (!sessionYtVolume) return;
-    sessionYtVolume = JSON.parse(sessionYtVolume);
-    sessionYtVolume.data = data;
-    window.sessionStorage.setItem("yt-player-volume", JSON.stringify(sessionYtVolume));
 }
