@@ -46,7 +46,6 @@ function setup() {
     })
 
     console.log('loaded Youtube-Volume-Scroll');
-
 }
 
 function loadPageAccess() {

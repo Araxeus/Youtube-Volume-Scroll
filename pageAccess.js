@@ -1,7 +1,10 @@
 const $ = document.querySelector.bind(document);
 
-const api = $('#movie_player');
-
+let apiResolved;
+const api = () => {
+    if (!apiResolved) apiResolved = $('#movie_player');
+    return apiResolved;
+};
 const isMusic = window.location.href.includes('music.youtube');
 
 let hudFadeTimeout;
@@ -10,10 +13,13 @@ const oneMonth = 2592000000;
 
 let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
 
+// set last active time to now every 15min (blocks "are you there?" popup)
+setInterval(() =>  window._lact = Date.now(), 900000);
+
 if (volumeCookie) {
     volumeCookie = JSON.parse(volumeCookie);
-    if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
-        api.setVolume(volumeCookie.savedVolume);
+    if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api().getVolume()) {
+        api().setVolume(volumeCookie.savedVolume);
         if (!isMusic) saveNativeVolume(volumeCookie.savedVolume);
     }
 }
@@ -26,18 +32,18 @@ window.addEventListener('message', (event) => {
     }
 
     const newVolume = event.data.toIncrease ?
-        Math.min(api.getVolume() + event.data.steps, 100) :
-        Math.max(api.getVolume() - event.data.steps, 0);
+        Math.min(api().getVolume() + event.data.steps, 100) :
+        Math.max(api().getVolume() - event.data.steps, 0);
 
     // Have to manually mute/unmute on youtube.com
-    if (!isMusic && newVolume > 0 && api.isMuted()) {
+    if (!isMusic && newVolume > 0 && api().isMuted()) {
         //$('.ytp-mute-button').click();
-        api.unMute();
+        api().unMute();
     }
 
     showVolume(newVolume);
 
-    api.setVolume(newVolume);
+    api().setVolume(newVolume);
 
     if (!isMusic) saveNativeVolume(newVolume);
 
