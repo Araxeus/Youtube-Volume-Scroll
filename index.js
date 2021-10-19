@@ -1,20 +1,17 @@
-let isMusic;
 
 const $ = document.querySelector.bind(document);
+const oneMonth = 2592000000;
+
+let isMusic;
 
 // save volume after a delay to avoid throttle limit
 // https://developer.chrome.com/docs/extensions/reference/storage/#storage-and-throttling-limits
 let saveTimeout;
 
-window.addEventListener('load', () => {
-    try {
-        setup();
-    } catch {
-        setTimeout(setup, 2000);
-    }
-}, { once: true });
+window.addEventListener('load', start, { once: true });
 
-function setup() {
+function start() {
+
     const url = window.location.href;
     if (!url.includes('youtube')) {
         console.error('trying to load Youtube-Volume-Scroll outside of youtube domains');
@@ -24,15 +21,25 @@ function setup() {
     isMusic = url.includes('music.youtube');
 
     if (chrome.extension.inIncognitoContext) {
-        chrome.storage.sync.get('savedVolume', data => {
-            if (data && (data.savedVolume !== undefined)) {
-                window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
-                    incognito: true,
-                    savedVolume: data.savedVolume
-                }));
-            }
-        });
+        setupIncognito();
     }
+
+    if ($('video')) {
+        setup();
+        return;
+    }
+
+    const observer = new MutationObserver(() => {
+        if ($('video')) {
+            observer.disconnect();
+            setup();
+        }
+    })
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+}
+
+function setup() {
 
     loadPageAccess();
 
@@ -80,4 +87,35 @@ function saveVolume(newVolume) {
         chrome.storage.sync.set({ savedVolume: newVolume });
         saveTimeout = null;
     }, 1000)
+}
+
+function setupIncognito() {
+    chrome.storage.sync.get('savedVolume', data => {
+        if (data && (data.savedVolume !== undefined)) {
+            // indicate to pageAccess that we are in incognito
+            window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
+                incognito: true,
+                savedVolume: data.savedVolume
+            }));
+            if (!isMusic) {
+                // setup native youtube volume cookie
+                const cookieData = JSON.stringify({
+                    volume: data.savedVolume,
+                    muted: data.savedVolume <= 0
+                })
+                const timeNow = Date.now();
+
+                window.localStorage.setItem('yt-player-volume', JSON.stringify({
+                    data: cookieData,
+                    expiration: timeNow + oneMonth,
+                    creation: timeNow
+                }));
+
+                window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
+                    data: cookieData,
+                    creation: timeNow
+                }));
+            }
+        }
+    });
 }
