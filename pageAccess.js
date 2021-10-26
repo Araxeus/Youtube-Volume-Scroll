@@ -28,9 +28,9 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    const newVolume = event.data.toIncrease ?
+    const newVolume = Math.round(event.data.toIncrease ?
         Math.min(api.getVolume() + event.data.steps, 100) :
-        Math.max(api.getVolume() - event.data.steps, 0);
+        Math.max(api.getVolume() - event.data.steps, 0));
 
     // Have to manually mute/unmute on youtube.com
     if (!isMusic && newVolume > 0 && api.isMuted()) {
