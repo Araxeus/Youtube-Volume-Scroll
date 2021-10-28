@@ -24,7 +24,7 @@
 
 1. Install from [Chromestore](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
 2. Use Mousewheel on the video player on [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
-   you can also use shift+mousewheel to increments x5 faster you could also just press arrow up ;)
+
 
 ## Install without chromestore instructions:
 
