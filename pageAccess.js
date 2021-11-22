@@ -1,13 +1,13 @@
 const $ = document.querySelector.bind(document);
 
-const oneMonth = 2592000000;
+const oneMonth = 2592e6; // = 30_days * 24_hours * 60_minutes * 60_seconds * 1000_miliseconds
 
 const api = $('#movie_player');
 
 const isMusic = window.location.href.includes('music.youtube');
 
 // set last active time to now every 15min (blocks "are you there?" popup)
-setInterval(() =>  window._lact = Date.now(), 900000);
+setInterval(() =>  window._lact = Date.now(), 9e5);
 
 let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
 
@@ -92,7 +92,7 @@ function showVolume(volume) {
     hudFadeTimeout = setTimeout(() => {
         volumeHud.style.opacity = 0;
         hudFadeTimeout = null;
-    }, 1500);
+    }, 1.5e3);
 }
 
 //this function saves the volume to a native cookies used by youtube.com
