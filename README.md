@@ -24,7 +24,9 @@
 
 1. Install from [Chromestore](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
 2. Use Mousewheel on the video player on [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
+3. Click the extension icon to change the volume scroll "steps"
 
+(This extension also natively blocks the "Are you still there?" popup that pause the music automatically after some time)
 
 ## Install without chromestore instructions:
 
