@@ -12,6 +12,7 @@
         "https://www.youtube.com/*",
         "https://music.youtube.com/*"
       ],
+      "all_frames": true,
       "js": [
         "index.js"
       ],
