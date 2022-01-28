@@ -20,13 +20,24 @@
     <img alt="Chromestore" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
   </a>
 
+### Features
+
+★ Use mousewheel on the video to change the volume
+
+★ Display the new volume for 1 second on the video when changing volume
+
+★ Remember volume even in incognito mode
+
+★ Works in embedded videos
+
+★ Clicking the extension icon allows changing the volume scroll 'steps'
+
+★ Automatically blocks the "Are you still there?" popup that appears after some time
+
 ## Usage
 
 1. Install from [Chromestore](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
 2. Use Mousewheel on the video player on [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
-3. Click the extension icon to change the volume scroll "steps"
-
-(This extension also natively blocks the "Are you still there?" popup that pause the music automatically after some time)
 
 ## Install without chromestore instructions:
 
