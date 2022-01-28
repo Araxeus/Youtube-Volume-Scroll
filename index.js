@@ -3,15 +3,21 @@ const $ = document.querySelector.bind(document);
 const oneMonth = 2592000000;
 
 let isMusic;
-
-// save volume after a delay to avoid throttle limit
-// https://developer.chrome.com/docs/extensions/reference/storage/#storage-and-throttling-limits
-let saveTimeout;
+let steps = 1;
 
 window.addEventListener('load', start, { once: true });
 
-function start() {
+chrome.storage.sync.get('steps', data => {
+    if (data.steps) steps = Number(data.steps);
+});
 
+chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync' && changes.steps?.newValue) {
+        steps = Number(changes.steps.newValue);
+    }
+});
+
+function start() {
     const url = window.location.href;
     if (!url.includes('youtube')) {
         console.error('trying to load Youtube-Volume-Scroll outside of youtube domains');
@@ -46,7 +52,7 @@ function setup() {
     setVideoVolumeOnwheel();
 
     window.addEventListener('message', (event) => {
-        if (event.data.type && event.data.type === 'Youtube-Volume-Scroll' &&
+        if (event.data?.type === 'Youtube-Volume-Scroll' &&
             event.data.newVolume !== null && typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume)
         }
@@ -77,21 +83,12 @@ function setVideoVolumeOnwheel() {
 
 function changeVolume(toIncrease, shiftHeld = false) {
     //post new volume to pageAccess.js
-    window.postMessage({ type: 'Youtube-Volume-Scroll', steps: shiftHeld ? 5 : 1, toIncrease: toIncrease }, '*');
-}
-
-function saveVolume(newVolume) {
-    if (saveTimeout) clearTimeout(saveTimeout);
-
-    saveTimeout = setTimeout(() => {
-        chrome.storage.sync.set({ savedVolume: newVolume });
-        saveTimeout = null;
-    }, 1000)
+    window.postMessage({ type: 'Youtube-Volume-Scroll', steps: shiftHeld ? steps * 2 : steps, toIncrease: toIncrease }, '*');
 }
 
 function setupIncognito() {
     chrome.storage.sync.get('savedVolume', data => {
-        if (data && (data.savedVolume !== undefined)) {
+        if (data?.savedVolume !== undefined) {
             // indicate to pageAccess that we are in incognito
             window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
                 incognito: true,
@@ -118,4 +115,17 @@ function setupIncognito() {
             }
         }
     });
+}
+
+// save volume after a delay to avoid throttle limit
+// https://developer.chrome.com/docs/extensions/reference/storage/#storage-and-throttling-limits
+let saveTimeout;
+
+function saveVolume(newVolume) {
+    if (saveTimeout) clearTimeout(saveTimeout);
+
+    saveTimeout = setTimeout(() => {
+        chrome.storage.sync.set({ savedVolume: newVolume });
+        saveTimeout = null;
+    }, 1000)
 }
