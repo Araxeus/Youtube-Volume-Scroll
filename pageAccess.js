@@ -1,6 +1,5 @@
 const $ = document.querySelector.bind(document);
-
-const oneMonth = 2592e6; // = 30_days * 24_hours * 60_minutes * 60_seconds * 1000_miliseconds
+const oneMonth = 2592e6;
 
 const api = $('#movie_player');
 
@@ -22,9 +21,9 @@ if (volumeCookie) {
 }
 
 window.addEventListener('message', (event) => {
-    if (!event.data.type || event.data.type !== 'Youtube-Volume-Scroll' ||
-        event.data.steps === undefined || typeof event.data.steps !== 'number' ||
-        event.data.toIncrease === undefined || typeof event.data.toIncrease !== 'boolean') {
+    if (event.data.type !== 'Youtube-Volume-Scroll' ||
+        typeof event.data.steps !== 'number' ||
+        typeof event.data.toIncrease !== 'boolean') {
         return;
     }
 
@@ -57,7 +56,7 @@ function getVolumeHud() {
         volumeHud = $('#volumeHud');
     }
     if (volumeHud === null) {
-        console.err('Cannot Create BetterYoutubeVolume HUD');
+        console.err('Cannot Create Youtube-Volume-Scroll HUD');
         return null;
     }
     return volumeHud;

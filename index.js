@@ -1,6 +1,5 @@
-
 const $ = document.querySelector.bind(document);
-const oneMonth = 2592000000;
+const oneMonth = 2592e6;
 
 let isMusic;
 let steps = 1;
@@ -52,8 +51,8 @@ function setup() {
     setVideoVolumeOnwheel();
 
     window.addEventListener('message', (event) => {
-        if (event.data?.type === 'Youtube-Volume-Scroll' &&
-            event.data.newVolume !== null && typeof event.data.newVolume === 'number') {
+        if (event.data.type === 'Youtube-Volume-Scroll' &&
+            typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume)
         }
     })
