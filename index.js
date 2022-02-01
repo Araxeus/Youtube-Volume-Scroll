@@ -6,6 +6,7 @@ let steps = 1;
 
 window.addEventListener('load', start, { once: true });
 
+// keep 'steps' in sync with extension popup
 chrome.storage.sync.get('steps', data => {
     if (data.steps) steps = Number(data.steps);
 });
@@ -30,18 +31,36 @@ function start() {
     }
 
     if ($('video')) {
-        setup();
+        checkOverlay();
         return;
     }
 
-    const observer = new MutationObserver(() => {
+    const documentObserver = new MutationObserver(() => {
         if ($('video')) {
-            observer.disconnect();
-            setup();
+            documentObserver.disconnect();
+            checkOverlay();
         }
     })
 
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    documentObserver.observe(document.documentElement, { childList: true, subtree: true });
+}
+
+// check the extension is inside a youtube embedded iframe that isn't active yet
+function checkOverlay() {
+    const overlay = $('.ytp-cued-thumbnail-overlay-image');
+    const noOverlay = () => !overlay || !overlay.style.backgroundImage || overlay.parentNode.style.display === 'none';
+    if (noOverlay()) {
+        setup();
+    } else {
+        const overlayObserver = new MutationObserver(() => {
+            if (noOverlay()) {
+                overlayObserver.disconnect();
+                setup();
+            }
+        });
+
+        overlayObserver.observe(overlay.parentNode, { attributeFilter: ['style'] });
+    }
 }
 
 function setup() {
@@ -57,7 +76,7 @@ function setup() {
         }
     })
 
-    console.log('loaded Youtube-Volume-Scroll');
+    console.log('loaded Youtube-Volume-Scroll on url: ', window.location.href);
 }
 
 function loadPageAccess() {
