@@ -12,6 +12,7 @@ let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
 
 let hudFadeTimeout;
 
+// incognito setup
 if (volumeCookie) {
     volumeCookie = JSON.parse(volumeCookie);
     if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
@@ -20,6 +21,7 @@ if (volumeCookie) {
     }
 }
 
+// listen for volumeChange request
 window.addEventListener('message', (event) => {
     if (event.data.type !== 'Youtube-Volume-Scroll' ||
         typeof event.data.steps !== 'number' ||
@@ -94,7 +96,7 @@ function showVolume(volume) {
     }, 1.5e3);
 }
 
-//this function saves the volume to a native cookies used by youtube.com
+// save the volume to a native cookies used by youtube.com
 function saveNativeVolume(newVolume) {
     const data = JSON.stringify({
         volume: newVolume,
