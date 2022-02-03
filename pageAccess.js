@@ -72,14 +72,10 @@ function injectVolumeHud() {
         $('.ytp-chrome-top-buttons').style.display = 'none';
     }
 
-    const elementSelector = isMusic ?
+    $(isMusic ?
         '#song-video' :
-        '.html5-video-container';
-
-    const position = `top: ${isMusic ? '10px' : '5px'}; ${isMusic ? 'left: 10px' : 'right: 5px'}; z-index: 999; position: absolute;`;
-    const mainStyle = 'font-size: xxx-large; padding: 10px; transition: opacity 0.6s; font-weight: 600; text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000, -1px -1px 0 #000;';
-
-    $(elementSelector).insertAdjacentHTML('afterend', `<span id='volumeHud' style='${position + mainStyle}'></span>`)
+        '.html5-video-container'
+    ).insertAdjacentHTML('afterend', `<span id='volumeHud' ${isMusic ? "class='music'" : ''}></span>`)
 }
 
 function showVolume(volume) {
