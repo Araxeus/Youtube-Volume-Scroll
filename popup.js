@@ -1,26 +1,21 @@
-const setupInput = () => {
+window.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('#input');
-    if (!input) setTimeout(setupInput, 100);
-    else {
-        input.oninput = () => {
-            setValue(input);
-            saveSteps(input.value);
-        }
-        chrome.storage.sync.get('steps', data => {
-            if (data?.steps) {
-                input.value = data.steps;
-                setValue(input);
-            }
-        });
+    input.oninput = () => {
+        setValue(input);
+        saveSteps(input.value);
     }
-}
+    chrome.storage.sync.get('steps', data => {
+        if (data?.steps) {
+            input.value = data.steps;
+            setValue(input);
+        }
+    });
+}, {once: true, });
 
 function setValue(node) {
     node.parentNode.style.setProperty('--value', node.value);
     node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
 }
-
-setupInput();
 
 let saveTimeout;
 function saveSteps(steps) {
