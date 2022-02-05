@@ -30,9 +30,9 @@
 
 ★ Works in embedded videos
 
-★ Clicking the extension icon allows changing the volume scroll 'steps'
+★ Clicking the extension [icon](https://user-images.githubusercontent.com/78568641/152661730-3b6be926-a163-47d8-a337-ddd929183317.png) allows Changing the volume scroll 'steps'
 
-★ Automatically blocks the "Are you still there?" popup that appears after some time
+★ Automatically blocks the ["Continue watching?" popup](https://user-images.githubusercontent.com/61631665/129977894-01c60740-7ec6-4bf0-9a2c-25da24491b0e.png) that appears after some time
 
 ## Usage
 
