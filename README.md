@@ -46,13 +46,13 @@ Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/r
  <details>
 <summary><b>Chrome Example</b></summary>
 
-![ChromeUnpacked](images/ChromeUnpacked.png)
+![ChromeUnpacked](assets/ChromeUnpacked.png)
 </details>
 
  <details>
   <summary><b>Edge Example</b></summary>
 
-![EdgeUnpacked](images/EdgeUnpacked.png)
+![EdgeUnpacked](assets/EdgeUnpacked.png)
 </details>
 
 ## Author
