@@ -34,14 +34,14 @@
     }
   ],
   "icons": {
-    "16": "images/icon16x16.png",
-    "32": "images/icon32x32.png",
-    "48": "images/BigIcon48x48.png",
-    "128": "images/BigIcon128x128.png",
-    "512": "images/BigIcon512x512.png"
+    "16": "assets/icon16x16.png",
+    "32": "assets/icon32x32.png",
+    "48": "assets/BigIcon48x48.png",
+    "128": "assets/BigIcon128x128.png",
+    "512": "assets/BigIcon512x512.png"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup/popup.html"
   },
   "manifest_version": 3
 }
