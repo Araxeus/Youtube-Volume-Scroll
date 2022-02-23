@@ -1,8 +1,9 @@
 window.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('#input');
-    input.oninput = () => {
-        setValue(input);
-        saveSteps(input.value);
+    input.oninput = updateOutput;
+    input.onwheel = e => {
+        e.deltaY < 0 ? input.value++ : input.value--;
+        updateOutput();
     }
     chrome.storage.sync.get('steps', data => {
         if (data?.steps) {
@@ -10,6 +11,10 @@ window.addEventListener('DOMContentLoaded', () => {
             setValue(input);
         }
     });
+    function updateOutput() {
+        setValue(input);
+        saveSteps(input.value);
+    }
 }, {once: true, });
 
 function setValue(node) {
