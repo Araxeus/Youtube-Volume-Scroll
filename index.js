@@ -145,5 +145,5 @@ function saveVolume(newVolume) {
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ savedVolume: newVolume });
         saveTimeout = null;
-    }, 1000)
+    }, 500)
 }
