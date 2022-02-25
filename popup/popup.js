@@ -11,11 +11,16 @@ window.addEventListener('DOMContentLoaded', () => {
             setValue(input);
         }
     });
+
+    window.onblur = () => {
+        chrome.storage.sync.set({ steps: input.value });
+    };
+
     function updateOutput() {
         setValue(input);
         saveSteps(input.value);
     }
-}, {once: true, });
+}, { once: true, });
 
 function setValue(node) {
     node.parentNode.style.setProperty('--value', node.value);
@@ -29,5 +34,5 @@ function saveSteps(steps) {
     saveTimeout = setTimeout(() => {
         chrome.storage.sync.set({ steps: steps });
         saveTimeout = null;
-    }, 200)
+    }, 500)
 }
