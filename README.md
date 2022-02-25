@@ -1,13 +1,12 @@
 <h1 align="center">Welcome to Youtube Volume Scroll 👋</h1>
 <p>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/releases" target="_blank">
-    <img alt="Version" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg" />
-    <!––-<img alt="Version" src="https://img.shields.io/badge/version-1.3.21-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg" onerror='this.onerror=undefined; this.src="https://img.shields.io/badge/version-1.4.0-blue.svg?cacheSeconds=2592000"'/>
   </a>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
-   <a href="https://github.com/Araxeus/custom-electron-prompt" target="_blank">
+   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
 </p>
