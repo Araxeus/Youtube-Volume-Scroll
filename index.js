@@ -69,7 +69,7 @@ function setup() {
 
     setVideoVolumeOnwheel();
 
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
         if (event.data.type === 'Youtube-Volume-Scroll' &&
             typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume)

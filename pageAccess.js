@@ -6,7 +6,7 @@ const api = $('#movie_player');
 const isMusic = window.location.href.includes('music.youtube');
 
 // set last active time to now every 15min (blocks "are you there?" popup)
-setInterval(() =>  window._lact = Date.now(), 9e5);
+setInterval(() => window._lact = Date.now(), 9e5);
 
 let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
 
@@ -22,7 +22,7 @@ if (volumeCookie) {
 }
 
 // listen for volumeChange request
-window.addEventListener('message', (event) => {
+window.addEventListener('message', event => {
     if (event.data.type !== 'Youtube-Volume-Scroll' ||
         typeof event.data.steps !== 'number' ||
         typeof event.data.toIncrease !== 'boolean') {
