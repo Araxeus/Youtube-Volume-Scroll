@@ -5,8 +5,14 @@ const api = $('#movie_player');
 
 const isMusic = window.location.href.includes('music.youtube');
 
-// set last active time to now every 15min (blocks "are you there?" popup)
-setInterval(() => window._lact = Date.now(), 9e5);
+let steps = 1;
+
+// listen for 'steps' change
+window.addEventListener('message', event => {
+    if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.steps === 'number') {
+        steps = event.data.steps;
+    }
+}, false);
 
 let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
 
@@ -21,17 +27,22 @@ if (volumeCookie) {
     }
 }
 
-// listen for volumeChange request
-window.addEventListener('message', event => {
-    if (event.data.type !== 'Youtube-Volume-Scroll' ||
-        typeof event.data.steps !== 'number' ||
-        typeof event.data.toIncrease !== 'boolean') {
-        return;
-    }
+// set last active time to now every 15min (blocks "are you there?" popup)
+setInterval(() => window._lact = Date.now(), 9e5);
 
-    const newVolume = Math.round(event.data.toIncrease ?
-        Math.min(api.getVolume() + event.data.steps, 100) :
-        Math.max(api.getVolume() - event.data.steps, 0));
+(isMusic ?
+    $('#main-panel') :
+    $('.html5-video-player')
+).onwheel = event => {
+    event.preventDefault();
+    // Event.deltaY < 0 means wheel-up
+    changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+};
+
+function changeVolume(toIncrease, modifier) {
+    const newVolume = Math.round(toIncrease ?
+        Math.min(api.getVolume() + (steps * modifier), 100) :
+        Math.max(api.getVolume() - (steps * modifier), 0));
 
     // Have to manually mute/unmute on youtube.com
     if (!isMusic && newVolume > 0 && api.isMuted()) {
@@ -39,15 +50,14 @@ window.addEventListener('message', event => {
         api.unMute();
     }
 
-    showVolume(newVolume);
-
     api.setVolume(newVolume);
+
+    showVolume(newVolume);
 
     if (!isMusic) saveNativeVolume(newVolume);
 
     window.postMessage({ type: 'Youtube-Volume-Scroll', newVolume: newVolume }, '*');
-
-}, false);
+}
 
 injectVolumeHud();
 

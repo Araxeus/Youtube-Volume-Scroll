@@ -1,7 +1,6 @@
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 let isMusic = window.location.href.includes('music.youtube');
-let steps = 1;
 
 if (chrome.extension.inIncognitoContext) {
     setupIncognito();
@@ -10,13 +9,9 @@ if (chrome.extension.inIncognitoContext) {
 window.addEventListener('load', start, { once: true });
 
 // keep 'steps' in sync with extension popup
-chrome.storage.sync.get('steps', data => {
-    if (data.steps) steps = Number(data.steps);
-});
-
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.steps?.newValue) {
-        steps = Number(changes.steps.newValue);
+        sendSteps(Number(changes.steps.newValue));
     }
 });
 
@@ -55,14 +50,10 @@ function checkOverlay() {
 }
 
 function setup() {
-
     loadPageAccess();
 
-    setVideoVolumeOnwheel();
-
     window.addEventListener('message', event => {
-        if (event.data.type === 'Youtube-Volume-Scroll' &&
-            typeof event.data.newVolume === 'number') {
+        if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume)
         }
     })
@@ -75,24 +66,16 @@ function loadPageAccess() {
     pageAccess.src = chrome.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
+        chrome.storage.sync.get('steps', data => {
+            if (data.steps) sendSteps(Number(data.steps));
+        });
     };
     (document.head || document.documentElement).appendChild(pageAccess);
 }
 
-function setVideoVolumeOnwheel() {
-    (isMusic ?
-        $('#main-panel') :
-        $('.html5-video-player')
-    ).onwheel = event => {
-        event.preventDefault();
-        // Event.deltaY < 0 means wheel-up
-        changeVolume(event.deltaY < 0, event.shiftKey);
-    };
-}
-
-function changeVolume(toIncrease, shiftHeld = false) {
-    //post new volume to pageAccess.js
-    window.postMessage({ type: 'Youtube-Volume-Scroll', steps: shiftHeld ? steps * 2 : steps, toIncrease: toIncrease }, '*');
+function sendSteps(steps) {
+    //send updated 'steps' to pageAccess.js
+    window.postMessage({ type: 'Youtube-Volume-Scroll', steps }, '*');
 }
 
 function setupIncognito() {
