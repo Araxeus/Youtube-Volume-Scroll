@@ -1,8 +1,11 @@
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
-
-let isMusic;
+let isMusic = window.location.href.includes('music.youtube');
 let steps = 1;
+
+if (chrome.extension.inIncognitoContext) {
+    setupIncognito();
+}
 
 window.addEventListener('load', start, { once: true });
 
@@ -18,18 +21,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 function start() {
-    const url = window.location.href;
-    if (!url.includes('youtube')) {
-        console.error('trying to load Youtube-Volume-Scroll outside of youtube domains');
-        return;
-    }
-
-    isMusic = url.includes('music.youtube');
-
-    if (chrome.extension.inIncognitoContext) {
-        setupIncognito();
-    }
-
     if ($('video')) {
         checkOverlay();
         return;
