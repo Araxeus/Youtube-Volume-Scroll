@@ -10,16 +10,30 @@ param (
     [switch] $OverwriteZip = $false, # overwrite zip (delete existing zip before creating a new one)
     [boolean] $Sync = $true, # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true)
     [string] $Verbose = "Continue", # set to "SilentlyContinue" to ignore verbose
-    [boolean] $PauseOnDone = $true # pause script when done to allow reading output
+    [boolean] $PauseOnDone = $true, # pause script when done to allow reading output
+    [string] $AddVersionFrom = "unpacked\manifest.json", # set empty string to not add a version
+    [string] $ScssPaths = @("unpacked/popup") # update scss->css in the directories, leave empty to disable
 )
 
 $VerbosePreference = $Verbose
 $ChangesCount = 0;
 
-try { # transform scss to css
-    sass --update unpacked/popup
-} catch {
-    Write-Error  "Error when calling sass: `n $($_.Exception.Message)" 
+if ($ScssPaths.Length -gt 0) {
+    try { # transform scss to css
+        sass --update $ScssPaths
+    } catch {
+        Write-Error  "Error when calling sass: `n $($_.Exception.Message)" 
+    }
+}
+
+if ($AddVersionFrom) {
+    try {
+        $jsonFile = Get-Content "unpacked\manifest.json"
+        $jsonObj = $jsonFile | ConvertFrom-Json
+        $ZipPath = $ZipPath.Replace('.zip', "_v$($jsonObj.version).zip")
+    } catch {
+        Write-Error("Error adding version: `n $($_.Exception.Message)")
+    }
 }
 
 if ($OverwriteZip) {
