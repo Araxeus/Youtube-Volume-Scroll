@@ -1,29 +1,32 @@
 #!/usr/bin/env pwsh
 
+#  Specifying no parameter will result in current working directory ($pwd) being archived into $pwd\$pwd.zip
 param (
     # The following paths can be relative or absolute:
     # path to folder/s containing the files to be archived
-    [string[]] $FoldersPath = @("unpacked"),
+    [Alias("i")][string[]] $FolderPaths = @($PWD),
     # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
-    [string] $ZipPath = "",
+    [Alias("u")][string] $ZipPath = "", # defaults to $PWD.zip
     # set $ZipPath to end with .zip or set this to an empty string to disable this feature
-    [string] $ZipNameFromJson = "unpacked\manifest.json", # $name_v$version.zip
+    [Alias("j")][string] $ZipNameFromJson = "", # set to a json file containing name and version, output will be $name_v$version.zip
     # ie "*.*" to only include files that have a .extension
-    [string] $Filter = "",
+    [Alias("f")][string] $Filter = "",
     # filterScript has more options than eclude
-    [string[]] $Exclude = @("*.scss", "_*"),
+    [Alias("e")][string[]] $Exclude = @(),
     # { ($_.FullName -notlike "*\node_modules\*") -and ($_.Name -notlike "*.scss")}, # ignore .scss and nodeModules folder
-    [ScriptBlock] $FilterScript = { $_ },
+    [Alias("fs")][ScriptBlock] $FilterScript = { $_ },
     # overwrite zip (if there is a zip with the same name, delete it creating a new one)
-    [switch] $OverwriteZip = $false,
+    [Alias("o")][switch] $OverwriteZip,
     # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true) - delete surplus files from zip
-    [boolean] $Sync = $true,
+    [Alias("s")][switch] $Sync,
     # pause script when done to allow reading output
-    [boolean] $PauseOnDone = $true,
+    [Alias("p")][switch] $PauseOnDone,
     # update scss->css in the directories, leave empty to disable
-    [string] $ScssPaths = @("unpacked/popup"),
+    [Alias("scss")][string] $ScssPaths = @(),
     # verbose output
-    [boolean] $Verbose = $true
+    [Alias("v")][switch] $Verbose,
+    # default settings for youtube-volume-scroll
+    [Alias("d")][switch] $Default = $true
 )
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -32,9 +35,17 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     Exit
 }
 
-$VerbosePreference = $Verbose ? "Continue" : "SilentlyContinue" 
+if ($Default) {
+    $FolderPaths = @("unpacked")
+    $ZipNameFromJson = "unpacked\manifest.json"
+    $Exclude = @("*.scss", "_*")
+    $Sync = $true
+    $PauseOnDone = $true
+    $ScssPaths = @("unpacked/popup")
+    $Verbose = $true
+}
 
-$ChangesCount = 0;
+$VerbosePreference = $Verbose ? "Continue" : "SilentlyContinue" 
 
 if ($ScssPaths.Length -gt 0) {
     try { # transform scss to css
@@ -47,7 +58,7 @@ if ($ScssPaths.Length -gt 0) {
 if ($ZipNameFromJson -and !$ZipPath.EndsWith('.zip')) {
         $jsonFile = Get-Content $ZipNameFromJson
         $jsonObj = $jsonFile | ConvertFrom-Json
-        $ZipName = "$($jsonObj.name.Replace(' ', '-'))_v$($jsonObj.version).zip"
+        $ZipName = "$($jsonObj.name.Trim().Replace(' ', '-'))_v$($jsonObj.version.Trim()).zip"
     if ($ZipPath) {
         try {  
             [System.IO.Directory]::CreateDirectory($ZipPath) | Out-Null
@@ -59,6 +70,8 @@ if ($ZipNameFromJson -and !$ZipPath.EndsWith('.zip')) {
     } else {
         $ZipPath = $ZipName
     }
+} elseif (!$ZipPath) {
+    $ZipPath = [IO.Path]::Combine($PWD, "$(Split-Path -Path $PWD -Leaf).zip")
 }
 
 if ($OverwriteZip) {
@@ -67,9 +80,11 @@ if ($OverwriteZip) {
 
 $AllFiles = New-Object System.Collections.Generic.List[System.Object]
 
+$ChangesCount = 0;
+
 try {
     $ZipArchive = [IO.Compression.ZipFile]::Open( $ZipPath, "Update" )
-    foreach ($FolderPath in $FoldersPath) {
+    foreach ($FolderPath in $FolderPaths) {
         $FileList = (Get-ChildItem -LiteralPath $FolderPath -Filter $Filter -Exclude $Exclude -File -Recurse | Where-Object $FilterScript) #use the -File argument because empty folders can"t be stored
         foreach ($File in $FileList) {
             if ($File.FullName.endsWith($ZipPath)) { continue }
@@ -109,10 +124,8 @@ try {
             }
         }
     }
-    if ($Verbose) {
-        $ZipPath = Resolve-Path $ZipPath
-    }
-    Write-Output "$($ZipPath) was succesfully updated ($($ChangesCount) files changed)"
+    
+    Write-Output "$(Resolve-Path $ZipPath) was succesfully updated ($($ChangesCount) files changed)"
 } catch { # failure to open the zip file
     Write-Error $_.Exception
 } finally { # always close the zip file so it can be read later
