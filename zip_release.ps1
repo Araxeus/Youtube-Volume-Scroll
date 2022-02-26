@@ -2,21 +2,35 @@
 
 param (
     # The following paths can be relative or absolute:
-    [string[]] $FoldersPath = @("unpacked"), # path to folder/s containing the files to be archived
-    [string] $ZipPath = "", # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
-    # $name(replace space with `-`)_v$version
-    [string] $ZipNameFromJson = "unpacked\manifest.json", # set this to an empty string to disable this feature
-    [string] $Filter = "", # "*.*" to only include files that have a .extension
-    [string[]] $Exclude = @("*.scss", "_*"), # filterScript has more options 
-    [ScriptBlock] $FilterScript = { $_ }, # { ($_.FullName -notlike "*\node_modules\*") -and ($_.Name -notlike "_*") -and ($_.Name -notlike "*.scss")}, # ignore .scss and files that starts with _
-    [switch] $OverwriteZip = $false, # overwrite zip (delete existing zip before creating a new one)
-    [boolean] $Sync = $true, # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true)
-    [string] $Verbose = "Continue", # set to "SilentlyContinue" to ignore verbose
-    [boolean] $PauseOnDone = $true, # pause script when done to allow reading output
-    [string] $ScssPaths = @("unpacked/popup") # update scss->css in the directories, leave empty to disable
+    # path to folder/s containing the files to be archived
+    [string[]] $FoldersPath = @("unpacked"),
+    # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
+    [string] $ZipPath = "",
+    # set $ZipPath to end with .zip or set this to an empty string to disable this feature
+    [string] $ZipNameFromJson = "unpacked\manifest.json", # $name_v$version.zip
+    # ie "*.*" to only include files that have a .extension
+    [string] $Filter = "",
+    # filterScript has more options than eclude
+    [string[]] $Exclude = @("*.scss", "_*"),
+    # { ($_.FullName -notlike "*\node_modules\*") -and ($_.Name -notlike "*.scss")}, # ignore .scss and nodeModules folder
+    [ScriptBlock] $FilterScript = { $_ },
+    # overwrite zip (if there is a zip with the same name, delete it creating a new one)
+    [switch] $OverwriteZip = $false,
+    # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true) - delete surplus files from zip
+    [boolean] $Sync = $true,
+    # pause script when done to allow reading output
+    [boolean] $PauseOnDone = $true,
+    # update scss->css in the directories, leave empty to disable
+    [string] $ScssPaths = @("unpacked/popup"),
+    # verbose output
+    [boolean] $Verbose = $true
 )
 
-$VerbosePreference = $Verbose
+if ($Verbose) {
+    $VerbosePreference = "Continue"
+} else {
+    $VerbosePreference = "SilentlyContinue" 
+}
 $ChangesCount = 0;
 
 if ($ScssPaths.Length -gt 0) {
@@ -27,13 +41,13 @@ if ($ScssPaths.Length -gt 0) {
     }
 }
 
-if ($ZipNameFromJson -and ($ZipPath -notmatch '\.zip$')) {
+if ($ZipNameFromJson -and !$ZipPath.EndsWith('.zip')) {
         $jsonFile = Get-Content $ZipNameFromJson
         $jsonObj = $jsonFile | ConvertFrom-Json
         $ZipName = "$($jsonObj.name.Replace(' ', '-'))_v$($jsonObj.version).zip"
     if ($ZipPath) {
         try {  
-            [system.io.directory]::CreateDirectory($ZipPath) | Out-Null
+            [System.IO.Directory]::CreateDirectory($ZipPath) | Out-Null
             $ZipPath = [IO.Path]::Combine($ZipPath, $ZipName)
         } catch {
             Write-Error("Error creating ZipPath: `n $($_.Exception.Message)")
@@ -48,17 +62,17 @@ if ($OverwriteZip) {
     Remove-item -literalpath $ZipPath -force -ErrorAction SilentlyContinue
 }
 
-$AllFiles = @()
+$AllFiles = New-Object System.Collections.Generic.List[System.Object]
 
-@( "System.IO.Compression", "System.IO.Compression.FileSystem") | ForEach-Object { [void][Reflection.Assembly]::LoadWithPartialName($_) }
 try {
     $ZipArchive = [IO.Compression.ZipFile]::Open( $ZipPath, "Update" )
     foreach ($FolderPath in $FoldersPath) {
-        $FileList = (Get-ChildItem -LiteralPath @($FolderPath) -Filter $Filter -Exclude $Exclude -File -Recurse | Where-Object $FilterScript) #use the -File argument because empty folders can"t be stored
+        $FileList = (Get-ChildItem -LiteralPath $FolderPath -Filter $Filter -Exclude $Exclude -File -Recurse | Where-Object $FilterScript) #use the -File argument because empty folders can"t be stored
         foreach ($File in $FileList) {
+            if ($File.FullName.endsWith($ZipPath)) { continue }
             # get relative path and trim leading .\ from it 
             $File | Add-Member RelativePath ([System.IO.Path]::GetRelativePath($FolderPath, $File.FullName) -replace "^.\\")
-            $AllFiles += $File
+            $AllFiles.Add($File)
             try { # zip will store multiple copies of the exact same file - prevent this by checking if already archived.
                 if (!$OverwriteZip) {
                     $AlreadyArchivedFile = $ZipArchive.GetEntry($File.RelativePath)
@@ -74,7 +88,7 @@ try {
                 }
                 $ZipArchiveEntry = [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($ZipArchive, $File.FullName, $File.RelativePath, 'Optimal')
                 $ChangesCount++
-                Write-Verbose "Archived $($ZipPath)\$($ZipArchiveEntry.FullName)"
+                Write-Verbose "Archived \$($ZipArchiveEntry.FullName)"
             } catch { # single file failed - usually inaccessible or in use
                 Write-Warning  "$($File.FullName) could not be archived. `n $($_.Exception.Message)"
                 }
@@ -92,7 +106,10 @@ try {
             }
         }
     }
-    Write-Output "Archive was succesfully updated ($($ChangesCount) files changed)"
+    if ($Verbose) {
+        $ZipPath = Resolve-Path $ZipPath
+    }
+    Write-Output "$($ZipPath) was succesfully updated ($($ChangesCount) files changed)"
 } catch { # failure to open the zip file
     Write-Error $_.Exception
 } finally { # always close the zip file so it can be read later
