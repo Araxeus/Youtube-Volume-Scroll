@@ -62,6 +62,8 @@
 
 ## Known Issues
 
+* To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
+
 * If you experience embedded videos in incognito mode not saving volume:<br />
   disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155840831-d3cb8fa8-4d17-457a-944e-638a813600d7.png))
 
