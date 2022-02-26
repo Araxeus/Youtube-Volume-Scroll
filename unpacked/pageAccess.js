@@ -14,7 +14,12 @@ window.addEventListener('message', event => {
     }
 }, false);
 
-let volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
+let volumeCookie;
+try {
+    volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
+} catch {
+    printIncognitoError();
+}
 
 let hudFadeTimeout;
 
@@ -110,14 +115,22 @@ function saveNativeVolume(newVolume) {
     })
     const timeNow = Date.now();
 
-    window.localStorage.setItem('yt-player-volume', JSON.stringify({
-        data: data,
-        expiration: timeNow + oneMonth,
-        creation: timeNow
-    }));
+    try {
+        window.localStorage.setItem('yt-player-volume', JSON.stringify({
+            data: data,
+            expiration: timeNow + oneMonth,
+            creation: timeNow
+        }));
+    
+        window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
+            data: data,
+            creation: timeNow
+        }));
+    } catch {
+        printIncognitoError();
+    }
+}
 
-    window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
-        data: data,
-        creation: timeNow
-    }));
+function printIncognitoError() {
+    console.error("Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png");
 }

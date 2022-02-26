@@ -1,11 +1,11 @@
 .header {
   text-align: center;
-  color: #AE181D;
+  color: #ae181d;
   font-size: 15px;
 }
 
 .range-slider {
-  --primary-color: #AE181D;
+  --primary-color: #ae181d;
 
   --value-offset-y: var(--ticks-gap);
   --value-active-color: white;
@@ -24,21 +24,16 @@
 
   --thumb-size: 22px;
   --thumb-color: white;
-  --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset,
-    0 0 0 99px var(--thumb-color) inset;
+  --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px var(--thumb-color) inset;
 
-  --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset
-      var(--thumb-color),
+  --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset var(--thumb-color),
     0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
 
   --thumb-shadow-hover: var(--thumb-shadow);
 
   --ticks-thickness: 1px;
   --ticks-height: 5px;
-  --ticks-gap: var(
-    --ticks-height,
-    0
-  ); // vertical space between the ticks and the progress bar
+  --ticks-gap: var(--ticks-height, 0); // vertical space between the ticks and the progress bar
   --ticks-color: silver;
 
   // ⚠️ BELOW VARIABLES SHOULD NOT BE CHANGED
@@ -52,24 +47,15 @@
   ); // manipulate the number of steps if too many ticks exist, so there would only be 2
   --tickInterval: 100/ ((var(--max) - var(--min)) / var(--step)) * var(--tickEvery, 1);
   --tickIntervalPerc: calc(
-    (100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) *
-      var(--tickEvery, 1)
+    (100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) * var(--tickEvery, 1)
   );
 
-  --value-a: Clamp(
-    var(--min),
-    var(--value, 0),
-    var(--max)
-  ); // default value ("--value" is used in single-range markup)
+  --value-a: Clamp(var(--min), var(--value, 0), var(--max)); // default value ("--value" is used in single-range markup)
   --value-b: var(--value, 0); // default value
   --text-value-a: var(--text-value, "");
 
-  --completed-a: calc(
-    (var(--value-a) - var(--min)) / (var(--max) - var(--min)) * 100
-  );
-  --completed-b: calc(
-    (var(--value-b) - var(--min)) / (var(--max) - var(--min)) * 100
-  );
+  --completed-a: calc((var(--value-a) - var(--min)) / (var(--max) - var(--min)) * 100);
+  --completed-b: calc((var(--value-b) - var(--min)) / (var(--max) - var(--min)) * 100);
   --ca: Min(var(--completed-a), var(--completed-b));
   --cb: Max(var(--completed-a), var(--completed-b));
 
@@ -78,11 +64,7 @@
   // "calc" is used to inflat the outcome into a huge number, to get rid of any value between -1 & 1
   // if absolute diff of both completed % is above "5" (%)
   // ".001" bumps the value just a bit, to avoid a scenario where calc resulted in "0" (then clamp will also be "0")
-  --thumbs-too-close: Clamp(
-    -1,
-    1000 * (Min(1, Max(var(--cb) - var(--ca) - 5, -1)) + 0.001),
-    1
-  );
+  --thumbs-too-close: Clamp(-1, 1000 * (Min(1, Max(var(--cb) - var(--ca) - 5, -1)) + 0.001), 1);
   --thumb-close-to-min: Min(1, Max(var(--ca) - 2, 0)); // 2% threshold
   --thumb-close-to-max: Min(1, Max(98 - var(--cb), 0)); // 2% threshold
 
@@ -102,16 +84,9 @@
   display: inline-block;
   height: Max(var(--track-height), var(--thumb-size));
   // margin: calc((var(--thumb-size) - var(--track-height)) * -.25) var(--thumb-size) 0;
-  background: linear-gradient(
-      to right,
-      var(--ticks-color) var(--ticks-thickness),
-      transparent 1px
-    )
-    repeat-x;
+  background: linear-gradient(to right, var(--ticks-color) var(--ticks-thickness), transparent 1px) repeat-x;
   background-size: var(--tickIntervalPerc) var(--ticks-height);
-  background-position-x: calc(
-    var(--thumb-size) / 2 - var(--ticks-thickness) / 2
-  );
+  background-position-x: calc(var(--thumb-size) / 2 - var(--ticks-thickness) / 2);
   background-position-y: var(--flip-y, bottom);
 
   padding-bottom: var(--flip-y, var(--ticks-gap));
@@ -135,10 +110,7 @@
     bottom: var(--flip-y, -2.5ch);
     top: calc(-2.5ch * var(--flip-y));
     opacity: Clamp(0, var(--at-edge), var(--min-max-opacity));
-    transform: translateX(
-        calc(var(--min-max-x-offset) * var(--before, -1) * -1)
-      )
-      scale(var(--at-edge));
+    transform: translateX(calc(var(--min-max-x-offset) * var(--before, -1) * -1)) scale(var(--at-edge));
     pointer-events: none;
   }
 
@@ -183,10 +155,7 @@
     position: absolute;
     left: var(--start-end);
     right: var(--start-end);
-    top: calc(
-      var(--ticks-gap) * var(--flip-y, 0) + var(--thumb-size) / 2 -
-        var(--track-height) / 2
-    );
+    top: calc(var(--ticks-gap) * var(--flip-y, 0) + var(--thumb-size) / 2 - var(--track-height) / 2);
     //  transform: var(--flip-y, translateY(-50%) translateZ(0));
     height: calc(var(--track-height));
     background: var(--progress-background, #eee);
@@ -232,10 +201,7 @@
     margin: 0;
     position: absolute;
     left: 0;
-    top: calc(
-      50% - Max(var(--track-height), var(--thumb-size)) / 2 +
-        calc(var(--ticks-gap) / 2 * var(--flip-y, -1))
-    );
+    top: calc(50% - Max(var(--track-height), var(--thumb-size)) / 2 + calc(var(--ticks-gap) / 2 * var(--flip-y, -1)));
     cursor: -webkit-grab;
     cursor: grab;
     outline: none;
@@ -306,9 +272,7 @@
     & + output {
       --flip: -1;
       --x-offset: calc(var(--completed-b) * -1%);
-      --pos: calc(
-        ((var(--value) - var(--min)) / (var(--max) - var(--min))) * 100%
-      );
+      --pos: calc(((var(--value) - var(--min)) / (var(--max) - var(--min))) * 100%);
 
       pointer-events: none;
       position: absolute;
@@ -319,10 +283,7 @@
       left: var(--pos);
       transform: translate(
         var(--x-offset),
-        calc(
-          150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) *
-            var(--flip)
-        )
+        calc(150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) * var(--flip))
       );
       transition: all 0.12s ease-out, left 0s;
 

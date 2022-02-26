@@ -16,7 +16,7 @@
 ### 🏠 [Homepage](https://github.com/Araxeus/Youtube-Volume-Scroll#welcome-to-youtube-volume-scroll-)
 
  <a href="https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk" target="_blank">
-    <img alt="Chromestore" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
+    <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
   </a>
 
 ### Features
@@ -35,12 +35,18 @@
 
 ## Usage
 
-1. Install from [Chromestore](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
+1. Install from the [Chrome Web Store](https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk) or as unpacked extension
 2. Use Mousewheel on the video player on [youtube.com](youtube.com) or [music.youtube.com](music.youtube.com)
 
-## Install without chromestore instructions:
+## Standalone install (unpacked extension)
 
-Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases) and load as unpacked extension in your chromium browser
+* Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases), 
+  > or clone the repo, optionally install [sass](https://sass-lang.com/install) and build yourself using either:
+  > * `zip_release.ps1` - need to [have powershell 7+ installed](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+  > * `zip_release_linux-mac.sh` - if you are on mac |OR| linux and have [`zip`](https://linux.die.net/man/1/zip) installed via your package manager
+  > * if you don't care about the extra 10kb you can instead just download the [unpacked](unpacked) folder
+* Extract the files to a folder
+* Load that folder as an unpacked extension in your chromium browser
 
  <details>
 <summary><b>Chrome Example</b></summary>
@@ -53,6 +59,10 @@ Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/r
 
 ![EdgeUnpacked](assets/EdgeUnpacked.png)
 </details>
+
+## Known Issues
+
+* If you experience embedded videos in incognito mode not saving volume, disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155840831-d3cb8fa8-4d17-457a-944e-638a813600d7.png))
 
 ## Author
 

@@ -81,29 +81,33 @@ function sendSteps(steps) {
 function setupIncognito() {
     chrome.storage.sync.get('savedVolume', data => {
         if (data?.savedVolume !== undefined) {
-            // indicate to pageAccess that we are in incognito
-            window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
-                incognito: true,
-                savedVolume: data.savedVolume
-            }));
-            if (!isMusic) {
-                // setup native youtube volume cookie
-                const cookieData = JSON.stringify({
-                    volume: data.savedVolume,
-                    muted: data.savedVolume <= 0
-                })
-                const timeNow = Date.now();
-
-                window.localStorage.setItem('yt-player-volume', JSON.stringify({
-                    data: cookieData,
-                    expiration: timeNow + oneMonth,
-                    creation: timeNow
+            try {
+                // indicate to pageAccess that we are in incognito
+                window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
+                    incognito: true,
+                    savedVolume: data.savedVolume
                 }));
+                if (!isMusic) {
+                    // setup native youtube volume cookie
+                    const cookieData = JSON.stringify({
+                        volume: data.savedVolume,
+                        muted: data.savedVolume <= 0
+                    })
+                    const timeNow = Date.now();
 
-                window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
-                    data: cookieData,
-                    creation: timeNow
-                }));
+                    window.localStorage.setItem('yt-player-volume', JSON.stringify({
+                        data: cookieData,
+                        expiration: timeNow + oneMonth,
+                        creation: timeNow
+                    }));
+
+                    window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
+                        data: cookieData,
+                        creation: timeNow
+                    }));
+                }
+            } catch {
+                console.error("Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png")
             }
         }
     });
