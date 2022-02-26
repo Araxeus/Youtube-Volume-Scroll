@@ -26,6 +26,12 @@ param (
     [boolean] $Verbose = $true
 )
 
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    Write-Warning "`n This program requires Powershell 7+,`n Current Powershell version is: '$($PSVersionTable.PSVersion)`n Proccess will now exit"
+    cmd /c "pause"
+    Exit
+}
+
 if ($Verbose) {
     $VerbosePreference = "Continue"
 } else {
@@ -37,7 +43,7 @@ if ($ScssPaths.Length -gt 0) {
     try { # transform scss to css
         sass --update $ScssPaths
     } catch {
-        Write-Error  "Error when calling sass: `n $($_.Exception.Message)" 
+        Write-Error  "`n Error when calling sass:`n $($_.Exception.Message)" 
     }
 }
 
@@ -50,7 +56,7 @@ if ($ZipNameFromJson -and !$ZipPath.EndsWith('.zip')) {
             [System.IO.Directory]::CreateDirectory($ZipPath) | Out-Null
             $ZipPath = [IO.Path]::Combine($ZipPath, $ZipName)
         } catch {
-            Write-Error("Error creating ZipPath: `n $($_.Exception.Message)")
+            Write-Error("`n Error creating ZipPath:`n $($_.Exception.Message)")
             $ZipPath = $ZipName
         }
     } else {
@@ -90,7 +96,7 @@ try {
                 $ChangesCount++
                 Write-Verbose "Archived \$($ZipArchiveEntry.FullName)"
             } catch { # single file failed - usually inaccessible or in use
-                Write-Warning  "$($File.FullName) could not be archived. `n $($_.Exception.Message)"
+                Write-Warning  "`n $($File.FullName) could not be archived.`n $($_.Exception.Message)"
                 }
             }
     }
