@@ -3,7 +3,9 @@
 param (
     # The following paths can be relative or absolute:
     [string[]] $FoldersPath = @("unpacked"), # path to folder/s containing the files to be archived
-    [string] $ZipPath = "Youtube-Volume-Scroll.zip", # path to zipfile (will be created if it doesn't exist)
+    [string] $ZipPath = "", # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
+    # $name(replace space with `-`)_v$version
+    [string] $ZipNameFromJson = "unpacked\manifest.json", # set this to an empty string to disable this feature
     [string] $Filter = "", # "*.*" to only include files that have a .extension
     [string[]] $Exclude = @("*.scss", "_*"), # filterScript has more options 
     [ScriptBlock] $FilterScript = { $_ }, # { ($_.FullName -notlike "*\node_modules\*") -and ($_.Name -notlike "_*") -and ($_.Name -notlike "*.scss")}, # ignore .scss and files that starts with _
@@ -11,7 +13,6 @@ param (
     [boolean] $Sync = $true, # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true)
     [string] $Verbose = "Continue", # set to "SilentlyContinue" to ignore verbose
     [boolean] $PauseOnDone = $true, # pause script when done to allow reading output
-    [string] $AddVersionFrom = "unpacked\manifest.json", # set empty string to not add a version
     [string] $ScssPaths = @("unpacked/popup") # update scss->css in the directories, leave empty to disable
 )
 
@@ -26,13 +27,20 @@ if ($ScssPaths.Length -gt 0) {
     }
 }
 
-if ($AddVersionFrom) {
-    try {
-        $jsonFile = Get-Content $AddVersionFrom
+if ($ZipNameFromJson -and ($ZipPath -notmatch '\.zip$')) {
+        $jsonFile = Get-Content $ZipNameFromJson
         $jsonObj = $jsonFile | ConvertFrom-Json
-        $ZipPath = $ZipPath.Replace('.zip', "_v$($jsonObj.version).zip")
-    } catch {
-        Write-Error("Error adding version: `n $($_.Exception.Message)")
+        $ZipName = "$($jsonObj.name.Replace(' ', '-'))_v$($jsonObj.version).zip"
+    if ($ZipPath) {
+        try {  
+            [system.io.directory]::CreateDirectory($ZipPath) | Out-Null
+            $ZipPath = [IO.Path]::Combine($ZipPath, $ZipName)
+        } catch {
+            Write-Error("Error creating ZipPath: `n $($_.Exception.Message)")
+            $ZipPath = $ZipName
+        }
+    } else {
+        $ZipPath = $ZipName
     }
 }
 
