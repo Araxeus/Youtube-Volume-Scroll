@@ -42,7 +42,7 @@
 
 * Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases), 
   > or clone the repo, optionally install [sass](https://sass-lang.com/install) and build yourself using either:
-  > * `.\zip.ps1` \ `zip_windows.bat` - need to [have powershell 7+ installed](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (from cmd `pwsh -f zip_release.ps1`)
+  > * `.\zip.ps1` \ `zip_windows.bat` - need to [have powershell 7+ installed](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (from cmd `pwsh -f zip_release.ps1 -d`)
   > * `zip_linux-mac.sh` - if you are on mac |OR| linux and have [`zip`](https://linux.die.net/man/1/zip) installed via your package manager
   > * if you don't care about the extra 10kb you can instead just download the [unpacked](unpacked) folder
 * Extract the files to a folder

@@ -1,37 +1,43 @@
 #!/usr/bin/env pwsh
+#Requires -Version 7
 
 #  Specifying no parameter will result in current working directory ($pwd) being archived into $pwd\$pwd.zip
 param (
     # The following paths can be relative or absolute:
     # path to folder/s containing the files to be archived
-    [Alias("i")][string[]] $FolderPaths = @($PWD),
+    [Alias("i","input","from")][string[]] $FolderPaths = @($PWD),
     # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
-    [Alias("u")][string] $ZipPath = "", # defaults to $PWD.zip
+    [Alias("u","output","to")][string] $ZipPath = "", # defaults to $PWD.zip
     # set $ZipPath to end with .zip or set this to an empty string to disable this feature
-    [Alias("j")][string] $ZipNameFromJson = "", # set to a json file containing name and version, output will be $name_v$version.zip
+    [Alias("j","json")][string] $ZipNameFromJson = "", # set to a json file containing name and version, output will be $name_v$version.zip
     # ie "*.*" to only include files that have a .extension
     [Alias("f")][string] $Filter = "",
     # filterScript has more options than eclude
     [Alias("e")][string[]] $Exclude = @(),
     # { ($_.FullName -notlike "*\node_modules\*") -and ($_.Name -notlike "*.scss")}, # ignore .scss and nodeModules folder
-    [Alias("fs")][ScriptBlock] $FilterScript = { $_ },
+    [Alias("fs","script")][ScriptBlock] $FilterScript = { $_ },
     # overwrite zip (if there is a zip with the same name, delete it creating a new one)
-    [Alias("o")][switch] $OverwriteZip,
+    [Alias("o","overwrite")][switch] $OverwriteZip,
     # keep sync between folder and zip (doesn"t do anything if OverwriteZip=true) - delete surplus files from zip
     [Alias("s")][switch] $Sync,
     # pause script when done to allow reading output
-    [Alias("p")][switch] $PauseOnDone,
+    [Alias("p","pause")][switch] $PauseOnDone,
     # update scss->css in the directories, leave empty to disable
     [Alias("scss")][string] $ScssPaths = @(),
     # verbose output
     [Alias("v")][switch] $Verbose,
-    # default settings for youtube-volume-scroll
-    [Alias("d")][switch] $Default = $true
+    # show all parameter and exit
+    [Alias("h")][switch] $Help,
+    # default settings for youtube-volume-scroll, applied by default if current folder = 'Youtube-Volume-Scroll'
+    [Alias("d")][switch] $Default = (Split-Path -Path $PWD -Leaf) -eq 'Youtube-Volume-Scroll'
 )
 
-if ($PSVersionTable.PSVersion.Major -lt 7) {
-    Write-Warning "`n This program requires Powershell 7+,`n Current Powershell version is: '$($PSVersionTable.PSVersion)`n Proccess will now exit"
-    cmd /c "pause"
+"`n"
+
+if ($Help) {
+    # $MyInvocation.MyCommand.Source -eq $PSCommandPath
+    "Available flags:`n" | Write-Host -ForegroundColor Yellow
+    (Get-Help $PSCommandPath).TrimStart($MyInvocation.MyCommand.Name+' ').replace('] [', '], [').split(', ') | ForEach-Object { "`t$($_)" } | Write-Host -ForegroundColor Cyan
     Exit
 }
 
@@ -124,12 +130,11 @@ try {
             }
         }
     }
-    
-    Write-Output "$(Resolve-Path $ZipPath) was succesfully updated ($($ChangesCount) files changed)"
 } catch { # failure to open the zip file
     Write-Error $_.Exception
 } finally { # always close the zip file so it can be read later
     $ZipArchive.Dispose() 
+    Write-Host "$(Resolve-Path $ZipPath) was succesfully updated ($($ChangesCount) files changed)" -ForegroundColor Green
 }
 
 if ($PauseOnDone) {
