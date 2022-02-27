@@ -5,11 +5,13 @@
 param (
     # The following paths can be relative or absolute:
     # path to folder/s containing the files to be archived
-    [Alias("i","input","from")][string[]] $FolderPaths = @($PWD),
+    [Alias("i","input","from")][string[]][ValidateScript({ Test-Path -LiteralPath $_ })] $FolderPaths = @($PWD),
     # path to zipfile / zipFolder if $ZipNameFromJson is specified (will be created if it doesn't exist)
-    [Alias("u","output","to")][string] $ZipPath = "", # defaults to $PWD.zip
+    [Alias("t","to","output")][string] $ZipPath = "", # defaults to $PWD.zip
     # set $ZipPath to end with .zip or set this to an empty string to disable this feature
-    [Alias("j","json")][string] $ZipNameFromJson = "", # set to a json file containing name and version, output will be $name_v$version.zip
+    [Alias("j","json")][string][ValidatePattern('.json$')] $ZipNameFromJson = "", # set to a json file containing name and version, output will be $name_v$version.zip
+    # update scss->css in the directories, leave empty to disable
+    [Alias("scss")][string[]][ValidateScript({ Test-Path -LiteralPath $_ })] $ScssPaths = @(),
     # ie "*.*" to only include files that have a .extension
     [Alias("f")][string] $Filter = "",
     # filterScript has more options than eclude
@@ -22,8 +24,6 @@ param (
     [Alias("s")][switch] $Sync,
     # pause script when done to allow reading output
     [Alias("p","pause")][switch] $PauseOnDone,
-    # update scss->css in the directories, leave empty to disable
-    [Alias("scss")][string] $ScssPaths = @(),
     # verbose output
     [Alias("v")][switch] $Verbose,
     # show all parameter and exit
