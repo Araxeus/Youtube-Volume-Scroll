@@ -42,7 +42,7 @@
 
 * Download [the latest release](https://github.com/Araxeus/Youtube-Volume-Scroll/releases), 
   > or clone the repo, optionally install [sass](https://sass-lang.com/install) and build yourself using either:
-  > * `.\zip.ps1` \ `zip_windows.bat` - need to [have powershell 7+ installed](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (from cmd `pwsh -f zip_release.ps1 -d`)
+  > * `.\zip.ps1` \ `zip_windows.bat` - need to [have powershell 7+ installed](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (from cmd `pwsh -f zip.ps1 -d`)
   > * `zip_linux-mac.sh` - if you are on mac |OR| linux and have [`zip`](https://linux.die.net/man/1/zip) installed via your package manager
   > * if you don't care about the extra 10kb you can instead just download the [unpacked](unpacked) folder
 * Extract the files to a folder
@@ -51,13 +51,13 @@
  <details>
 <summary><b>Chrome Example</b></summary>
 
-![ChromeUnpacked](assets/ChromeUnpacked.png)
+![ChromeUnpacked](external_assets/ChromeUnpacked.png)
 </details>
 
  <details>
   <summary><b>Edge Example</b></summary>
 
-![EdgeUnpacked](assets/EdgeUnpacked.png)
+![EdgeUnpacked](external_assets/EdgeUnpacked.png)
 </details>
 
 ## Known Issues
@@ -65,7 +65,8 @@
 * To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
 
 * If you experience embedded videos in incognito mode not saving volume:<br />
-  disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155840831-d3cb8fa8-4d17-457a-944e-638a813600d7.png))
+  disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155897465-08876dc9-48c2-4f7a-a95a-e39522e99f03.png))
+
 
 ## Author
 
