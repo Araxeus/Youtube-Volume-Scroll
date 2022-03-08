@@ -4,7 +4,7 @@
     <img alt="Version" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg" onerror='this.onerror=undefined; this.src="https://img.shields.io/badge/version-1.4.0-blue.svg?cacheSeconds=2592000"'/>
   </a>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+    <img alt="License: MIT" src="https://img.shields.io/github/license/Araxeus/Youtube-Volume-Scroll?color=yellow" />
   </a>
    <a href="https://github.com/Araxeus/Youtube-Volume-Scroll" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
@@ -17,6 +17,9 @@
 
  <a href="https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk" target="_blank">
     <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge" />
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk" target="_blank">
+    <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/users/agadcopafaojndinhloilcanpfpbonbk?style=for-the-badge&color=007d78" />
   </a>
 
 ### Features
