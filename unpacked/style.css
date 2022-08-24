@@ -1,6 +1,7 @@
 #volumeHud {
   z-index: 50;
   position: absolute;
+  pointer-events: none;
   user-select: none;
   font-size: xxx-large;
   padding: 10px;
