@@ -1,15 +1,18 @@
+const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
+if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
+
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 let isMusic = window.location.href.includes('music.youtube');
 
-if (chrome.extension.inIncognitoContext) {
+if (browserApi.extension.inIncognitoContext) {
     setupIncognito();
 }
 
 window.addEventListener('load', start, { once: true });
 
 // keep 'steps' in sync with extension popup
-chrome.storage.onChanged.addListener((changes, area) => {
+browserApi.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.steps?.newValue) {
         sendSteps(Number(changes.steps.newValue));
     }
@@ -54,7 +57,7 @@ function setup() {
 
     window.addEventListener('message', event => {
         if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.newVolume === 'number') {
-            saveVolume(event.data.newVolume)
+            saveVolume(event.data.newVolume);
         }
     })
 
@@ -63,10 +66,10 @@ function setup() {
 
 function loadPageAccess() {
     let pageAccess = document.createElement('script');
-    pageAccess.src = chrome.runtime.getURL('pageAccess.js');
+    pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        chrome.storage.sync.get('steps', data => {
+        browserApi.storage.sync.get('steps', data => {
             if (data.steps) sendSteps(Number(data.steps));
         });
     };
@@ -79,7 +82,7 @@ function sendSteps(steps) {
 }
 
 function setupIncognito() {
-    chrome.storage.sync.get('savedVolume', data => {
+    browserApi.storage.sync.get('savedVolume', data => {
         if (data?.savedVolume !== undefined) {
             try {
                 // indicate to pageAccess that we are in incognito
@@ -91,23 +94,23 @@ function setupIncognito() {
                     // setup native youtube volume cookie
                     const cookieData = JSON.stringify({
                         volume: data.savedVolume,
-                        muted: data.savedVolume <= 0
-                    })
+                        muted: data.savedVolume <= 0,
+                    });
                     const timeNow = Date.now();
 
                     window.localStorage.setItem('yt-player-volume', JSON.stringify({
                         data: cookieData,
                         expiration: timeNow + oneMonth,
-                        creation: timeNow
+                        creation: timeNow,
                     }));
 
                     window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
                         data: cookieData,
-                        creation: timeNow
+                        creation: timeNow,
                     }));
                 }
             } catch {
-                console.error("Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png")
+                console.error("Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png");
             }
         }
     });
@@ -121,7 +124,7 @@ function saveVolume(newVolume) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        chrome.storage.sync.set({ savedVolume: newVolume });
+        browserApi.storage.sync.set({ savedVolume: newVolume });
         saveTimeout = null;
-    }, 500)
+    }, 500);
 }

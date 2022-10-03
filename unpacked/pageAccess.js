@@ -40,14 +40,18 @@ setInterval(() => window._lact = Date.now(), 9e5);
     $('.html5-video-player')
 ).onwheel = event => {
     event.preventDefault();
-    // Event.deltaY < 0 means wheel-up
-    changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+    // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
+    if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+    // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
+    if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
 };
 
 function changeVolume(toIncrease, modifier) {
-    const newVolume = Math.round(toIncrease ?
-        Math.min(api.getVolume() + (steps * modifier), 100) :
-        Math.max(api.getVolume() - (steps * modifier), 0));
+    const newVolume = Math.round(
+        toIncrease
+        ? Math.min(api.getVolume() + (steps * modifier), 100)
+        : Math.max(api.getVolume() - (steps * modifier), 0)
+    );
 
     // Have to manually mute/unmute on youtube.com
     if (!isMusic && newVolume > 0 && api.isMuted()) {
@@ -90,7 +94,7 @@ function injectVolumeHud() {
     $(isMusic ?
         '#song-video' :
         '.html5-video-container'
-    ).insertAdjacentHTML('afterend', `<span id='volumeHud' ${isMusic ? "class='music'" : ''}></span>`)
+    ).insertAdjacentHTML('afterend', `<span id='volumeHud' ${isMusic ? "class='music'" : ''}></span>`);
 }
 
 function showVolume(volume) {
@@ -111,7 +115,7 @@ function showVolume(volume) {
 function saveNativeVolume(newVolume) {
     const data = JSON.stringify({
         volume: newVolume,
-        muted: newVolume <= 0
+        muted: newVolume <= 0,
     })
     const timeNow = Date.now();
 
@@ -119,12 +123,12 @@ function saveNativeVolume(newVolume) {
         window.localStorage.setItem('yt-player-volume', JSON.stringify({
             data: data,
             expiration: timeNow + oneMonth,
-            creation: timeNow
+            creation: timeNow,
         }));
     
         window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
             data: data,
-            creation: timeNow
+            creation: timeNow,
         }));
     } catch {
         printIncognitoError();
