@@ -1,4 +1,4 @@
-const browserApi = browser ?? chrome ?? null;
+const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
 if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
 
 const $ = document.querySelector.bind(document);
