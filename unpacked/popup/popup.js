@@ -5,7 +5,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('#input');
     input.oninput = updateOutput;
     input.onwheel = e => {
+        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
         if (e.deltaY !== 0) e.deltaY < 0 ? input.value++ : input.value--;
+        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
         if (e.deltaX !== 0) e.deltaX < 0 ? input.value-- : input.value++;
         updateOutput();
     }

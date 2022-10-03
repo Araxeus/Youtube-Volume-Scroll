@@ -40,7 +40,9 @@ setInterval(() => window._lact = Date.now(), 9e5);
     $('.html5-video-player')
 ).onwheel = event => {
     event.preventDefault();
+    // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
     if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+    // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
     if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
 };
 
