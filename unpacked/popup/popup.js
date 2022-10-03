@@ -2,10 +2,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('#input');
     input.oninput = updateOutput;
     input.onwheel = e => {
-        e.deltaY < 0 ? input.value++ : input.value--;
+        if (e.deltaY !== 0) e.deltaY < 0 ? input.value++ : input.value--;
+        if (e.deltaX !== 0) e.deltaX < 0 ? input.value-- : input.value++;
         updateOutput();
     }
-    chrome.storage.sync.get('steps', data => {
+    browser.storage.sync.get('steps', data => {
         if (data?.steps) {
             input.value = data.steps;
             setValue(input);
@@ -13,14 +14,14 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     window.onblur = () => {
-        chrome.storage.sync.set({ steps: input.value });
+        browser.storage.sync.set({ steps: input.value });
     };
 
     function updateOutput() {
         setValue(input);
         saveSteps(input.value);
     }
-}, { once: true, });
+}, { once: true });
 
 function setValue(node) {
     node.parentNode.style.setProperty('--value', node.value);
@@ -32,7 +33,7 @@ function saveSteps(steps) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        chrome.storage.sync.set({ steps: steps });
+        browser.storage.sync.set({ steps: steps });
         saveTimeout = null;
     }, 500)
 }
