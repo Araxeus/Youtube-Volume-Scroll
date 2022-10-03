@@ -1,3 +1,6 @@
+const browserApi = browser ?? chrome ?? null;
+if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
+
 window.addEventListener('DOMContentLoaded', () => {
     const input = document.querySelector('#input');
     input.oninput = updateOutput;
@@ -6,7 +9,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (e.deltaX !== 0) e.deltaX < 0 ? input.value-- : input.value++;
         updateOutput();
     }
-    browser.storage.sync.get('steps', data => {
+    browserApi.storage.sync.get('steps', data => {
         if (data?.steps) {
             input.value = data.steps;
             setValue(input);
@@ -14,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     window.onblur = () => {
-        browser.storage.sync.set({ steps: input.value });
+        browserApi.storage.sync.set({ steps: input.value });
     };
 
     function updateOutput() {
@@ -33,7 +36,7 @@ function saveSteps(steps) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        browser.storage.sync.set({ steps: steps });
+        browserApi.storage.sync.set({ steps: steps });
         saveTimeout = null;
     }, 500)
 }

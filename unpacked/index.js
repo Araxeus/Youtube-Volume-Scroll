@@ -1,15 +1,18 @@
+const browserApi = browser ?? chrome ?? null;
+if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
+
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 let isMusic = window.location.href.includes('music.youtube');
 
-if (browser.extension.inIncognitoContext) {
+if (browserApi.extension.inIncognitoContext) {
     setupIncognito();
 }
 
 window.addEventListener('load', start, { once: true });
 
 // keep 'steps' in sync with extension popup
-browser.storage.onChanged.addListener((changes, area) => {
+browserApi.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.steps?.newValue) {
         sendSteps(Number(changes.steps.newValue));
     }
@@ -63,10 +66,10 @@ function setup() {
 
 function loadPageAccess() {
     let pageAccess = document.createElement('script');
-    pageAccess.src = browser.runtime.getURL('pageAccess.js');
+    pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        browser.storage.sync.get('steps', data => {
+        browserApi.storage.sync.get('steps', data => {
             if (data.steps) sendSteps(Number(data.steps));
         });
     };
@@ -79,7 +82,7 @@ function sendSteps(steps) {
 }
 
 function setupIncognito() {
-    browser.storage.sync.get('savedVolume', data => {
+    browserApi.storage.sync.get('savedVolume', data => {
         if (data?.savedVolume !== undefined) {
             try {
                 // indicate to pageAccess that we are in incognito
@@ -121,7 +124,7 @@ function saveVolume(newVolume) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        browser.storage.sync.set({ savedVolume: newVolume });
+        browserApi.storage.sync.set({ savedVolume: newVolume });
         saveTimeout = null;
     }, 500);
 }
