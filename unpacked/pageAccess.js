@@ -37,7 +37,7 @@ setInterval(() => window._lact = Date.now(), 9e5);
 
 (isMusic ?
     $('#main-panel') :
-    $('.html5-video-player')
+    $('.html5-video-player#movie_player')
 ).onwheel = event => {
     event.preventDefault();
     // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
