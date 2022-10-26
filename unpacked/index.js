@@ -19,13 +19,13 @@ browserApi.storage.onChanged.addListener((changes, area) => {
 });
 
 function start() {
-    if ($('video')) {
+    if ($('#movie_player video')) {
         checkOverlay();
         return;
     }
 
     const documentObserver = new MutationObserver(() => {
-        if ($('video')) {
+        if ($('#movie_player video')) {
             documentObserver.disconnect();
             checkOverlay();
         }
