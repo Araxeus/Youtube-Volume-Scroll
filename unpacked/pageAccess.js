@@ -93,7 +93,7 @@ function injectVolumeHud() {
 
     $(isMusic ?
         '#song-video' :
-        '.html5-video-container'
+        '#movie_player .html5-video-container'
     ).insertAdjacentHTML('afterend', `<span id='volumeHud' ${isMusic ? "class='music'" : ''}></span>`);
 }
 
