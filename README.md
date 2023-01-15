@@ -1,6 +1,6 @@
 [link-chrome]: https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/youtube-volume-scroll- 'Version published on Mozilla Add-ons'
-[link-edge]: https://microsoftedge.microsoft.com/addons/detail/kigkklogdpgeomdollklnlfgglnkgenb- 'Version published on Edge Add-ons'
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/youtube-volume-scroll 'Version published on Mozilla Add-ons'
+[link-edge]: https://microsoftedge.microsoft.com/addons/detail/kigkklogdpgeomdollklnlfgglnkgenb 'Version published on Edge Add-ons'
 [link-releases]: https://github.com/Araxeus/Youtube-Volume-Scroll/releases/latest 'Latest release'
 
 <h1 <img width="45" align="left" src="https://github.com/Araxeus/Youtube-Volume-Scroll/raw/main/unpacked/icons/icon32x32.png" /> Youtube Volume Scroll </h1>
@@ -42,9 +42,9 @@
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk.svg?label=%20">][link-chrome] Chrome and other Chromium browsers
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk.svg?label=%20">][link-chrome] Microsoft Edge
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="48" alt="Chrome" valign="middle">][link-edge] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk.svg?label=%20">][link-edge] Microsoft Edge
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox] [<img valign="middle" src="https://img.shields.io/amo/v/youtube-volume-scroll-.svg?label=%20">][link-firefox] Manifest V3 only
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox] [<img valign="middle" src="https://img.shields.io/amo/v/youtube-volume-scroll.svg?label=%20">][link-firefox] Manifest V3 only
 
 [<img src="https://www.iconsdb.com/icons/preview/white/github-11-xxl.png" width="48" alt="Firefox" valign="middle">][link-releases] [<img valign="middle" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg?label=%20">][link-releases] Signed <kbd>.xpi</kbd> files
 
