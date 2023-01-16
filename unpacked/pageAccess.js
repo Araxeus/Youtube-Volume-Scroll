@@ -55,7 +55,6 @@ function changeVolume(toIncrease, modifier) {
 
     // Have to manually mute/unmute on youtube.com
     if (!isMusic && newVolume > 0 && api.isMuted()) {
-        //$('.ytp-mute-button').click();
         api.unMute();
     }
 

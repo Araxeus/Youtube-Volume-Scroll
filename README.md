@@ -10,7 +10,7 @@
 
 [<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="for Firefox" height="60px">][link-firefox] [<img src="https://user-images.githubusercontent.com/78568641/212470539-dd4d22a0-3af8-4fa7-9671-6df5b2e26a70.png" alt="for Firefox" height="60px">][link-edge] [<img src="https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/HRs9MPufa1J1h5glNhut.png" alt="for Chrome" height="60px">][link-chrome]
 
-> Chromium Extension that enable scrolling mousewheel to control volume  on Youtube and Youtube Music
+> Browser Extension that enable scrolling mousewheel to control volume  on Youtube and Youtube Music
 
 <p>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/releases" target="_blank">
