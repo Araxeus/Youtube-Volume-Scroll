@@ -12,7 +12,8 @@
     "firefox_manifest": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
-    "publish": "gh workflow run publish.yml"
+    "publish": "gh workflow run publish.yml",
+    "format": "remark . --output --frail"
   },
   "repository": {
     "type": "git",
@@ -25,14 +26,17 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
+    "web-ext": "^7.4.0",
+    "release-it": "^15.6.0",
     "@release-it/bumper": "^4.0.2",
     "cpy-cli": "^4.2.0",
     "dot-json": "^1.2.2",
-    "release-it": "^15.6.0",
-    "rimraf": "^4.0.6",
+    "rimraf": "^4.0.7",
     "sass": "^1.57.1",
-    "web-ext": "^7.4.0",
-    "x-var": "^0.0.1"
+    "x-var": "^0.0.1",
+    "remark-cli": "^11.0.0",
+    "remark-preset-lint-consistent": "^5.1.1",
+    "remark-preset-lint-recommended": "^6.1.2"
   },
   "overrides": {
     "addons-linter": "^5.26.0",
@@ -82,5 +86,15 @@
     "npm": {
       "publish": false
     }
+  },
+  "remarkConfig": {
+    "settings": {
+      "emphasis": "*",
+      "strong": "*"
+    },
+    "plugins": [
+      "remark-preset-lint-consistent",
+      "remark-preset-lint-recommended"
+    ]
   }
 }

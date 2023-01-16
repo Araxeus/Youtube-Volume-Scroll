@@ -1,13 +1,16 @@
-[link-chrome]: https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk 'Version published on Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/youtube-volume-scroll 'Version published on Mozilla Add-ons'
-[link-edge]: https://microsoftedge.microsoft.com/addons/detail/kigkklogdpgeomdollklnlfgglnkgenb 'Version published on Edge Add-ons'
-[link-releases]: https://github.com/Araxeus/Youtube-Volume-Scroll/releases/latest 'Latest release'
+[link-chrome]: https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk "Version published on Chrome Web Store"
+
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/youtube-volume-scroll "Version published on Mozilla Add-ons"
+
+[link-edge]: https://microsoftedge.microsoft.com/addons/detail/kigkklogdpgeomdollklnlfgglnkgenb "Version published on Edge Add-ons"
+
+[link-releases]: https://github.com/Araxeus/Youtube-Volume-Scroll/releases/latest "Latest release"
 
 <h1 <img width="45" align="left" src="https://github.com/Araxeus/Youtube-Volume-Scroll/raw/main/unpacked/icons/icon32x32.png" /> Youtube Volume Scroll </h1>
 
 [<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="for Firefox" height="60px">][link-firefox] [<img src="https://user-images.githubusercontent.com/78568641/212470539-dd4d22a0-3af8-4fa7-9671-6df5b2e26a70.png" alt="for Firefox" height="60px">][link-edge] [<img src="https://storage.googleapis.com/chrome-gcs-uploader.appspot.com/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/HRs9MPufa1J1h5glNhut.png" alt="for Chrome" height="60px">][link-chrome]
 
->  Chromium Extension that enable scrolling mousewheel to control volume  on Youtube and Youtube Music
+> Chromium Extension that enable scrolling mousewheel to control volume  on Youtube and Youtube Music
 
 <p>
   <a href="https://github.com/Araxeus/Youtube-Volume-Scroll/releases" target="_blank">
@@ -20,7 +23,6 @@
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
 </p>
- 
 
 ## Features
 
@@ -48,9 +50,8 @@
 
 [<img src="https://www.iconsdb.com/icons/preview/white/github-11-xxl.png" width="48" alt="Firefox" valign="middle">][link-releases] [<img valign="middle" src="https://img.shields.io/github/release/Araxeus/Youtube-Volume-Scroll.svg?label=%20">][link-releases] Signed <kbd>.xpi</kbd> files
 
-
-
 ## Build it yourself
+
 Requires [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
 
 ```sh
@@ -70,21 +71,20 @@ The resulting unsigned xpi/zip file will be in the `web-ext-artifacts` folder.
 
 ## Known Issues
 
-* To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
+*   To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
 
-* If you experience embedded videos in incognito mode not saving volume:<br />
-  disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155897465-08876dc9-48c2-4f7a-a95a-e39522e99f03.png))
-
+*   If you experience embedded videos in incognito mode not saving volume:<br />
+    disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155897465-08876dc9-48c2-4f7a-a95a-e39522e99f03.png))
 
 ## Author
 
 👤 **Araxeus**
 
-* Github: [@Araxeus](https://github.com/Araxeus)
+*   Github: [@Araxeus](https://github.com/Araxeus)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Araxeus/Youtube-Volume-Scroll/issues). 
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Araxeus/Youtube-Volume-Scroll/issues).
 
 ## Show your support
 
