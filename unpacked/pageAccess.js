@@ -49,8 +49,8 @@ setInterval(() => window._lact = Date.now(), 9e5);
 function changeVolume(toIncrease, modifier) {
     const newVolume = Math.round(
         toIncrease
-        ? Math.min(api.getVolume() + (steps * modifier), 100)
-        : Math.max(api.getVolume() - (steps * modifier), 0)
+            ? Math.min(api.getVolume() + (steps * modifier), 100)
+            : Math.max(api.getVolume() - (steps * modifier), 0)
     );
 
     // Have to manually mute/unmute on youtube.com
@@ -124,7 +124,7 @@ function saveNativeVolume(newVolume) {
             expiration: timeNow + oneMonth,
             creation: timeNow,
         }));
-    
+
         window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
             data: data,
             creation: timeNow,
