@@ -4,3 +4,4 @@ external_assets/uncompressed/
 *.xpi
 node_modules
 keys.json
+*.crx
