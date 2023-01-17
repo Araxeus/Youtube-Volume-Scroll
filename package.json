@@ -1,0 +1,100 @@
+{
+  "name": "youtube-volume-scroll",
+  "version": "1.6.1",
+  "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
+  "main": "index.js",
+  "scripts": {
+    "pack": "cpy . ../dist --cwd=unpacked",
+    "build": "npm run sas && npm run pack && npm run build:firefox && npm run build:chromium && rimraf dist",
+    "build:chromium": "npm run chromium_manifest && x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_chromium.zip\" && npm run firefox_manifest",
+    "build:firefox": "x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_firefox.xpi\"",
+    "chromium_manifest": "dot-json dist/manifest.json -d browser_specific_settings",
+    "firefox_manifest": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "sas": "sass --update unpacked/popup",
+    "release": "release-it",
+    "publish": "gh workflow run publish.yml",
+    "format": "remark . --output --frail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Araxeus/Youtube-Volume-Scroll.git"
+  },
+  "author": "Araxeus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Araxeus/Youtube-Volume-Scroll/issues"
+  },
+  "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
+  "devDependencies": {
+    "web-ext": "^7.4.0",
+    "release-it": "^15.6.0",
+    "@release-it/bumper": "^4.0.2",
+    "cpy-cli": "^4.2.0",
+    "dot-json": "^1.2.2",
+    "rimraf": "^4.0.7",
+    "sass": "^1.57.1",
+    "x-var": "^0.0.1",
+    "remark-cli": "^11.0.0",
+    "remark-preset-lint-consistent": "^5.1.1",
+    "remark-preset-lint-recommended": "^6.1.2"
+  },
+  "overrides": {
+    "addons-linter": "^5.26.0",
+    "sign-addon": "^5.2.0"
+  },
+  "webExt": {
+    "sourceDir": "dist",
+    "ignoreFiles": [
+      "./popup/*.scss",
+      "./popup/*.map"
+    ],
+    "run": {
+      "firefox": "nightly"
+    },
+    "lint": {
+      "pretty": true,
+      "firefoxPreview": [
+        "mv3"
+      ]
+    },
+    "build": {
+      "overwriteDest": true
+    }
+  },
+  "release-it": {
+    "plugins": {
+      "@release-it/bumper": {
+        "out": [
+          "package.json",
+          "dist/manifest.json"
+        ]
+      }
+    },
+    "hooks": {
+      "after:bump": "npm run build",
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+    },
+    "git": {
+      "requireBranch": "master",
+      "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
+    },
+    "github": {
+      "release": true,
+      "draft": true,
+      "web": true
+    },
+    "npm": {
+      "publish": false
+    }
+  },
+  "remarkConfig": {
+    "settings": {
+      "emphasis": "*",
+      "strong": "*"
+    },
+    "plugins": [
+      "remark-preset-lint-consistent",
+      "remark-preset-lint-recommended"
+    ]
+  }
+}

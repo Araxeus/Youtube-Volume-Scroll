@@ -1,3 +1,6 @@
 .vscode/*
 external_assets/uncompressed/
 *.zip
+*.xpi
+node_modules
+keys.json
