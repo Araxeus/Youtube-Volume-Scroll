@@ -2,9 +2,9 @@ const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
 if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
 
 const hudTypes = {
-    none: 0,
+    custom: 0,
     native: 1,
-    custom: 2
+    none: 2
 };
 
 let config = {
@@ -33,6 +33,7 @@ function init() {
         browserApi.storage.sync.set({ config });
     };
     setupStepsSlider();
+    setupHudRadio();
 }
 
 function setupHudRadio() {

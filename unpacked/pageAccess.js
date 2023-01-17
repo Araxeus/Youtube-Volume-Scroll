@@ -7,9 +7,9 @@
     const isMusic = window.location.href.includes('music.youtube');
 
     const hudTypes = {
-        none: 0,
+        custom: 0,
         native: 1,
-        custom: 2
+        none: 2
     };
 
     let config = {

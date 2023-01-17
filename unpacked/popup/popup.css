@@ -253,6 +253,52 @@
   font: var(--value-font);
 }
 
+.radio-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.radio-container label {
+  display: flex;
+  cursor: pointer;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  margin: 0.3em;
+}
+.radio-container label input {
+  position: absolute;
+  left: -9999px;
+}
+.radio-container label input:checked + span {
+  background-color: #f2dadb;
+}
+.radio-container label input:checked + span:before {
+  box-shadow: inset 0 0 0 0.4375em #ae181d;
+}
+.radio-container label span {
+  display: flex;
+  align-items: center;
+  padding: 0.375em 0.75em 0.375em 0.375em;
+  border-radius: 99em;
+  transition: 0.25s ease;
+}
+.radio-container label span:hover {
+  background-color: #f2dadb;
+}
+.radio-container label span:before {
+  display: flex;
+  flex-shrink: 0;
+  content: "";
+  background-color: #fff;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  margin-right: 0.375em;
+  transition: 0.25s ease;
+  box-shadow: inset 0 0 0 0.125em #ae181d;
+}
+
 body {
   display: grid;
   place-content: space-evenly;
