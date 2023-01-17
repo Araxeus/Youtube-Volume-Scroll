@@ -29,9 +29,10 @@
     "web-ext": "^7.4.0",
     "release-it": "^15.6.0",
     "@release-it/bumper": "^4.0.2",
+    "auto-changelog": "^2.4.0",
     "cpy-cli": "^4.2.0",
     "dot-json": "^1.2.2",
-    "rimraf": "^4.0.7",
+    "rimraf": "^4.1.0",
     "sass": "^1.57.1",
     "x-var": "^0.0.1",
     "remark-cli": "^11.0.0",
@@ -66,16 +67,19 @@
       "@release-it/bumper": {
         "out": [
           "package.json",
-          "dist/manifest.json"
+          "unpacked/manifest.json"
         ]
       }
     },
     "hooks": {
-      "after:bump": "npm run build",
+      "before:init": [
+        "npm run format",
+        "npm run build"
+      ],
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     },
     "git": {
-      "requireBranch": "master",
+      "requireBranch": "main",
       "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
     },
     "github": {
