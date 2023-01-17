@@ -1,3 +1,4 @@
+(() => {
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 
@@ -124,8 +125,8 @@ function injectVolumeHud() {
                     `<div id="volume-hud-native-wrapper" style="opacity: 0" class="ytp-bezel-text-wrapper"><div id="volume-hud-native" class="ytp-bezel-text"></div></div>`);
             }
             break;
-        default:
         case hudTypes.custom:
+        default:
             if (!$('#volume-hud')) {
                 hudContainer().insertAdjacentHTML('afterend',
                     `<span id="volume-hud" ${isMusic ? 'class="music"' : ''}></span>`);
@@ -143,7 +144,6 @@ function setupHudOnVolume() {
 
 function showVolume(volume) {
     let volumeHud = getVolumeHud();
-    console.log(volumeHud); // DELETE
     if (volumeHud === null) return;
 
     volumeHud.textContent = volume + '%';
@@ -168,8 +168,8 @@ function getHudTime() {
             return 0;
         case hudTypes.native:
             return 1e3;
-        default:
         case hudTypes.custom:
+        default:
             return 1.5e3;
     }
 }
@@ -210,3 +210,4 @@ function saveNativeVolume(newVolume) {
 function printIncognitoError() {
     console.error("Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png");
 }
+})();
