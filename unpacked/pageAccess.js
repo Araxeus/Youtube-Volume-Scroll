@@ -5,9 +5,16 @@ let api = $('#movie_player');
 
 const isMusic = window.location.href.includes('music.youtube');
 
+const hudTypes = {
+    none: 0,
+    native: 1,
+    custom: 2
+};
+
 const config = {
     steps: 1,
-}
+    hud: hudTypes.native // TODO switch default to custom and add option to switch to native/none
+};
 
 // set last active time to now every 15min (blocks "are you there?" popup)
 setInterval(() => window._lact = Date.now(), 9e5);
@@ -22,8 +29,11 @@ function init() {
 
     setupConfig();
     setupIncognito();
+    setupDomTweaks();
     setupOnWheel();
     injectVolumeHud();
+    setupHudOnVolume();
+    // visual tweaks
 }
 
 function setupConfig() {
@@ -78,52 +88,99 @@ function changeVolume(toIncrease, modifier) {
 
     api.setVolume(newVolume);
 
-    showVolume(newVolume);
-
     if (!isMusic) saveNativeVolume(newVolume);
 
     window.postMessage({ type: 'Youtube-Volume-Scroll', newVolume: newVolume }, '*');
 }
 
 function getVolumeHud() {
-    let volumeHud = $('#volume-hud');
+    const selector = config.hud === hudTypes.native ? '#volume-hud-native' : '#volume-hud';
+    let volumeHud = $(selector);
     if (volumeHud === null) {
         injectVolumeHud();
-        volumeHud = $('#volume-hud');
+        volumeHud = $(selector);
     }
     if (volumeHud === null) {
-        console.err('Cannot Create Youtube-Volume-Scroll HUD');
+        console.error('Cannot Create Youtube-Volume-Scroll HUD');
         return null;
     }
     return volumeHud;
 }
 
+
 function injectVolumeHud() {
-    if ($('#volume-hud')) return;
+    const hudContainer = () => $(
+        isMusic ?
+            '#song-video' :
+            '#movie_player .html5-video-container'
+    );
 
-    if (!isMusic) {
-        $('.ytp-cards-button-icon').style.display = 'none';
-        $('.ytp-chrome-top-buttons').style.display = 'none';
+    switch (config.hud) {
+        case hudTypes.none:
+            break;
+        case hudTypes.native:
+            if (!$('#volume-hud-native')) {
+                hudContainer().insertAdjacentHTML('afterend',
+                    `<div id="volume-hud-native-wrapper" style="opacity: 0" class="ytp-bezel-text-wrapper"><div id="volume-hud-native" class="ytp-bezel-text"></div></div>`);
+            }
+            break;
+        default:
+        case hudTypes.custom:
+            if (!$('#volume-hud')) {
+                hudContainer().insertAdjacentHTML('afterend',
+                    `<span id="volume-hud" ${isMusic ? 'class="music"' : ''}></span>`);
+            }
     }
+}
 
-    $(isMusic ?
-        '#song-video' :
-        '#movie_player .html5-video-container'
-    ).insertAdjacentHTML('afterend', `<span id='volume-hud' ${isMusic ? "class='music'" : ''}></span>`);
+function setupHudOnVolume() {
+    $("video").addEventListener('volumechange', () => {
+        if (config.hud !== hudTypes.none) {
+            showVolume(Math.round(api.getVolume()));
+        }
+    });
 }
 
 function showVolume(volume) {
     let volumeHud = getVolumeHud();
+    console.log(volumeHud); // DELETE
     if (volumeHud === null) return;
 
     volumeHud.textContent = volume + '%';
     volumeHud.style.opacity = 1;
+    if (config.hud === hudTypes.native) {
+        volumeHud.parentElement.style.opacity = 1;
+    }
 
     if (hudFadeTimeout) clearTimeout(hudFadeTimeout);
     hudFadeTimeout = setTimeout(() => {
         volumeHud.style.opacity = 0;
+        if (config.hud === hudTypes.native) {
+            volumeHud.parentElement.style.opacity = 0;
+        }
         hudFadeTimeout = null;
-    }, 1.5e3);
+    }, getHudTime());
+}
+
+function getHudTime() {
+    switch (config.hud) {
+        case hudTypes.none:
+            return 0;
+        case hudTypes.native:
+            return 1e3;
+        default:
+        case hudTypes.custom:
+            return 1.5e3;
+    }
+}
+
+function setupDomTweaks() {
+    if (!isMusic) {
+        $('.ytp-cards-button-icon').style.display = 'none';
+        $('.ytp-chrome-top-buttons').style.display = 'none';
+        // remove the real native volume hud
+        $('.ytp-bezel-text-wrapper').parentElement.remove();
+    }
 }
 
 // save the volume to a native cookies used by youtube.com

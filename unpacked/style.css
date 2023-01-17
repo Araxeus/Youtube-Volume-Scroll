@@ -19,3 +19,9 @@
   top: 5px;
   right: 5px;
 }
+
+#volume-hud-native {
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
