@@ -1,56 +1,74 @@
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 
-const api = $('#movie_player');
+let api = $('#movie_player');
 
 const isMusic = window.location.href.includes('music.youtube');
 
-let steps = 1;
-
-// listen for 'steps' change
-window.addEventListener('message', event => {
-    if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.steps === 'number') {
-        steps = event.data.steps;
-    }
-}, false);
-
-let volumeCookie;
-try {
-    volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
-} catch {
-    printIncognitoError();
-}
-
-let hudFadeTimeout;
-
-// incognito setup
-if (volumeCookie) {
-    volumeCookie = JSON.parse(volumeCookie);
-    if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
-        api.setVolume(volumeCookie.savedVolume);
-        if (!isMusic) saveNativeVolume(volumeCookie.savedVolume);
-    }
+const config = {
+    steps: 1,
 }
 
 // set last active time to now every 15min (blocks "are you there?" popup)
 setInterval(() => window._lact = Date.now(), 9e5);
 
-(isMusic ?
-    $('#main-panel') :
-    $('.html5-video-player#movie_player')
-).onwheel = event => {
-    event.preventDefault();
-    // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-    if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
-    // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-    if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
-};
+let hudFadeTimeout;
+
+init();
+
+function init() {
+    api ??= $('#movie_player');
+    if (!api) return setTimeout(init, 250);
+
+    setupConfig();
+    setupIncognito();
+    setupOnWheel();
+    injectVolumeHud();
+}
+
+function setupConfig() {
+    // listen for 'steps' change
+    window.addEventListener('message', event => {
+        if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.steps === 'number') {
+            config.steps = event.data.steps;
+        }
+    }, false);
+}
+
+function setupIncognito() {
+    let volumeCookie;
+    try {
+        volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
+    } catch {
+        printIncognitoError();
+    }
+    if (volumeCookie) {
+        volumeCookie = JSON.parse(volumeCookie);
+        if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
+            api.setVolume(volumeCookie.savedVolume);
+            if (!isMusic) saveNativeVolume(volumeCookie.savedVolume);
+        }
+    }
+}
+
+function setupOnWheel() {
+    (isMusic ?
+        $('#main-panel') :
+        $('.html5-video-player#movie_player')
+    ).onwheel = event => {
+        event.preventDefault();
+        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
+        if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
+        if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
+    };
+}
 
 function changeVolume(toIncrease, modifier) {
     const newVolume = Math.round(
         toIncrease
-            ? Math.min(api.getVolume() + (steps * modifier), 100)
-            : Math.max(api.getVolume() - (steps * modifier), 0)
+            ? Math.min(api.getVolume() + (config.steps * modifier), 100)
+            : Math.max(api.getVolume() - (config.steps * modifier), 0)
     );
 
     // Have to manually mute/unmute on youtube.com
@@ -67,13 +85,11 @@ function changeVolume(toIncrease, modifier) {
     window.postMessage({ type: 'Youtube-Volume-Scroll', newVolume: newVolume }, '*');
 }
 
-injectVolumeHud();
-
 function getVolumeHud() {
-    let volumeHud = $('#volumeHud');
+    let volumeHud = $('#volume-hud');
     if (volumeHud === null) {
         injectVolumeHud();
-        volumeHud = $('#volumeHud');
+        volumeHud = $('#volume-hud');
     }
     if (volumeHud === null) {
         console.err('Cannot Create Youtube-Volume-Scroll HUD');
@@ -83,7 +99,7 @@ function getVolumeHud() {
 }
 
 function injectVolumeHud() {
-    if ($('#volumeHud')) return;
+    if ($('#volume-hud')) return;
 
     if (!isMusic) {
         $('.ytp-cards-button-icon').style.display = 'none';
@@ -93,7 +109,7 @@ function injectVolumeHud() {
     $(isMusic ?
         '#song-video' :
         '#movie_player .html5-video-container'
-    ).insertAdjacentHTML('afterend', `<span id='volumeHud' ${isMusic ? "class='music'" : ''}></span>`);
+    ).insertAdjacentHTML('afterend', `<span id='volume-hud' ${isMusic ? "class='music'" : ''}></span>`);
 }
 
 function showVolume(volume) {
