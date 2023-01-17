@@ -58,6 +58,7 @@
   background-position-y: var(--flip-y, bottom);
   padding-bottom: var(--flip-y, var(--ticks-gap));
   padding-top: calc(var(--flip-y) * var(--ticks-gap));
+  margin-top: 13px;
   position: relative;
   z-index: 1;
 }
@@ -253,6 +254,10 @@
   font: var(--value-font);
 }
 
+h2.hud {
+  color: #ae181d;
+}
+
 .radio-container {
   display: flex;
   flex-wrap: wrap;
@@ -308,8 +313,8 @@ body {
 }
 @media screen and (max-width: 500px) {
   body {
-    padding-bottom: 2em;
-    gap: 8%;
+    padding-bottom: 1.2em;
+    gap: 1%;
   }
 }
 

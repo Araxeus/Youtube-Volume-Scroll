@@ -1,6 +1,8 @@
+$primary-color: #ae181d;
+$secondary-color: #ad0007;
 .header {
   text-align: center;
-  color: #ae181d;
+  color: $primary-color;
   font-size: 15px;
 }
 
@@ -91,6 +93,7 @@
 
   padding-bottom: var(--flip-y, var(--ticks-gap));
   padding-top: calc(var(--flip-y) * var(--ticks-gap));
+  margin-top: 13px;
 
   position: relative;
   z-index: 1;
@@ -296,7 +299,10 @@
 }
 /////////////////////////////////////////////////
 /// Radios
-$primary-color: #ae181d;
+h2.hud{
+  color: $primary-color;
+}
+
 .radio-container {
   display: flex;
   flex-wrap: wrap;
@@ -354,8 +360,8 @@ body {
   padding: 0;
 
   @media screen and (max-width: 500px) {
-    padding-bottom: 2em;
-    gap: 8%;
+    padding-bottom: 1.2em;
+    gap: 1%;
   }
 }
 
