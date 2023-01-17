@@ -11,10 +11,10 @@ if (browserApi.extension.inIncognitoContext) {
 
 window.addEventListener('load', start, { once: true });
 
-// keep 'steps' in sync with extension popup
+// keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync' && changes.steps?.newValue) {
-        sendSteps(Number(changes.steps.newValue));
+    if (area === 'sync' && changes.config?.newValue) {
+        sendConfig(changes.config.newValue);
     }
 });
 
@@ -39,12 +39,12 @@ function checkOverlay() {
     const overlay = $('.ytp-cued-thumbnail-overlay-image');
     const noOverlay = () => !overlay || !overlay.style.backgroundImage || overlay.parentNode.style.display === 'none';
     if (noOverlay()) {
-        setup();
+        init();
     } else {
         const overlayObserver = new MutationObserver(() => {
             if (noOverlay()) {
                 overlayObserver.disconnect();
-                setup();
+                init();
             }
         });
 
@@ -52,11 +52,11 @@ function checkOverlay() {
     }
 }
 
-function setup() {
+function init() {
     loadPageAccess();
 
     window.addEventListener('message', event => {
-        if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.newVolume === 'number') {
+        if (event.data.type === 'Youtube-Volume-Scroll-volume' && typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume);
         }
     })
@@ -69,16 +69,16 @@ function loadPageAccess() {
     pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        browserApi.storage.sync.get('steps', data => {
-            if (data.steps) sendSteps(Number(data.steps));
+        browserApi.storage.sync.get('config', data => {
+            if (data.config) sendConfig(data.config);
         });
     };
     (document.head || document.documentElement).appendChild(pageAccess);
 }
 
-function sendSteps(steps) {
-    //send updated 'steps' to pageAccess.js
-    window.postMessage({ type: 'Youtube-Volume-Scroll', steps }, '*');
+function sendConfig(config) {
+    //send updated config to pageAccess.js
+    window.postMessage({ type: 'Youtube-Volume-Scroll-config', config }, '*');
 }
 
 function setupIncognito() {

@@ -1,213 +1,212 @@
 (() => {
-const $ = document.querySelector.bind(document);
-const oneMonth = 2592e6;
+    const $ = document.querySelector.bind(document);
+    const oneMonth = 2592e6;
 
-let api = $('#movie_player');
+    let api = $('#movie_player');
 
-const isMusic = window.location.href.includes('music.youtube');
+    const isMusic = window.location.href.includes('music.youtube');
 
-const hudTypes = {
-    none: 0,
-    native: 1,
-    custom: 2
-};
-
-const config = {
-    steps: 1,
-    hud: hudTypes.native // TODO switch default to custom and add option to switch to native/none
-};
-
-// set last active time to now every 15min (blocks "are you there?" popup)
-setInterval(() => window._lact = Date.now(), 9e5);
-
-let hudFadeTimeout;
-
-init();
-
-function init() {
-    api ??= $('#movie_player');
-    if (!api) return setTimeout(init, 250);
-
-    setupConfig();
-    setupIncognito();
-    setupDomTweaks();
-    setupOnWheel();
-    injectVolumeHud();
-    setupHudOnVolume();
-    // visual tweaks
-}
-
-function setupConfig() {
-    // listen for 'steps' change
-    window.addEventListener('message', event => {
-        if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.steps === 'number') {
-            config.steps = event.data.steps;
-        }
-    }, false);
-}
-
-function setupIncognito() {
-    let volumeCookie;
-    try {
-        volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
-    } catch {
-        printIncognitoError();
-    }
-    if (volumeCookie) {
-        volumeCookie = JSON.parse(volumeCookie);
-        if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
-            api.setVolume(volumeCookie.savedVolume);
-            if (!isMusic) saveNativeVolume(volumeCookie.savedVolume);
-        }
-    }
-}
-
-function setupOnWheel() {
-    (isMusic ?
-        $('#main-panel') :
-        $('.html5-video-player#movie_player')
-    ).onwheel = event => {
-        event.preventDefault();
-        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-        if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
-        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-        if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
+    const hudTypes = {
+        none: 0,
+        native: 1,
+        custom: 2
     };
-}
 
-function changeVolume(toIncrease, modifier) {
-    const newVolume = Math.round(
-        toIncrease
-            ? Math.min(api.getVolume() + (config.steps * modifier), 100)
-            : Math.max(api.getVolume() - (config.steps * modifier), 0)
-    );
+    let config = {
+        steps: 1,
+        hud: hudTypes.custom
+    };
 
-    // Have to manually mute/unmute on youtube.com
-    if (!isMusic && newVolume > 0 && api.isMuted()) {
-        api.unMute();
-    }
+    // set last active time to now every 15min (blocks "are you there?" popup)
+    setInterval(() => window._lact = Date.now(), 9e5);
 
-    api.setVolume(newVolume);
+    let hudFadeTimeout;
 
-    if (!isMusic) saveNativeVolume(newVolume);
+    init();
 
-    window.postMessage({ type: 'Youtube-Volume-Scroll', newVolume: newVolume }, '*');
-}
+    function init() {
+        api ??= $('#movie_player');
+        if (!api) return setTimeout(init, 250);
 
-function getVolumeHud() {
-    const selector = config.hud === hudTypes.native ? '#volume-hud-native' : '#volume-hud';
-    let volumeHud = $(selector);
-    if (volumeHud === null) {
+        setupConfig();
+        setupIncognito();
+        setupDomTweaks();
+        setupOnWheel();
         injectVolumeHud();
-        volumeHud = $(selector);
+        setupHudOnVolume();
     }
-    if (volumeHud === null) {
-        console.error('Cannot Create Youtube-Volume-Scroll HUD');
-        return null;
-    }
-    return volumeHud;
-}
 
-
-function injectVolumeHud() {
-    const hudContainer = () => $(
-        isMusic ?
-            '#song-video' :
-            '#movie_player .html5-video-container'
-    );
-
-    switch (config.hud) {
-        case hudTypes.none:
-            break;
-        case hudTypes.native:
-            if (!$('#volume-hud-native')) {
-                hudContainer().insertAdjacentHTML('afterend',
-                    `<div id="volume-hud-native-wrapper" style="opacity: 0" class="ytp-bezel-text-wrapper"><div id="volume-hud-native" class="ytp-bezel-text"></div></div>`);
+    function setupConfig() {
+        // listen for 'steps' change
+        window.addEventListener('message', event => {
+            if (event.data.type === 'Youtube-Volume-Scroll-config' && typeof event.data.config === 'object') {
+                config = event.data.config;
             }
-            break;
-        case hudTypes.custom:
-        default:
-            if (!$('#volume-hud')) {
-                hudContainer().insertAdjacentHTML('afterend',
-                    `<span id="volume-hud" ${isMusic ? 'class="music"' : ''}></span>`);
-            }
+        }, false);
     }
-}
 
-function setupHudOnVolume() {
-    $("video").addEventListener('volumechange', () => {
-        if (config.hud !== hudTypes.none) {
-            showVolume(Math.round(api.getVolume()));
+    function setupIncognito() {
+        let volumeCookie;
+        try {
+            volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
+        } catch {
+            printIncognitoError();
         }
-    });
-}
-
-function showVolume(volume) {
-    let volumeHud = getVolumeHud();
-    if (volumeHud === null) return;
-
-    volumeHud.textContent = volume + '%';
-    volumeHud.style.opacity = 1;
-    if (config.hud === hudTypes.native) {
-        volumeHud.parentElement.style.opacity = 1;
+        if (volumeCookie) {
+            volumeCookie = JSON.parse(volumeCookie);
+            if (volumeCookie.incognito === true && volumeCookie.savedVolume !== api.getVolume()) {
+                api.setVolume(volumeCookie.savedVolume);
+                if (!isMusic) saveNativeVolume(volumeCookie.savedVolume);
+            }
+        }
     }
 
-    if (hudFadeTimeout) clearTimeout(hudFadeTimeout);
-    hudFadeTimeout = setTimeout(() => {
-        volumeHud.style.opacity = 0;
+    function setupOnWheel() {
+        (isMusic ?
+            $('#main-panel') :
+            $('.html5-video-player#movie_player')
+        ).onwheel = event => {
+            event.preventDefault();
+            // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
+            if (event.deltaY !== 0) changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+            // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
+            if (event.deltaX !== 0) changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
+        };
+    }
+
+    function changeVolume(toIncrease, modifier) {
+        const newVolume = Math.round(
+            toIncrease
+                ? Math.min(api.getVolume() + (config.steps * modifier), 100)
+                : Math.max(api.getVolume() - (config.steps * modifier), 0)
+        );
+
+        // Have to manually mute/unmute on youtube.com
+        if (!isMusic && newVolume > 0 && api.isMuted()) {
+            api.unMute();
+        }
+
+        api.setVolume(newVolume);
+
+        if (!isMusic) saveNativeVolume(newVolume);
+
+        window.postMessage({ type: 'Youtube-Volume-Scroll-volume', newVolume: newVolume }, '*');
+    }
+
+    function getVolumeHud() {
+        const selector = config.hud === hudTypes.native ? '#volume-hud-native' : '#volume-hud';
+        let volumeHud = $(selector);
+        if (volumeHud === null) {
+            injectVolumeHud();
+            volumeHud = $(selector);
+        }
+        if (volumeHud === null) {
+            console.error('Cannot Create Youtube-Volume-Scroll HUD');
+            return null;
+        }
+        return volumeHud;
+    }
+
+
+    function injectVolumeHud() {
+        const hudContainer = () => $(
+            isMusic ?
+                '#song-video' :
+                '#movie_player .html5-video-container'
+        );
+
+        switch (config.hud) {
+            case hudTypes.none:
+                break;
+            case hudTypes.native:
+                if (!$('#volume-hud-native')) {
+                    hudContainer().insertAdjacentHTML('afterend',
+                        `<div id="volume-hud-native-wrapper" style="opacity: 0" class="ytp-bezel-text-wrapper"><div id="volume-hud-native" class="ytp-bezel-text"></div></div>`);
+                }
+                break;
+            case hudTypes.custom:
+            default:
+                if (!$('#volume-hud')) {
+                    hudContainer().insertAdjacentHTML('afterend',
+                        `<span id="volume-hud" ${isMusic ? 'class="music"' : ''}></span>`);
+                }
+        }
+    }
+
+    function setupHudOnVolume() {
+        $("video").addEventListener('volumechange', () => {
+            if (config.hud !== hudTypes.none) {
+                showVolume(Math.round(api.getVolume()));
+            }
+        });
+    }
+
+    function showVolume(volume) {
+        let volumeHud = getVolumeHud();
+        if (volumeHud === null) return;
+
+        volumeHud.textContent = volume + '%';
+        volumeHud.style.opacity = 1;
         if (config.hud === hudTypes.native) {
-            volumeHud.parentElement.style.opacity = 0;
+            volumeHud.parentElement.style.opacity = 1;
         }
-        hudFadeTimeout = null;
-    }, getHudTime());
-}
 
-function getHudTime() {
-    switch (config.hud) {
-        case hudTypes.none:
-            return 0;
-        case hudTypes.native:
-            return 1e3;
-        case hudTypes.custom:
-        default:
-            return 1.5e3;
+        if (hudFadeTimeout) clearTimeout(hudFadeTimeout);
+        hudFadeTimeout = setTimeout(() => {
+            volumeHud.style.opacity = 0;
+            if (config.hud === hudTypes.native) {
+                volumeHud.parentElement.style.opacity = 0;
+            }
+            hudFadeTimeout = null;
+        }, getHudTime());
     }
-}
 
-function setupDomTweaks() {
-    if (!isMusic) {
-        $('.ytp-cards-button-icon').style.display = 'none';
-        $('.ytp-chrome-top-buttons').style.display = 'none';
-        // remove the real native volume hud
-        $('.ytp-bezel-text-wrapper').parentElement.remove();
+    function getHudTime() {
+        switch (config.hud) {
+            case hudTypes.none:
+                return 0;
+            case hudTypes.native:
+                return 1e3;
+            case hudTypes.custom:
+            default:
+                return 1.5e3;
+        }
     }
-}
 
-// save the volume to a native cookies used by youtube.com
-function saveNativeVolume(newVolume) {
-    const data = JSON.stringify({
-        volume: newVolume,
-        muted: newVolume <= 0,
-    })
-    const timeNow = Date.now();
-
-    try {
-        window.localStorage.setItem('yt-player-volume', JSON.stringify({
-            data: data,
-            expiration: timeNow + oneMonth,
-            creation: timeNow,
-        }));
-
-        window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
-            data: data,
-            creation: timeNow,
-        }));
-    } catch {
-        printIncognitoError();
+    function setupDomTweaks() {
+        if (!isMusic) {
+            $('.ytp-cards-button-icon').style.display = 'none';
+            $('.ytp-chrome-top-buttons').style.display = 'none';
+            // remove the real native volume hud
+            $('.ytp-bezel-text-wrapper').parentElement.remove();
+        }
     }
-}
 
-function printIncognitoError() {
-    console.error("Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png");
-}
+    // save the volume to a native cookies used by youtube.com
+    function saveNativeVolume(newVolume) {
+        const data = JSON.stringify({
+            volume: newVolume,
+            muted: newVolume <= 0,
+        })
+        const timeNow = Date.now();
+
+        try {
+            window.localStorage.setItem('yt-player-volume', JSON.stringify({
+                data: data,
+                expiration: timeNow + oneMonth,
+                creation: timeNow,
+            }));
+
+            window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
+                data: data,
+                creation: timeNow,
+            }));
+        } catch {
+            printIncognitoError();
+        }
+    }
+
+    function printIncognitoError() {
+        console.error("Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png");
+    }
 })();
