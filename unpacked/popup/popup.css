@@ -256,6 +256,8 @@
 
 h2.hud {
   color: #ae181d;
+  margin-block-end: 5px;
+  margin-block-start: 20px;
 }
 
 .radio-container {
@@ -282,6 +284,7 @@ h2.hud {
   box-shadow: inset 0 0 0 0.4375em #ae181d;
 }
 .radio-container label span {
+  font-size: large;
   display: flex;
   align-items: center;
   padding: 0.375em 0.75em 0.375em 0.375em;

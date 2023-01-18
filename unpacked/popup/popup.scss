@@ -301,6 +301,8 @@ $secondary-color: #ad0007;
 /// Radios
 h2.hud{
   color: $primary-color;
+  margin-block-end: 5px;
+  margin-block-start: 20px;
 }
 
 .radio-container {
@@ -325,6 +327,7 @@ h2.hud{
       }
     }
     span {
+      font-size: large;
       display: flex;
       align-items: center;
       padding: 0.375em 0.75em 0.375em 0.375em;
