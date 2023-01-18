@@ -32,7 +32,7 @@
     "auto-changelog": "^2.4.0",
     "cpy-cli": "^4.2.0",
     "dot-json": "^1.2.2",
-    "rimraf": "^4.1.0",
+    "rimraf": "^4.1.1",
     "sass": "^1.57.1",
     "x-var": "^0.0.1",
     "remark-cli": "^11.0.0",
