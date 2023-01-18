@@ -116,25 +116,42 @@ function injectVolumeHud() {
     );
 
     switch (config.hud) {
-        case hudTypes.none:
-            break;
-        case hudTypes.native:
-            if (!$('#volume-hud-native')) {
-                hudContainer().insertAdjacentHTML('afterend',
-                    `<div id="volume-hud-native-wrapper" style="opacity: 0" class="ytp-bezel-text-wrapper"><div id="volume-hud-native" class="ytp-bezel-text"></div></div>`);
-            }
-            break;
-        case hudTypes.custom:
-        default:
-            if (!$('#volume-hud')) {
-                hudContainer().insertAdjacentHTML('afterend',
-                    `<span id="volume-hud" ${isMusic ? 'class="music"' : ''}></span>`);
-            }
+    case hudTypes.none:
+        break;
+    case hudTypes.native:
+        if (!$('#volume-hud-native')) {
+            createNative();
+        }
+        break;
+    case hudTypes.custom:
+    default:
+        if (!$('#volume-hud')) {
+            createCustom();
+        }
+    }
+
+    function createNative() {
+        const volumeHudNativeWrapper = document.createElement('div');
+        volumeHudNativeWrapper.id = 'volume-hud-native-wrapper';
+        volumeHudNativeWrapper.style.opacity = 0;
+        volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper');
+        const volumeHudNative = document.createElement('div');
+        volumeHudNative.id = 'volume-hud-native';
+        volumeHudNative.classList.add('ytp-bezel-text');
+        volumeHudNativeWrapper.appendChild(volumeHudNative);
+        hudContainer().insertAdjacentElement('afterend', volumeHudNativeWrapper);
+    }
+
+    function createCustom() {
+        const volumeHud = document.createElement('span');
+        volumeHud.id = 'volume-hud';
+        if (isMusic) volumeHud.classList.add('music');
+        hudContainer().insertAdjacentElement('afterend', volumeHud);
     }
 }
 
 function setupHudOnVolume() {
-    $("video").addEventListener('volumechange', () => {
+    $('video').addEventListener('volumechange', () => {
         if (config.hud !== hudTypes.none) {
             showVolume(Math.round(api.getVolume()));
         }
@@ -163,13 +180,13 @@ function showVolume(volume) {
 
 function getHudTime() {
     switch (config.hud) {
-        case hudTypes.none:
-            return 0;
-        case hudTypes.native:
-            return 1e3;
-        case hudTypes.custom:
-        default:
-            return 1.5e3;
+    case hudTypes.none:
+        return 0;
+    case hudTypes.native:
+        return 1e3;
+    case hudTypes.custom:
+    default:
+        return 1.5e3;
     }
 }
 
@@ -187,7 +204,7 @@ function saveNativeVolume(newVolume) {
     const data = JSON.stringify({
         volume: newVolume,
         muted: newVolume <= 0,
-    })
+    });
     const timeNow = Date.now();
 
     try {
@@ -207,6 +224,6 @@ function saveNativeVolume(newVolume) {
 }
 
 function printIncognitoError() {
-    console.error("Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png");
+    console.error('Youtube-Volume-Scroll could not save volume to cookies, if you are in incognito mode see https://i.stack.imgur.com/mEidB.png');
 }
 

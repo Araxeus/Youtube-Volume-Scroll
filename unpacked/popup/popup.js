@@ -10,7 +10,7 @@ const hudTypes = {
 let config = {
     steps: 1,
     hud: hudTypes.native,
-}
+};
 
 let saveTimeout;
 function saveConfig() {
@@ -19,11 +19,11 @@ function saveConfig() {
     saveTimeout = setTimeout(() => {
         browserApi.storage.sync.set({ config });
         saveTimeout = null;
-    }, 500)
+    }, 500);
 }
 
 browserApi.storage.sync.get('config', data => {
-    res = data.config;
+    const res = data.config;
     if (res) config = {...config, ...res}; // merge with default config
     window.addEventListener('DOMContentLoaded', init, { once: true });
 });
@@ -42,7 +42,7 @@ function setupHudRadio() {
         radio.onchange = () => {
             config.hud = parseInt(radio.value);
             saveConfig();
-        }
+        };
     });
     radios[config.hud].checked = true;
 }
@@ -56,7 +56,7 @@ function setupStepsSlider() {
         // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
         if (e.deltaX !== 0) e.deltaX < 0 ? slider.value-- : slider.value++;
         updateOutput();
-    }
+    };
 
     slider.value = config.steps;
     setValue(slider);

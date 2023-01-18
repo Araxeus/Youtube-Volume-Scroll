@@ -29,7 +29,7 @@ function start() {
             documentObserver.disconnect();
             checkOverlay();
         }
-    })
+    });
 
     documentObserver.observe(document.documentElement, { childList: true, subtree: true });
 }
@@ -59,7 +59,7 @@ function init() {
         if (event.data.type === 'Youtube-Volume-Scroll-volume' && typeof event.data.newVolume === 'number') {
             saveVolume(event.data.newVolume);
         }
-    })
+    });
 
     console.log('loaded Youtube-Volume-Scroll on url: ', window.location.href);
 }
@@ -110,7 +110,7 @@ function setupIncognito() {
                     }));
                 }
             } catch {
-                console.error("Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png");
+                console.error('Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png');
             }
         }
     });
