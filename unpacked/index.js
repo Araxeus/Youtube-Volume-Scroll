@@ -124,7 +124,6 @@ let saveTimeout;
 
 function saveVolume(newVolume) {
     if (saveTimeout) clearTimeout(saveTimeout);
-    console.log('saving volume: ', newVolume); // DELETE
 
     saveTimeout = setTimeout(() => {
         browserApi.storage.sync.set({ savedVolume: newVolume });
