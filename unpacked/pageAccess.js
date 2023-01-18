@@ -38,9 +38,9 @@ function init() {
 
 function setupConfig() {
     // listen for 'steps' change
-    window.addEventListener('message', event => {
-        if (event.data.type === 'Youtube-Volume-Scroll-config' && typeof event.data.config === 'object') {
-            config = event.data.config;
+    document.addEventListener('YoutubeVolumeScroll-config', (event) => {
+        if (typeof event.detail.config === 'object') {
+            config = event.detail.config;
         }
     }, false);
 }
@@ -90,7 +90,9 @@ function changeVolume(toIncrease, modifier) {
 
     if (!isMusic) saveNativeVolume(newVolume);
 
-    window.postMessage({ type: 'Youtube-Volume-Scroll-volume', newVolume: newVolume }, '*');
+    document.dispatchEvent(
+        new CustomEvent('YoutubeVolumeScroll-volume', { detail: { volume: newVolume } })
+    );
 }
 
 function getVolumeHud() {
@@ -116,18 +118,18 @@ function injectVolumeHud() {
     );
 
     switch (config.hud) {
-    case hudTypes.none:
-        break;
-    case hudTypes.native:
-        if (!$('#volume-hud-native')) {
-            createNative();
-        }
-        break;
-    case hudTypes.custom:
-    default:
-        if (!$('#volume-hud')) {
-            createCustom();
-        }
+        case hudTypes.none:
+            break;
+        case hudTypes.native:
+            if (!$('#volume-hud-native')) {
+                createNative();
+            }
+            break;
+        case hudTypes.custom:
+        default:
+            if (!$('#volume-hud')) {
+                createCustom();
+            }
     }
 
     function createNative() {
@@ -180,13 +182,13 @@ function showVolume(volume) {
 
 function getHudTime() {
     switch (config.hud) {
-    case hudTypes.none:
-        return 0;
-    case hudTypes.native:
-        return 1e3;
-    case hudTypes.custom:
-    default:
-        return 1.5e3;
+        case hudTypes.none:
+            return 0;
+        case hudTypes.native:
+            return 1e3;
+        case hudTypes.custom:
+        default:
+            return 1.5e3;
     }
 }
 
