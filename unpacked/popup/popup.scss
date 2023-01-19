@@ -1,6 +1,8 @@
+$primary-color: #ae181d;
+$secondary-color: #ad0007;
 .header {
   text-align: center;
-  color: #ae181d;
+  color: $primary-color;
   font-size: 15px;
 }
 
@@ -91,6 +93,7 @@
 
   padding-bottom: var(--flip-y, var(--ticks-gap));
   padding-top: calc(var(--flip-y) * var(--ticks-gap));
+  margin-top: 13px;
 
   position: relative;
   z-index: 1;
@@ -294,6 +297,60 @@
     }
   }
 }
+/////////////////////////////////////////////////
+/// Radios
+h2.hud{
+  color: $primary-color;
+  margin-block-end: 8px;
+  margin-block-start: 20px;
+}
+
+.radio-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  label {
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    margin: 0.3em;
+    input {
+      position: absolute;
+      left: -9999px;
+      &:checked + span {
+        background-color: mix(#fff, $primary-color, 84%);
+        &:before {
+          box-shadow: inset 0 0 0 0.4375em $primary-color;
+        }
+      }
+    }
+    span {
+      font-size: medium;
+      display: flex;
+      align-items: center;
+      padding: 0.375em 0.75em 0.375em 0.375em;
+      border-radius: 99em; // or something higher...
+      transition: 0.25s ease;
+      &:hover {
+        background-color: mix(#fff, $primary-color, 84%);
+      }
+      &:before {
+        display: flex;
+        flex-shrink: 0;
+        content: "";
+        background-color: #fff;
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 50%;
+        margin-right: 0.375em;
+        transition: 0.25s ease;
+        box-shadow: inset 0 0 0 0.125em $primary-color;
+      }
+    }
+  }
+}
 
 ////////////////////////////////////////////////
 // PAGE SETUP
@@ -306,8 +363,8 @@ body {
   padding: 0;
 
   @media screen and (max-width: 500px) {
-    padding-bottom: 2em;
-    gap: 8%;
+    padding-bottom: 1.2em;
+    gap: 1%;
   }
 }
 

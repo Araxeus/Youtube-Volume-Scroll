@@ -1,4 +1,4 @@
-#volumeHud {
+#volume-hud {
   z-index: 50;
   position: absolute;
   pointer-events: none;
@@ -10,12 +10,18 @@
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000, -1px -1px 0 #000;
 }
 
-#volumeHud.music {
+#volume-hud.music {
   top: 10px;
   left: 10px;
 }
 
-#volumeHud:not(.music) {
+#volume-hud:not(.music) {
   top: 5px;
   right: 5px;
+}
+
+#volume-hud-native {
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }

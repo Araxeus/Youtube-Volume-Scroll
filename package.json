@@ -13,7 +13,8 @@
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "format": "remark . --output --frail"
+    "check": "eslint . && npm run pack && web-ext lint -w && rimraf dist && remark .",
+    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix"
   },
   "repository": {
     "type": "git",
@@ -26,18 +27,19 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
-    "web-ext": "^7.4.0",
-    "release-it": "^15.6.0",
     "@release-it/bumper": "^4.0.2",
     "auto-changelog": "^2.4.0",
     "cpy-cli": "^4.2.0",
     "dot-json": "^1.2.2",
-    "rimraf": "^4.1.0",
-    "sass": "^1.57.1",
-    "x-var": "^0.0.1",
+    "eslint": "^8.32.0",
+    "release-it": "^15.6.0",
     "remark-cli": "^11.0.0",
     "remark-preset-lint-consistent": "^5.1.1",
-    "remark-preset-lint-recommended": "^6.1.2"
+    "remark-preset-lint-recommended": "^6.1.2",
+    "rimraf": "^4.1.1",
+    "sass": "^1.57.1",
+    "web-ext": "^7.4.0",
+    "x-var": "^0.0.1"
   },
   "overrides": {
     "addons-linter": "^5.26.0",
@@ -53,10 +55,7 @@
       "firefox": "nightly"
     },
     "lint": {
-      "pretty": true,
-      "firefoxPreview": [
-        "mv3"
-      ]
+      "pretty": true
     },
     "build": {
       "overwriteDest": true
@@ -73,7 +72,7 @@
     },
     "hooks": {
       "before:init": [
-        "npm run format",
+        "npm run check",
         "npm run build"
       ],
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."

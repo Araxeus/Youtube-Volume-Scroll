@@ -11,25 +11,25 @@ if (browserApi.extension.inIncognitoContext) {
 
 window.addEventListener('load', start, { once: true });
 
-// keep 'steps' in sync with extension popup
+// keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync' && changes.steps?.newValue) {
-        sendSteps(Number(changes.steps.newValue));
+    if (area === 'sync' && changes.config?.newValue) {
+        sendConfig(changes.config.newValue);
     }
 });
 
 function start() {
-    if ($('#movie_player video')) {
+    if ($('#movie_player:not(.unstarted-mode) video')) {
         checkOverlay();
         return;
     }
 
     const documentObserver = new MutationObserver(() => {
-        if ($('#movie_player video')) {
+        if ($('#movie_player:not(.unstarted-mode) video')) {
             documentObserver.disconnect();
             checkOverlay();
         }
-    })
+    });
 
     documentObserver.observe(document.documentElement, { childList: true, subtree: true });
 }
@@ -39,12 +39,12 @@ function checkOverlay() {
     const overlay = $('.ytp-cued-thumbnail-overlay-image');
     const noOverlay = () => !overlay || !overlay.style.backgroundImage || overlay.parentNode.style.display === 'none';
     if (noOverlay()) {
-        setup();
+        init();
     } else {
         const overlayObserver = new MutationObserver(() => {
             if (noOverlay()) {
                 overlayObserver.disconnect();
-                setup();
+                init();
             }
         });
 
@@ -52,14 +52,14 @@ function checkOverlay() {
     }
 }
 
-function setup() {
+function init() {
     loadPageAccess();
 
-    window.addEventListener('message', event => {
-        if (event.data.type === 'Youtube-Volume-Scroll' && typeof event.data.newVolume === 'number') {
-            saveVolume(event.data.newVolume);
+    document.addEventListener('YoutubeVolumeScroll-volume', (event) => {
+        if (typeof event.detail.volume === 'number') {
+            saveVolume(event.detail.volume);
         }
-    })
+    }, false);
 
     console.log('loaded Youtube-Volume-Scroll on url: ', window.location.href);
 }
@@ -69,16 +69,18 @@ function loadPageAccess() {
     pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        browserApi.storage.sync.get('steps', data => {
-            if (data.steps) sendSteps(Number(data.steps));
+        browserApi.storage.sync.get('config', data => {
+            if (data.config) sendConfig(data.config);
         });
     };
     (document.head || document.documentElement).appendChild(pageAccess);
 }
 
-function sendSteps(steps) {
-    //send updated 'steps' to pageAccess.js
-    window.postMessage({ type: 'Youtube-Volume-Scroll', steps }, '*');
+function sendConfig(config) {
+    //send updated config to pageAccess.js
+    document.dispatchEvent(
+        new CustomEvent('YoutubeVolumeScroll-config', { detail: { config } })
+    );
 }
 
 function setupIncognito() {
@@ -110,7 +112,7 @@ function setupIncognito() {
                     }));
                 }
             } catch {
-                console.error("Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png");
+                console.error('Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png');
             }
         }
     });
