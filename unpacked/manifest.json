@@ -1,5 +1,4 @@
 {
-  "manifest_version": 3,
   "name": "Youtube Volume Scroll",
   "short_name": "YoutubeVolumeScroll",
   "version": "1.6.1",
@@ -7,15 +6,11 @@
   "permissions": [
     "storage"
   ],
-  "host_permissions": [
-    "*://www.youtube.com/*",
-    "*://music.youtube.com/*"
-  ],
   "content_scripts": [
     {
       "matches": [
-        "*://www.youtube.com/*",
-        "*://music.youtube.com/*"
+        "https://www.youtube.com/*",
+        "https://music.youtube.com/*"
       ],
       "all_frames": true,
       "js": [
@@ -33,8 +28,8 @@
         "pageAccess.js"
       ],
       "matches": [
-        "*://www.youtube.com/*",
-        "*://music.youtube.com/*"
+        "https://www.youtube.com/*",
+        "https://music.youtube.com/*"
       ]
     }
   ],
@@ -52,5 +47,6 @@
   },
   "action": {
     "default_popup": "popup/popup.html"
-  }
+  },
+  "manifest_version": 3
 }
