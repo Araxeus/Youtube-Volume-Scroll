@@ -5,16 +5,21 @@
   "main": "index.js",
   "scripts": {
     "pack": "cpy . ../dist --cwd=unpacked",
-    "build": "npm run sas && npm run pack && npm run build:firefox && npm run build:chromium && rimraf dist",
-    "build:chromium": "npm run chromium_manifest && x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_chromium.zip\" && npm run firefox_manifest",
+    "prebuild": "npm run sas && npm run pack && npm run check_no_pack",
+    "build": "npm run build:firefox && npm run build:chromium",
+    "postbuild": "rimraf dist",
     "build:firefox": "x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_firefox.xpi\"",
-    "chromium_manifest": "dot-json dist/manifest.json -d browser_specific_settings",
-    "firefox_manifest": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
-    "sas": "sass --update unpacked/popup",
+    "prebuild:chromium": "dot-json dist/manifest.json -d browser_specific_settings",
+    "build:chromium": "x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_chromium.zip\"",
+    "postbuild:chromium": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "check": "eslint . && npm run pack && web-ext lint -w && rimraf dist && remark .",
-    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix"
+    "check_no_pack": "(eslint . && web-ext lint -w && remark .) || (rimraf dist && exit 1)",
+    "check": "eslint . && npm run pack && web-ext lint -w && remark .",
+    "postcheck": "rimraf dist",
+    "sas": "sass --update unpacked/popup",
+    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix",
+    "remark": "remark ."
   },
   "repository": {
     "type": "git",
