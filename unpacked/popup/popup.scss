@@ -315,9 +315,6 @@ h2.hud {
     position: relative;
     overflow: hidden;
     margin: 0.3em;
-    span {
-      font-family: Segoe UI Semibold;
-    }
     input {
       position: absolute;
       left: -9999px;
@@ -329,6 +326,7 @@ h2.hud {
       }
     }
     span {
+      font-family: "Segoe UI Semibold", sans-serif;
       font-size: medium;
       display: flex;
       align-items: center;
