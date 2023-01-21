@@ -40,7 +40,7 @@ function setupHudRadio() {
     const radios = document.querySelectorAll('input[name="hud"]');
     radios.forEach(radio => {
         radio.onchange = () => {
-            config.hud = parseInt(radio.value);
+            config.hud = Number(radio.value);
             saveConfig();
         };
     });

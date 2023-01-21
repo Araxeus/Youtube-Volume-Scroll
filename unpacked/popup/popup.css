@@ -1,7 +1,7 @@
-.header {
+h2 {
   text-align: center;
   color: #ae181d;
-  font-size: 15px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
 .range-slider {
@@ -255,8 +255,7 @@
 }
 
 h2.hud {
-  color: #ae181d;
-  margin-block-end: 5px;
+  margin-block-end: 8px;
   margin-block-start: 20px;
 }
 
@@ -284,6 +283,7 @@ h2.hud {
   box-shadow: inset 0 0 0 0.4375em #ae181d;
 }
 .radio-container label span {
+  font-family: "Segoe UI Semibold", sans-serif;
   font-size: medium;
   display: flex;
   align-items: center;

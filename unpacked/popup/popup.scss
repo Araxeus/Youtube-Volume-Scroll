@@ -1,9 +1,9 @@
 $primary-color: #ae181d;
 $secondary-color: #ad0007;
-.header {
+h2 {
   text-align: center;
   color: $primary-color;
-  font-size: 15px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
 .range-slider {
@@ -299,8 +299,7 @@ $secondary-color: #ad0007;
 }
 /////////////////////////////////////////////////
 /// Radios
-h2.hud{
-  color: $primary-color;
+h2.hud {
   margin-block-end: 8px;
   margin-block-start: 20px;
 }
@@ -327,6 +326,7 @@ h2.hud{
       }
     }
     span {
+      font-family: "Segoe UI Semibold", sans-serif;
       font-size: medium;
       display: flex;
       align-items: center;
