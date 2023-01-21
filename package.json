@@ -4,14 +4,18 @@
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
   "scripts": {
+    "manifest:add:gecko.id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "manifest:remove:gecko.id": "dot-json dist/manifest.json -d browser_specific_settings",
+    "manifest:add:background-script": "dot-json dist/manifest.json background.scripts[0] background-script.js",
+    "manifest:remove:background-script": "dot-json dist/manifest.json -d background",
     "pack": "cpy . ../dist --cwd=unpacked",
     "prebuild": "npm run sas && npm run pack && npm run check_no_pack",
     "build": "npm run build:firefox && npm run build:chromium",
     "postbuild": "rimraf dist",
     "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
-    "prebuild:chromium": "dot-json dist/manifest.json -d browser_specific_settings",
+    "prebuild:chromium": "npm run manifest:remove:gecko.id && npm run manifest:remove:background-script",
     "build:chromium": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
-    "postbuild:chromium": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "postbuild:chromium": "npm run manifest:add:gecko.id && npm run manifest:add:background-script",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
     "check_no_pack": "(eslint . && web-ext lint -w && remark .) || (rimraf dist && exit 1)",
@@ -19,7 +23,8 @@
     "postcheck": "rimraf dist",
     "sas": "sass --update unpacked/popup",
     "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix",
-    "remark": "remark ."
+    "remark": "remark .",
+    "dotjson": "dot-json"
   },
   "repository": {
     "type": "git",

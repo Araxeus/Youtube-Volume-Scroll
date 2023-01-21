@@ -22,6 +22,9 @@
       "run_at": "document_end"
     }
   ],
+  "background": {
+    "scripts": ["background-script.js"]
+  },
   "web_accessible_resources": [
     {
       "resources": [
