@@ -2,6 +2,7 @@ h2 {
   text-align: center;
   color: #ae181d;
   font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 25px;
 }
 
 .range-slider {
@@ -129,7 +130,7 @@ h2 {
   top: 0;
   bottom: 0;
   background: var(--fill-color, black);
-  box-shadow: var(--progress-flll-shadow);
+  box-shadow: var(--progress-fill-shadow);
   z-index: 1;
   border-radius: inherit;
 }
@@ -146,6 +147,7 @@ h2 {
 }
 .range-slider > input {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: var(--thumb-size);
   margin: 0;

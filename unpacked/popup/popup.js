@@ -1,6 +1,9 @@
 const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
 if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
 
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 const hudTypes = {
     custom: 0,
     native: 1,
@@ -24,23 +27,27 @@ function saveConfig() {
 
 browserApi.storage.sync.get('config', data => {
     const res = data.config;
-    if (res) config = {...config, ...res}; // merge with default config
-    window.addEventListener('DOMContentLoaded', init, { once: true });
+    if (res) config = { ...config, ...res }; // merge with default config
+    if ($('#steps_slider')) init();
+    else {
+        window.addEventListener('DOMContentLoaded', init, { once: true });
+    }
 });
 
 function init() {
     window.onblur = () => {
         browserApi.storage.sync.set({ config });
     };
+
     setupStepsSlider();
     setupHudRadio();
 }
 
 function setupHudRadio() {
-    const radios = document.querySelectorAll('input[name="hud"]');
+    const radios = $$('input[name="hud"]');
     radios.forEach(radio => {
         radio.onchange = () => {
-            config.hud = Number(radio.value);
+            config.hud = parseInt(radio.value, 10);
             saveConfig();
         };
     });
@@ -48,7 +55,7 @@ function setupHudRadio() {
 }
 
 function setupStepsSlider() {
-    const slider = document.querySelector('#input');
+    const slider = $('#steps_slider');
     slider.oninput = updateOutput;
     slider.onwheel = e => {
         // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)

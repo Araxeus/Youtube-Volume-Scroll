@@ -55,11 +55,11 @@ function checkOverlay() {
 function init() {
     loadPageAccess();
 
-    document.addEventListener('YoutubeVolumeScroll-volume', (event) => {
-        if (typeof event.detail.volume === 'number') {
-            saveVolume(event.detail.volume);
+    window.addEventListener('message', event => {
+        if (event.data.type === 'YoutubeVolumeScroll-volume' && typeof event.data.newVolume === 'number') {
+            saveVolume(event.data.newVolume);
         }
-    }, false);
+    });
 
     console.log('loaded Youtube-Volume-Scroll on url: ', window.location.href);
 }
@@ -78,9 +78,7 @@ function loadPageAccess() {
 
 function sendConfig(config) {
     //send updated config to pageAccess.js
-    document.dispatchEvent(
-        new CustomEvent('YoutubeVolumeScroll-config', { detail: { config } })
-    );
+    window.postMessage({ type: 'YoutubeVolumeScroll-config', config }, '*');
 }
 
 function setupIncognito() {

@@ -4,6 +4,7 @@ h2 {
   text-align: center;
   color: $primary-color;
   font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 25px;
 }
 
 .range-slider {
@@ -63,7 +64,7 @@ h2 {
 
   // breakdown of the below super-complex brain-breaking CSS math:
   // "clamp" is used to ensure either "-1" or "1"
-  // "calc" is used to inflat the outcome into a huge number, to get rid of any value between -1 & 1
+  // "calc" is used to inflate the outcome into a huge number, to get rid of any value between -1 & 1
   // if absolute diff of both completed % is above "5" (%)
   // ".001" bumps the value just a bit, to avoid a scenario where calc resulted in "0" (then clamp will also be "0")
   --thumbs-too-close: Clamp(-1, 1000 * (Min(1, Max(var(--cb) - var(--ca) - 5, -1)) + 0.001), 1);
@@ -178,7 +179,7 @@ h2 {
       top: 0;
       bottom: 0;
       background: var(--fill-color, black);
-      box-shadow: var(--progress-flll-shadow);
+      box-shadow: var(--progress-fill-shadow);
       z-index: 1;
       border-radius: inherit;
     }
@@ -199,6 +200,7 @@ h2 {
 
   & > input {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: var(--thumb-size);
     margin: 0;
