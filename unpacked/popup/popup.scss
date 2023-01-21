@@ -10,13 +10,27 @@ h2 {
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #0d1117;
-    color: #FFFFFF;
+    color: rgb(245, 245, 245);
   }
 
   .range-slider__progress,
   .radio-container label span:hover,
   .radio-container label input:checked + span {
     background-color: #9700003b !important;
+  }
+
+  .radio-container label span::before {
+    background-color: unset !important;
+  }
+
+  .radio-container label input:checked + span::before {
+    box-shadow: inset 0 0 0 0.4375em #bd003f !important;
+  }
+
+  .range-slider > input::-webkit-slider-thumb,
+  .range-slider > input::-moz-range-thumb,
+  .range-slider > input::-ms-thumb {
+      background: #bd003f !important; 
   }
 }
 
@@ -261,7 +275,14 @@ h2.hud {
   --min-max-x-offset: 10%; // 50% to center
 
   --thumb-size: 22px;
-  --thumb-color: white;
+
+  @media (prefers-color-scheme: dark) {
+    --thumb-color:#bd003f; 
+  }
+  @media (prefers-color-scheme: light) {
+    --thumb-color: white;
+  }
+
   --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px var(--thumb-color) inset;
 
   --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset var(--thumb-color),
