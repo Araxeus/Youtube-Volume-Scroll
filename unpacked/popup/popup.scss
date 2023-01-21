@@ -7,6 +7,19 @@ h2 {
   font-size: 25px;
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0d1117;
+    color: #FFFFFF;
+  }
+
+  .range-slider__progress,
+  .radio-container label span:hover,
+  .radio-container label input:checked + span {
+    background-color: #9700003b !important;
+  }
+}
+
 ////////////////////////////////////////////////
 // PAGE SETUP
 body {
@@ -19,6 +32,10 @@ body {
   @media screen and (max-width: 500px) {
     padding-bottom: 1.2em;
     gap: 1%;
+  }
+
+  @media screen and (min-width: 500px) {
+    height: 250px;
   }
 }
 

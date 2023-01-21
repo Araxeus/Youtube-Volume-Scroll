@@ -5,6 +5,17 @@ h2 {
   font-size: 25px;
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0d1117;
+    color: #FFFFFF;
+  }
+  .range-slider__progress,
+  .radio-container label span:hover,
+  .radio-container label input:checked + span {
+    background-color: rgba(151, 0, 0, 0.231372549) !important;
+  }
+}
 body {
   display: grid;
   place-content: space-evenly;
@@ -16,6 +27,11 @@ body {
   body {
     padding-bottom: 1.2em;
     gap: 1%;
+  }
+}
+@media screen and (min-width: 500px) {
+  body {
+    height: 250px;
   }
 }
 
