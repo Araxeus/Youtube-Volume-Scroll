@@ -56,8 +56,6 @@ function init() {
                         $('#permissions_wrapper').style.display = 'none';
                         $$('div:not(#permissions_wrapper)').forEach(node => node.style.display = 'flex');
                         $('body').style.setProperty('min-height', '240px');
-
-                        init();
                     }
                 });
                 window.close();

@@ -3,14 +3,13 @@ $secondary-color: #ad0007;
 h2 {
   text-align: center;
   color: $primary-color;
-  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-family: "Segoe UI", "Tahoma", "sans-serif";
   font-size: 25px;
 }
 
 ////////////////////////////////////////////////
 // PAGE SETUP
 body {
-  //background: #1abc9c;
   display: grid;
   place-content: space-evenly;
   place-items: center;
@@ -47,7 +46,6 @@ label[dir="rtl"] .range-slider {
   min-width: 200px;
 }
 
-
 ////////////////////////////////////////////////
 /// PERMISSIONS PROMPT
 ///
@@ -69,7 +67,7 @@ label[dir="rtl"] .range-slider {
     color: #fff;
     font-size: 23px;
     letter-spacing: 3px;
-    font-family: "Lato", sans-serif;
+    font-family: "Lato", "sans-serif";
     font-weight: 600;
     text-align: center;
     outline: none;
@@ -167,10 +165,9 @@ label[dir="rtl"] .range-slider {
   }
 }
 
-
 /////////////////////////////////////////////////
 /// HUD Radios
-/// 
+///
 h2.hud {
   margin-block-end: 8px;
   margin-block-start: 20px;
@@ -198,7 +195,7 @@ h2.hud {
       }
     }
     span {
-      font-family: "Segoe UI Semibold", sans-serif;
+      font-family: "Segoe UI Semibold", "sans-serif";
       font-size: medium;
       display: flex;
       align-items: center;
