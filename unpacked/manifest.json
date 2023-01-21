@@ -48,5 +48,9 @@
   "action": {
     "default_popup": "popup/popup.html"
   },
+  "options_ui": {
+    "page": "popup/popup.html",
+    "open_in_tab": false
+  },
   "manifest_version": 3
 }
