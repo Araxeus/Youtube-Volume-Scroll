@@ -1,41 +1,72 @@
-$primary-color: #ae181d;
-$secondary-color: #ad0007;
-h2 {
-  text-align: center;
-  color: $primary-color;
-  font-family: "Segoe UI", "Tahoma", "sans-serif";
-  font-size: 25px;
-}
+////////////////////////////////////////////////
+// DARK MODE
+
+// white-text
+$white_text: #f5f5f5;
+
+// h2
+$pnk1_title: #d5003c;
+
+// slider-thumb + selected button
+$pnk2_selected: #bd003f;
+
+//buttons outlines + selected slider part
+$red3_outlines: #ae181d;
+
+// slider-background + button hover background
+$red_deep: #2d0e12;
+
+// body background
+$drk_background: #0d1117;
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #0d1117;
-    color: rgb(245, 245, 245);
+    background-color: $drk_background;
+    color: $white_text;
   }
 
+  h2 {
+    color: $pnk1_title;
+  }
+
+  // slider background
   .range-slider__progress,
+  // hover background on radio buttons
   .radio-container label span:hover,
+  // background of selected radio button
   .radio-container label input:checked + span {
-    background-color: #9700003b !important;
+    background-color: $red_deep !important;
   }
 
+  // unselected radio buttons
   .radio-container label span::before {
     background-color: unset !important;
+    box-shadow: inset 0 0 0 0.125em $red3_outlines;
   }
 
+  // selected radio button
   .radio-container label input:checked + span::before {
-    box-shadow: inset 0 0 0 0.4375em #bd003f !important;
-  }
-
-  .range-slider > input::-webkit-slider-thumb,
-  .range-slider > input::-moz-range-thumb,
-  .range-slider > input::-ms-thumb {
-      background: #bd003f !important; 
+    box-shadow: inset 0 0 0 0.4375em $pnk2_selected !important;
   }
 }
 
 ////////////////////////////////////////////////
 // PAGE SETUP
+$primary-color: #ae181d;
+$secondary-color: #ad0007;
+
+@media (prefers-color-scheme: light) {
+  h2 {
+    color: $primary-color;
+  }
+}
+
+h2 {
+  text-align: center;
+  font-family: "Segoe UI", "Tahoma", "sans-serif";
+  font-size: 25px;
+}
+
 body {
   display: grid;
   place-content: space-evenly;
@@ -257,8 +288,6 @@ h2.hud {
 ///
 
 .range-slider {
-  --primary-color: #ae181d;
-
   --value-offset-y: var(--ticks-gap);
   --value-active-color: white;
   --value-background: transparent;
@@ -277,9 +306,13 @@ h2.hud {
   --thumb-size: 22px;
 
   @media (prefers-color-scheme: dark) {
-    --thumb-color:#bd003f; 
+    // $red3_outline
+    --primary-color: #ae181d;
+    //$pnk2_selected
+    --thumb-color: #bd003f;
   }
   @media (prefers-color-scheme: light) {
+    --primary-color: #ae181d;
     --thumb-color: white;
   }
 
