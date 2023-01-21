@@ -14,6 +14,7 @@ const YoutubeVolumeScroll = {
     },
     config: null,
     hudFadeTimeout: null,
+    isLoaded: false,
 
     printIncognitoError() {
         console.error('Youtube-Volume-Scroll: Could not save volume in incognito mode');
@@ -28,6 +29,7 @@ const YoutubeVolumeScroll = {
         this.setupOnWheel();
         this.injectVolumeHud();
         this.setupHudOnVolume();
+        this.isLoaded = true;
     },
 
     setupConfig() {
@@ -35,9 +37,9 @@ const YoutubeVolumeScroll = {
             steps: 1,
             hud: this.hudTypes.custom
         }; // default config as placeholder
-        document.addEventListener('YoutubeVolumeScroll-config', (event) => {
-            if (typeof event.detail.config === 'object') {
-                this.config = event.detail.config;
+        window.addEventListener('message', event => {
+            if (event.data.type === 'YoutubeVolumeScroll-config' && typeof event.data.config === 'object') {
+                this.config = event.data.config;
             }
         }, false);
     },
@@ -97,9 +99,7 @@ const YoutubeVolumeScroll = {
 
         if (!this.isMusic) this.saveNativeVolume(newVolume);
 
-        document.dispatchEvent(
-            new CustomEvent('YoutubeVolumeScroll-volume', { detail: { volume: newVolume } })
-        );
+        window.postMessage({ type: 'Youtube-Volume-Scroll-volume', newVolume }, '*');
     },
 
     // save the volume to a native cookies used by youtube.com
@@ -161,7 +161,7 @@ const YoutubeVolumeScroll = {
             const volumeHudNativeWrapper = document.createElement('div');
             volumeHudNativeWrapper.id = 'volume-hud-native-wrapper';
             volumeHudNativeWrapper.style.opacity = 0;
-            volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper');
+            volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper', 'volume-hud');
             const volumeHudNative = document.createElement('div');
             volumeHudNative.id = 'volume-hud-native';
             volumeHudNative.classList.add('ytp-bezel-text');
@@ -172,6 +172,7 @@ const YoutubeVolumeScroll = {
         function createCustom() {
             const volumeHud = document.createElement('span');
             volumeHud.id = 'volume-hud';
+            volumeHud.classList.add('volume-hud');
             if (YoutubeVolumeScroll.isMusic) volumeHud.classList.add('music');
             hudContainer().insertAdjacentElement('afterend', volumeHud);
         }
