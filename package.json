@@ -1,6 +1,6 @@
 {
   "name": "youtube-volume-scroll",
-  "version": "1.6.1",
+  "version": "2.0.0",
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
   "scripts": {
@@ -8,9 +8,9 @@
     "prebuild": "npm run sas && npm run pack && npm run check_no_pack",
     "build": "npm run build:firefox && npm run build:chromium",
     "postbuild": "rimraf dist",
-    "build:firefox": "x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_firefox.xpi\"",
+    "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
     "prebuild:chromium": "dot-json dist/manifest.json -d browser_specific_settings",
-    "build:chromium": "x-var web-ext build --filename=\"%npm_package_name%_%npm_package_version%_chromium.zip\"",
+    "build:chromium": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
     "postbuild:chromium": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
@@ -67,14 +67,6 @@
     }
   },
   "release-it": {
-    "plugins": {
-      "@release-it/bumper": {
-        "out": [
-          "package.json",
-          "unpacked/manifest.json"
-        ]
-      }
-    },
     "hooks": {
       "before:init": [
         "npm run check",
