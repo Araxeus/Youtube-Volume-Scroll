@@ -7,6 +7,16 @@
 </head>
 
 <body style="min-height: 240px; min-width: 350px">
+  <div id="permissions_wrapper" style="display: none;">
+    <h2 >Permissions Needed!</h2>
+    <button id="permissions_button">
+      Request Permissions
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
   <div class="header">
     <h2>Volume Steps:</h2>
   </div>
@@ -15,7 +25,9 @@
     <output></output>
     <div class='range-slider__progress'></div>
   </div>
-  <h2 class="hud">HUD Style:</h2>
+  <div class="header">
+    <h2 class="hud">HUD Style:</h2>
+  </div>
   <div class="radio-container">
 		<label>
 			<input type="radio" name="hud" value=0 checked/>

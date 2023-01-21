@@ -7,6 +7,234 @@ h2 {
   font-size: 25px;
 }
 
+////////////////////////////////////////////////
+// PAGE SETUP
+body {
+  //background: #1abc9c;
+  display: grid;
+  place-content: space-evenly;
+  place-items: center;
+  gap: 10%;
+  padding: 0;
+
+  @media screen and (max-width: 500px) {
+    padding-bottom: 1.2em;
+    gap: 1%;
+  }
+}
+
+a {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  display: inline-block;
+  height: 2em;
+
+  @media screen and (max-width: 500px) {
+    position: static;
+    order: -1;
+  }
+
+  > img {
+    display: inherit;
+    height: 100%;
+  }
+}
+
+body > .range-slider,
+label[dir="rtl"] .range-slider {
+  width: Clamp(300px, 50vw, 800px);
+  min-width: 200px;
+}
+
+
+////////////////////////////////////////////////
+/// PERMISSIONS PROMPT
+///
+
+#permissions_wrapper {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  // background: linear-gradient(to left top, #c32c71 50%, #b33771 50%);
+  // background-size: 400% 400%;
+  // animation: gradient 15s ease infinite;
+  h2 {
+    color: #e7195c;
+  }
+  #permissions_button {
+    width: 200px;
+    height: 70px;
+    background: linear-gradient(to left top, #c32c71 50%, #b33771 50%);
+    border-style: none;
+    color: #fff;
+    font-size: 23px;
+    letter-spacing: 3px;
+    font-family: "Lato";
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0px;
+    overflow: hidden;
+    transition: all 0.5s;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    &:hover {
+      transition: all 0.5s;
+      //transform: rotate(-3deg) ;
+      transform: perspective(5px) scale(1.1);
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+      // #permissions_button:hover span{
+      //   animation-play-state: paused;
+      // }
+    }
+    span {
+      position: absolute;
+      display: block;
+    }
+    span:nth-child(1) {
+      height: 3px;
+      width: 200px;
+      top: 0px;
+      left: -200px;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0), #f6e58d);
+      border-top-right-radius: 1px;
+      border-bottom-right-radius: 1px;
+      animation: span1 2s linear infinite;
+      animation-delay: 1s;
+    }
+    @keyframes span1 {
+      0% {
+        left: -200px;
+      }
+      100% {
+        left: 200px;
+      }
+    }
+    span:nth-child(2) {
+      height: 70px;
+      width: 3px;
+      top: -70px;
+      right: 0px;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #f6e58d);
+      border-bottom-left-radius: 1px;
+      border-bottom-right-radius: 1px;
+      animation: span2 2s linear infinite;
+      animation-delay: 2s;
+    }
+    @keyframes span2 {
+      0% {
+        top: -70px;
+      }
+      100% {
+        top: 70px;
+      }
+    }
+    span:nth-child(3) {
+      height: 3px;
+      width: 200px;
+      right: -200px;
+      bottom: 0px;
+      background: linear-gradient(to left, rgba(0, 0, 0, 0), #f6e58d);
+      border-top-left-radius: 1px;
+      border-bottom-left-radius: 1px;
+      animation: span3 2s linear infinite;
+      animation-delay: 3s;
+    }
+    @keyframes span3 {
+      0% {
+        right: -200px;
+      }
+      100% {
+        right: 200px;
+      }
+    }
+    #permissions_button span:nth-child(4) {
+      height: 70px;
+      width: 3px;
+      bottom: -70px;
+      left: 0px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0), #f6e58d);
+      border-top-right-radius: 1px;
+      border-top-left-radius: 1px;
+      animation: span4 2s linear infinite;
+      animation-delay: 4s;
+    }
+    @keyframes span4 {
+      0% {
+        bottom: -70px;
+      }
+      100% {
+        bottom: 70px;
+      }
+    }
+  }
+}
+
+
+/////////////////////////////////////////////////
+/// HUD Radios
+/// 
+h2.hud {
+  margin-block-end: 8px;
+  margin-block-start: 20px;
+}
+
+.radio-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  label {
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    margin: 0.3em;
+    input {
+      position: absolute;
+      left: -9999px;
+      &:checked + span {
+        background-color: mix(#fff, $primary-color, 84%);
+        &:before {
+          box-shadow: inset 0 0 0 0.4375em $primary-color;
+        }
+      }
+    }
+    span {
+      font-family: "Segoe UI Semibold", sans-serif;
+      font-size: medium;
+      display: flex;
+      align-items: center;
+      padding: 0.375em 0.75em 0.375em 0.375em;
+      border-radius: 99em; // or something higher...
+      transition: 0.25s ease;
+      &:hover {
+        background-color: mix(#fff, $primary-color, 84%);
+      }
+      &:before {
+        display: flex;
+        flex-shrink: 0;
+        content: "";
+        background-color: #fff;
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 50%;
+        margin-right: 0.375em;
+        transition: 0.25s ease;
+        box-shadow: inset 0 0 0 0.125em $primary-color;
+      }
+    }
+  }
+}
+
+////////////////////////////////////////////////
+/// STEPS SLIDER
+///
+
 .range-slider {
   --primary-color: #ae181d;
 
@@ -298,98 +526,4 @@ h2 {
       }
     }
   }
-}
-/////////////////////////////////////////////////
-/// Radios
-h2.hud {
-  margin-block-end: 8px;
-  margin-block-start: 20px;
-}
-
-.radio-container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  label {
-    display: flex;
-    cursor: pointer;
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-    margin: 0.3em;
-    input {
-      position: absolute;
-      left: -9999px;
-      &:checked + span {
-        background-color: mix(#fff, $primary-color, 84%);
-        &:before {
-          box-shadow: inset 0 0 0 0.4375em $primary-color;
-        }
-      }
-    }
-    span {
-      font-family: "Segoe UI Semibold", sans-serif;
-      font-size: medium;
-      display: flex;
-      align-items: center;
-      padding: 0.375em 0.75em 0.375em 0.375em;
-      border-radius: 99em; // or something higher...
-      transition: 0.25s ease;
-      &:hover {
-        background-color: mix(#fff, $primary-color, 84%);
-      }
-      &:before {
-        display: flex;
-        flex-shrink: 0;
-        content: "";
-        background-color: #fff;
-        width: 1.5em;
-        height: 1.5em;
-        border-radius: 50%;
-        margin-right: 0.375em;
-        transition: 0.25s ease;
-        box-shadow: inset 0 0 0 0.125em $primary-color;
-      }
-    }
-  }
-}
-
-////////////////////////////////////////////////
-// PAGE SETUP
-body {
-  //background: #1abc9c;
-  display: grid;
-  place-content: space-evenly;
-  place-items: center;
-  gap: 10%;
-  padding: 0;
-
-  @media screen and (max-width: 500px) {
-    padding-bottom: 1.2em;
-    gap: 1%;
-  }
-}
-
-a {
-  position: fixed;
-  top: 1em;
-  left: 1em;
-  display: inline-block;
-  height: 2em;
-
-  @media screen and (max-width: 500px) {
-    position: static;
-    order: -1;
-  }
-
-  > img {
-    display: inherit;
-    height: 100%;
-  }
-}
-
-body > .range-slider,
-label[dir="rtl"] .range-slider {
-  width: Clamp(300px, 50vw, 800px);
-  min-width: 200px;
 }
