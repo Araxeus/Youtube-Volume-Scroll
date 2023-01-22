@@ -4,22 +4,25 @@
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
   "scripts": {
+    "manifest:add:gecko.id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "manifest:remove:gecko.id": "dot-json dist/manifest.json -d browser_specific_settings",
+    "manifest:add:background-script": "dot-json dist/manifest.json background.scripts[0] background-script.js",
+    "manifest:remove:background-script": "dot-json dist/manifest.json -d background",
     "pack": "cpy . ../dist --cwd=unpacked",
     "prebuild": "npm run sas && npm run pack && npm run check_no_pack",
     "build": "npm run build:firefox && npm run build:chromium",
-    "postbuild": "rimraf dist",
+    "postbuild": "del-cli dist",
     "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
-    "prebuild:chromium": "dot-json dist/manifest.json -d browser_specific_settings",
+    "prebuild:chromium": "npm run manifest:remove:gecko.id && npm run manifest:remove:background-script && del-cli dist/background-script.js",
     "build:chromium": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
-    "postbuild:chromium": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "postbuild:chromium": "npm run manifest:add:gecko.id && npm run manifest:add:background-script",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "check_no_pack": "(eslint . && web-ext lint -w && remark .) || (rimraf dist && exit 1)",
+    "check_no_pack": "(eslint . && web-ext lint -w && remark .) || (del-cli dist && exit 1)",
     "check": "eslint . && npm run pack && web-ext lint -w && remark .",
-    "postcheck": "rimraf dist",
+    "postcheck": "del-cli dist",
     "sas": "sass --update unpacked/popup",
-    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix",
-    "remark": "remark ."
+    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix"
   },
   "repository": {
     "type": "git",
@@ -41,10 +44,10 @@
     "remark-cli": "^11.0.0",
     "remark-preset-lint-consistent": "^5.1.1",
     "remark-preset-lint-recommended": "^6.1.2",
-    "rimraf": "^4.1.1",
     "sass": "^1.57.1",
     "web-ext": "^7.4.0",
-    "x-var": "^0.0.1"
+    "x-var": "^0.0.1",
+    "del-cli": "^5.0.0"
   },
   "overrides": {
     "addons-linter": "^5.26.0",
