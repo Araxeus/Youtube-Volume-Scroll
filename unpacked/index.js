@@ -19,13 +19,13 @@ browserApi.storage.onChanged.addListener((changes, area) => {
 });
 
 function start() {
-    if ($('#movie_player:not(.unstarted-mode) video')) {
+    if ($('.html5-video-player:not(.unstarted-mode)')) {
         checkOverlay();
         return;
     }
 
     const documentObserver = new MutationObserver(() => {
-        if ($('#movie_player:not(.unstarted-mode) video')) {
+        if ($('.html5-video-player:not(.unstarted-mode)')) {
             documentObserver.disconnect();
             checkOverlay();
         }
