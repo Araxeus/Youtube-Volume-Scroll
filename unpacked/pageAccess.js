@@ -34,6 +34,12 @@ class ytvs {
         }, false);
         this.#initDone = true;
     }
+
+    static getCookie(n) {
+        return document.cookie
+            .split('; ')
+            .find((row) => row.startsWith(`${n}=`));
+    }
 }
 
 
@@ -120,15 +126,14 @@ class YoutubeVolumeScroll {
     #setupIncognito() {
         let volumeCookie;
         try {
-            volumeCookie = window.localStorage.getItem('Youtube-Volume-Scroll');
+            volumeCookie = JSON.parse(window.localStorage.getItem('Youtube-Volume-Scroll'));
         } catch {
             this.printIncognitoError();
         }
         if (volumeCookie) {
-            volumeCookie = JSON.parse(volumeCookie);
             if (volumeCookie.incognito === true && volumeCookie.savedVolume !== this.api.getVolume()) {
                 this.api.setVolume(volumeCookie.savedVolume);
-                if (!ytvs.isMusic) this.saveNativeVolume(volumeCookie.savedVolume);
+                this.saveNativeVolume(volumeCookie.savedVolume);
             }
         }
     }
@@ -159,15 +164,24 @@ class YoutubeVolumeScroll {
 
         if (this.isShorts) return;
 
-        if (!ytvs.isMusic) this.saveNativeVolume(newVolume);
+        this.saveNativeVolume(newVolume);
 
         window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, '*');
     }
 
-    saveNativeVolume(newVolume) {
+    saveNativeVolume(volume) {
+        if (!ytvs.isMusic) this.saveVolumeToStorage(volume);
+
+        const pref = ytvs.getCookie('PREF');
+        if (pref) {
+            document.cookie = pref.replace(/volume=(\d+)/, 'volume=' + volume) + ';domain=.youtube.com';
+        }
+    }
+
+    saveVolumeToStorage(volume) {
         const data = JSON.stringify({
-            volume: newVolume,
-            muted: newVolume <= 0,
+            volume,
+            muted: volume <= 0,
         });
         const timeNow = Date.now();
 
