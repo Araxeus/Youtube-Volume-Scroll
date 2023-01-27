@@ -38,6 +38,7 @@ class ytvs {
 
 
 class YoutubeVolumeScroll {
+    volume = null;
     hudFadeTimeout = null;
 
     isShorts = false;
@@ -91,6 +92,9 @@ class YoutubeVolumeScroll {
 
     constructor({ api, scrollTarget, hudContainer, hudAfter, isShorts, customFunction }) {
         this.api = api;
+        // Saves the volume locally so that hudOnVolume doesn't show hud if volume wasn't actually changed 
+        // (e.g. the sponsorblock skip function triggers a volume change without actually changing the volume)
+        this.volume = this.api.getVolume();
         if (!isShorts && !ytvs.isLoaded) {
             this.#setupIncognito();
         }
@@ -249,9 +253,10 @@ class YoutubeVolumeScroll {
         const video = ytvs.$(`${this.hudContainer} video`);
         setTimeout(() => {
             video.addEventListener('volumechange', () => {
-                if (ytvs.hud !== ytvs.hudTypes.none) {
+                if (ytvs.hud !== ytvs.hudTypes.none && this.volume !== this.api.getVolume()) {
                     this.showVolume(Math.round(this.api.getVolume()));
                 }
+                this.volume = this.api.getVolume();
             });
         });
     }
