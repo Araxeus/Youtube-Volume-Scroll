@@ -199,21 +199,34 @@ class YoutubeVolumeScroll {
     }
 
     injectVolumeHud() {
+        const getWrapper = () => {
+            let volumeHudWrapper = ytvs.$(`${this.hudContainer} .volume-hud-wrapper`);
+            if (!volumeHudWrapper) {
+                volumeHudWrapper = document.createElement('div');
+                volumeHudWrapper.classList.add('volume-hud-wrapper');
+                ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHudWrapper);
+            }
+            return volumeHudWrapper;
+        };
+
         const createNative = () => {
             const volumeHudNativeWrapper = document.createElement('div');
             volumeHudNativeWrapper.style.opacity = 0;
-            volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper', 'volume-hud');
+            volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper', 'volume-hud-native-wrapper');
             const volumeHudNative = document.createElement('div');
             volumeHudNative.classList.add('ytp-bezel-text', 'volume-hud-native');
             volumeHudNativeWrapper.appendChild(volumeHudNative);
-            ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHudNativeWrapper);
+            const volumeHudWrapper = getWrapper();
+            volumeHudWrapper.appendChild(volumeHudNativeWrapper);
         };
 
         const createCustom = () => {
             const volumeHud = document.createElement('span');
             volumeHud.classList.add('volume-hud', 'volume-hud-custom');
             if (ytvs.isMusic) volumeHud.classList.add('music');
-            ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHud);
+
+            const volumeHudWrapper = getWrapper();
+            volumeHudWrapper.appendChild(volumeHud);
         };
 
         switch (ytvs.hud) {
@@ -243,36 +256,43 @@ class YoutubeVolumeScroll {
         });
     }
 
-    showVolume(volume) {
-        const getHudTime = () => {
-            switch (ytvs.hud) {
-                case ytvs.hudTypes.none:
-                    return 0;
-                case ytvs.hudTypes.native:
-                    return 1e3;
-                case ytvs.hudTypes.custom:
-                default:
-                    return 1.5e3;
-            }
-        };
+    checkWrapperClass() {
+        const volumeHudWrapper = ytvs.$(`${this.hudContainer} .volume-hud-wrapper`);
 
+        if (ytvs.hud === ytvs.hudTypes.native) {
+            volumeHudWrapper.setAttribute('type', 'native');
+        } else if (ytvs.hud === ytvs.hudTypes.custom) {
+            volumeHudWrapper.setAttribute('type', 'custom');
+        }
+    }
+
+    showVolume(volume) {
         const volumeHud = this.getVolumeHud();
         if (volumeHud === null) return;
 
+        const hudTimes = {
+            [ytvs.hudTypes.none]: 0,
+            [ytvs.hudTypes.native]: 1e3,
+            [ytvs.hudTypes.custom]: 1.5e3,
+        };
+
+        const setOpacity = (opacity) => {
+            volumeHud.style.opacity = opacity;
+            if (ytvs.hud === ytvs.hudTypes.native) {
+                volumeHud.parentElement.style.opacity = opacity;
+            }
+        };
+
+        this.checkWrapperClass();
+
         volumeHud.textContent = volume + '%';
-        volumeHud.style.opacity = 1;
-        if (ytvs.hud === ytvs.hudTypes.native) {
-            volumeHud.parentElement.style.opacity = 1;
-        }
+        setOpacity(1);
 
         if (this.hudFadeTimeout) clearTimeout(this.hudFadeTimeout);
         this.hudFadeTimeout = setTimeout(() => {
-            volumeHud.style.opacity = 0;
-            if (ytvs.hud === ytvs.hudTypes.native) {
-                volumeHud.parentElement.style.opacity = 0;
-            }
+            setOpacity(0);
             this.hudFadeTimeout = null;
-        }, getHudTime());
+        }, hudTimes[ytvs.hud]);
     }
 }
 

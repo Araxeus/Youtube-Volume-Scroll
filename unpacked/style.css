@@ -27,3 +27,11 @@
   transition: opacity 0.3s;
   color: #dedddd;
 }
+
+.volume-hud-wrapper[type=native] .volume-hud-custom {
+  display: none;
+}
+
+.volume-hud-wrapper[type=custom] .volume-hud-native-wrapper {
+  display: none;
+}
