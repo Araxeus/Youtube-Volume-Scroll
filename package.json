@@ -39,6 +39,7 @@
     "@release-it/bumper": "^4.0.2",
     "auto-changelog": "^2.4.0",
     "cpy-cli": "^4.2.0",
+    "del-cli": "^5.0.0",
     "dot-json": "^1.2.2",
     "eslint": "^8.32.0",
     "release-it": "^15.6.0",
@@ -47,8 +48,7 @@
     "remark-preset-lint-recommended": "^6.1.2",
     "sass": "^1.57.1",
     "web-ext": "^7.5.0",
-    "x-var": "^0.0.1",
-    "del-cli": "^5.0.0"
+    "x-var": "^0.0.1"
   },
   "webExt": {
     "sourceDir": "dist",
@@ -67,6 +67,11 @@
     }
   },
   "release-it": {
+    "plugins": {
+      "@release-it/bumper": {
+        "out": "unpacked/manifest.json"
+      }
+    },
     "hooks": {
       "before:init": [
         "npm run check",
