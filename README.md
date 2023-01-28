@@ -55,13 +55,13 @@
 Requires [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
 
 ```sh
-# Clone the repo
-$ git clone https://github.com/Araxeus/Youtube-Volume-Scroll.git
+# Clone the repo and cd to it
+git clone https://github.com/Araxeus/Youtube-Volume-Scroll.git
 
-$ cd Youtube-Volume-Scroll
+cd Youtube-Volume-Scroll
 
-# Install dependencies
-$ npm install
+# Install build dependencies
+npm install
 
 # Build the extension
 $ npm run build

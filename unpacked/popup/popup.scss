@@ -62,6 +62,7 @@ $secondary-color: #ad0007;
 }
 
 h2 {
+  user-select: none;
   text-align: center;
   font-family: "Segoe UI", "Tahoma", "sans-serif";
   font-size: 25px;
@@ -257,6 +258,7 @@ h2.hud {
       }
     }
     span {
+      user-select: none;
       font-family: "Segoe UI Semibold", "sans-serif";
       font-size: medium;
       display: flex;
