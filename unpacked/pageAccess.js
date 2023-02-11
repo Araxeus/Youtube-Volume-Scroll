@@ -1,7 +1,6 @@
 
 // set last active time to now every 15min (blocks "are you there?" popup)
 setInterval(() => window._lact = Date.now(), 9e5);
-
 class ytvs {
     static #$ = document.querySelector.bind(document);
     static get $() {
@@ -51,20 +50,29 @@ class ytvs {
         this.#activeObjects.add(ytvsObject);
     }
 
-    static #positionMode = false;
-    static get positionMode() {
-        return this.#positionMode;
-    }
-
-    static #positionModeSubscribers = new Set();
-    static subscribeToPositionMode(fn) {
-        if (typeof fn !== 'function') return console.error('ytvs.subscribeToPositionMode() expects a function');
-        this.#positionModeSubscribers.add(fn);
-    }
+    // config
 
     static #steps = undefined;
+    static get steps() {
+        return this.#steps ?? 1;
+    }
+
     static #hud = undefined;
-    static #position = {
+    static get hud() {
+        return this.#hud ?? ytvs.hudTypes.custom;
+    }
+
+    static #hudPositionMode = false;
+    static get hudPositionMode() {
+        return this.#hudPositionMode;
+    }
+
+    static #hudSize = undefined;
+    static get hudSize() {
+        return this.#hudSize ?? '46px';
+    }
+
+    static #hudPosition = {
         youtube: {
             top: '5px',
             bottom: 'unset',
@@ -83,29 +91,28 @@ class ytvs {
             left: 'unset',
             right: '35px'
         }
-    }; // TODO implement defaults
-
-    static get position() {
-        return this.#position;
+    };
+    static get hudPosition() {
+        return this.#hudPosition;
     }
-
-    static set position(value) {
-        const [type, position] = Object.entries(value)[0];
-        if (!this.#position[type]) {
-            console.error(`ytvs.position.${type} is not a valid type`);
+    static set hudPosition(value) {
+        const [type, hudPosition] = Object.entries(value)[0];
+        if (!this.#hudPosition[type]) {
+            console.error(`ytvs.hudPosition.${type} is not a valid type`);
             return;
         }
-        if (typeof position !== 'object') {
-            console.error(`ytvs.position.${type} expects an object`);
+        if (typeof hudPosition !== 'object') {
+            console.error(`ytvs.hudPosition.${type} expects an object`);
             return;
         }
 
-        this.#position[type] = position;
+        this.#hudPosition[type] = hudPosition;
         this.#save();
     }
 
-    static #saveTimeout = undefined;
+    // save config
 
+    static #saveTimeout = undefined;
     static #save() {
         if (this.#saveTimeout) clearTimeout(this.#saveTimeout);
         this.#saveTimeout = setTimeout(() => {
@@ -114,45 +121,14 @@ class ytvs {
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
                 config: {
-                    positionMode: this.#positionMode,
-                    position: this.position,
+                    hud: this.hud,
                     steps: this.steps,
-                    hud: this.hud
+                    hudPositionMode: this.hudPositionMode,
+                    hudPosition: this.hudPosition,
+                    hudSize: this.hudSize
                 }
             }, '*');
         }, 500);
-    }
-
-    static get steps() {
-        return this.#steps ?? 1;
-    }
-    static get hud() {
-        return this.#hud ?? ytvs.hudTypes.custom;
-    }
-
-    static #initDone = false;
-    static init() {
-        if (this.#initDone) return console.warn('ytvs.init() was already called');
-        window.addEventListener('message', event => {
-            if (event.data.type === 'YoutubeVolumeScroll-config-change' && typeof event.data.config === 'object') {
-                console.log('got config', event.data.config); // DELETE
-                this.#steps = event.data.config.steps;
-                this.#hud = event.data.config.hud;
-                if (event.data.config.positionMode !== this.positionMode) {
-                    this.#positionMode = event.data.config.positionMode;
-                    this.#positionModeSubscribers.forEach(fn => fn(this.positionMode));
-                }
-                if (event.data.config.position && !this.simpleAreEqual(event.data.config.position, this.position)) {
-                    console.log('event.data.config.position', event.data.config.position, 'this.position', this.position); // DELETE
-                    this.#position = event.data.config.position;
-                    //setTimeout(() => this.activeObjects.forEach(obj => obj.updatePosition()));
-                    this.activeObjects.forEach(obj => obj.updatePosition());
-                } else {//DELETE
-                    console.log('got config but position are the same', 'event.data.config.position', event.data.config.position, 'this.position', this.position, this.simpleAreEqual(event.data.config.position, this.position)); // DELETE
-                }
-            }
-        }, false);
-        this.#initDone = true;
     }
 
     static getCookie(n) {
@@ -161,8 +137,50 @@ class ytvs {
             .find((row) => row.startsWith(`${n}=`));
     }
 
+    static #handleDataChange = config => {
+        this.#steps = config.steps;
+        if (this.#hud !== config.hud) {
+            this.#hud = config.hud;
+            this.#activeObjects.forEach(obj => obj.showVolume());
+        }
+        if (config.hudPositionMode !== this.hudPositionMode) {
+            console.log('config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
+            this.#hudPositionMode = config.hudPositionMode;
+            if (this.hud === this.hudTypes.custom) {
+                this.#activeObjects.forEach(obj => obj.updateHudPositionMode());
+            }
+        } else {//DELETE
+            console.log('got config but hudPositionMode are the same', 'config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
+        }
+        if (config.hudSize && config.hudSize !== this.hudSize) {
+            console.log('config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
+            this.#hudSize = config.hudSize;
+            this.#activeObjects.forEach(obj => obj.updateHudSize());
+        } else {//DELETE
+            console.log('got config but hudSize are the same', 'config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
+        }
+        if (config.hudPosition && !this.simpleAreEqual(config.hudPosition, this.hudPosition)) {
+            console.log('config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition); // DELETE
+            this.#hudPosition = config.hudPosition;
+            this.activeObjects.forEach(obj => obj.updateHudPosition());
+        } else {//DELETE
+            console.log('got config but hudPosition are the same', 'config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition, this.simpleAreEqual(config.hudPosition, this.hudPosition)); // DELETE
+        }
+    };
 
-    // recursive function to compare two position objects
+    static #initDone = false;
+    static init() {
+        if (this.#initDone) return console.warn('ytvs.init() was already called');
+        window.addEventListener('message', ({ data }) => {
+            if (data.type === 'YoutubeVolumeScroll-config-change' && typeof data.config === 'object') {
+                console.log('got config', data.config); // DELETE
+                this.#handleDataChange(data.config);
+            }
+        }, false);
+        this.#initDone = true;
+    }
+
+    // recursive function to compare two hudPosition objects
     static simpleAreEqual(pos1, pos2) {
         //return JSON.stringify(pos1) === JSON.stringify(pos2); // this is too slow
         if (typeof pos1 !== typeof pos2) return false;
@@ -271,8 +289,6 @@ class YoutubeVolumeScroll {
 
         this.setupHudOnVolume();
 
-        ytvs.subscribeToPositionMode(p => this.changePositionMode(p));
-
         ytvs.addActiveObject(this);
 
         if (!isShorts) {
@@ -280,30 +296,41 @@ class YoutubeVolumeScroll {
         }
     }
 
-    updatePosition() {
-        const newPosition = ytvs.position[this.type];
-
-        console.log('updatePosition', this.type, newPosition); //DELETE
-
-        const hud = this.getVolumeHud();
-        if (!hud) {
-            console.error('updatePosition: hud not found', this.hudContainer);
+    updateHudSize(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) {
+            console.error('updateHudSize: hud not found', this.hudContainer);
             return;
         }
 
-        Object.keys(newPosition).forEach(key => {
-            hud.style[key] = newPosition[key];
-            console.log('updatePosition', key, newPosition[key]); //DELETE
+        console.log('updateHudSize', this.type, volumeHud.style.fontSize, ytvs.hudSize); //DELETE
+        volumeHud.style.fontSize = ytvs.hudSize;
+    }
+
+    updateHudPosition(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) {
+            console.error('updateHudPosition: hud not found', this.hudContainer);
+            return;
+        }
+
+        const newHudPosition = ytvs.hudPosition[this.type];
+        console.log('updateHudPosition', this.type, newHudPosition); //DELETE
+
+        Object.keys(newHudPosition).forEach(key => {
+            volumeHud.style[key] = newHudPosition[key];
+            console.log('updateHudPosition', key, newHudPosition[key]); //DELETE
         });
     }
 
-    changePositionMode(positionMode) {
-        positionMode ??= ytvs.positionMode;
+    hudPositionMode = false;
+    updateHudPositionMode(volumeHud) {
+        if (ytvs.hudPositionMode === this.hudPositionMode) return;
 
+        console.log('updateHudPositionMode', ytvs.hudPositionMode); //DELETE
+ 
         const dragTarget = ytvs.$(this.hudContainer);
         if (!dragTarget) return console.error('dragTarget not found', this.hudContainer);
 
-        const getDraggedElement = () => ytvs.$(`${this.hudContainer} .volume-hud-custom`);
+        const getDraggedElement = () => volumeHud ?? ytvs.$(`${this.hudContainer} .volume-hud-custom`);
         let draggedElement = getDraggedElement();
         if (!draggedElement && ytvs.hudTypes.custom === ytvs.hud) {
             this.injectVolumeHud();
@@ -311,7 +338,7 @@ class YoutubeVolumeScroll {
         }
         if (!draggedElement) return console.error('draggedElement not found', `${this.hudContainer} .volume-hud-custom`);
 
-        if (positionMode) {
+        if (ytvs.hudPositionMode) {
             let dragOffsetX;
             let dragOffsetY;
 
@@ -343,7 +370,7 @@ class YoutubeVolumeScroll {
 
                 const dragTargetRect = dragTarget.getBoundingClientRect();
 
-                draggedElement.style.position = 'absolute';
+                draggedElement.style.hudPosition = 'absolute';
 
                 const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
                 const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
@@ -356,33 +383,33 @@ class YoutubeVolumeScroll {
                 const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
 
                 const ogStyle = draggedElement.style;
-                const position = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
+                const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
 
                 if (newLeft < dragTargetRect.width / 2) {
                     const x = Math.max(newLeft, 0 - padding);
-                    position.left = pxToPercent_width(x) + '%';
-                    position.right = 'unset';
+                    hudPosition.left = pxToPercent_width(x) + '%';
+                    hudPosition.right = 'unset';
                 } else {
                     const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
-                    position.right = (100 - pxToPercent_width(x)) + '%';
-                    position.left = 'unset';
+                    hudPosition.right = (100 - pxToPercent_width(x)) + '%';
+                    hudPosition.left = 'unset';
                 }
 
                 if (newTop < dragTargetRect.height / 2) {
                     const y = Math.max(newTop, 0 - padding);
-                    position.top = pxToPercent_height(y) + '%';
-                    position.bottom = 'unset';
+                    hudPosition.top = pxToPercent_height(y) + '%';
+                    hudPosition.bottom = 'unset';
                 } else {
                     const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
-                    position.bottom = (100 - pxToPercent_height(y)) + '%';
-                    position.top = 'unset';
+                    hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
+                    hudPosition.top = 'unset';
                 }
 
-                Object.keys(position).forEach(pos => draggedElement.style[pos] = position[pos]);
+                Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
 
-                const positionToSend = {};
-                positionToSend[this.type] = position;
-                ytvs.position = positionToSend;
+                const hudPositionToSend = {};
+                hudPositionToSend[this.type] = hudPosition;
+                ytvs.hudPosition = hudPositionToSend;
 
                 setShortsControlsPointerEvents('auto');
             };
@@ -396,6 +423,8 @@ class YoutubeVolumeScroll {
             draggedElement.style.pointerEvents = 'none';
             setTimeout(() => draggedElement.style.opacity = 0); // DELETE testing
         }
+
+        this.hudPositionMode = ytvs.hudPositionMode;
     }
 
     printIncognitoError() {
@@ -538,6 +567,9 @@ class YoutubeVolumeScroll {
             default:
                 if (!ytvs.$(`${this.hudContainer} .volume-hud-custom`)) {
                     createCustom();
+                    this.updateHudSize();
+                    this.updateHudPositionMode();
+                    this.updateHudPosition();
                 }
         }
     }
@@ -547,7 +579,7 @@ class YoutubeVolumeScroll {
         setTimeout(() => {
             video.addEventListener('volumechange', () => {
                 if (ytvs.hud !== ytvs.hudTypes.none && this.volume !== this.api.getVolume()) {
-                    this.showVolume(Math.round(this.api.getVolume()));
+                    this.showVolume();
                 }
                 this.volume = this.api.getVolume();
             });
@@ -564,7 +596,7 @@ class YoutubeVolumeScroll {
         }
     }
 
-    showVolume(volume) {
+    showVolume(volume = Math.round(this.api.getVolume())) {
         const volumeHud = this.getVolumeHud();
         if (!volumeHud) return;
 
@@ -575,7 +607,7 @@ class YoutubeVolumeScroll {
         };
 
         const setOpacity = (opacity) => {
-            if (opacity === 0 && ytvs.positionMode) return;
+            if (opacity === 0 && ytvs.hudPositionMode && ytvs.hud === ytvs.hudTypes.custom) return;
             volumeHud.style.opacity = opacity;
             if (ytvs.hud === ytvs.hudTypes.native) {
                 volumeHud.parentElement.style.opacity = opacity;

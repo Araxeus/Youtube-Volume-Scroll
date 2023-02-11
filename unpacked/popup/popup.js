@@ -10,24 +10,48 @@ const hudTypes = {
     none: 2
 };
 
-let config = {
+const defaultConfig = {
     steps: 1,
     hud: hudTypes.native,
+    hudSize: '46px',
+    hudPositionMode: false,
+    hudPosition: {
+        youtube: {
+            top: '5px',
+            bottom: 'unset',
+            left: 'unset',
+            right: '5px'
+        },
+        music: {
+            top: '10px',
+            bottom: 'unset',
+            left: 'unset',
+            right: '6%'
+        },
+        shorts: {
+            top: '0',
+            bottom: 'unset',
+            left: 'unset',
+            right: '35px'
+        }
+    }
 };
 
+let config;
+
 let saveTimeout;
-function saveConfig() {
+function sendConfig(timeout = 0) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        browserApi.storage.sync.set({ config });
+        browserApi.storage.local.set({ config });
         saveTimeout = null;
-    }, 500);
+    }, timeout);
 }
 
 browserApi.storage.sync.get('config', data => {
     const res = data.config;
-    if (res) config = { ...config, ...res }; // merge with default config
+    if (res) config = { ...defaultConfig, ...res }; // merge with default config
     if ($('#steps_slider')) init();
     else {
         window.addEventListener('DOMContentLoaded', init, { once: true });
@@ -41,7 +65,10 @@ function init() {
 
     setupStepsSlider();
     setupHudRadio();
-    setupPositionModeCheckbox();
+
+    // only shown if custom hud is selected
+    setupSizeSlider();
+    setupHudPositionModeCheckbox();
 
     const permissions = {
         origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*']
@@ -73,7 +100,7 @@ function setupHudRadio() {
         radio.onchange = () => {
             config.hud = parseInt(radio.value, 10);
             setCustomOptionsEnabled(config.hud === hudTypes.custom);
-            saveConfig();
+            sendConfig();
         };
     });
     radios[config.hud].checked = true;
@@ -92,25 +119,45 @@ function setupStepsSlider() {
     };
 
     slider.value = config.steps;
-    setValue(slider);
+    setSliderValue(slider, 500);
 
     function updateOutput() {
-        setValue(slider);
         config.steps = slider.value;
-        saveConfig();
-    }
-
-    function setValue(node) {
-        node.parentNode.style.setProperty('--value', node.value);
-        node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
+        setSliderValue(slider, 500);
     }
 }
 
-function setupPositionModeCheckbox() {
-    const checkbox = $('#position_mode_checkbox');
-    checkbox.onchange = () => {
-        config.positionMode = checkbox.checked;
-        saveConfig();
+function setupSizeSlider() {
+    const slider = $('#hud_size_slider');
+    slider.oninput = updateOutput;
+    slider.onwheel = e => {
+        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
+        if (e.deltaY !== 0) e.deltaY < 0 ? slider.value++ : slider.value--;
+        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
+        if (e.deltaX !== 0) e.deltaX < 0 ? slider.value-- : slider.value++;
+        updateOutput();
     };
-    checkbox.checked = config.positionMode;
+
+    slider.value = parseFloat(config.hudSize);
+    setSliderValue(slider);
+
+    function updateOutput() {
+        config.hudSize = slider.value + 'px';
+        setSliderValue(slider);
+    }
+}
+
+function setSliderValue(node, saveTimeout = 0) {
+    node.parentNode.style.setProperty('--value', node.value);
+    node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
+    sendConfig(saveTimeout);
+}
+
+function setupHudPositionModeCheckbox() {
+    const checkbox = $('#hud_position_mode_checkbox');
+    checkbox.onchange = () => {
+        config.hudPositionMode = checkbox.checked;
+        sendConfig();
+    };
+    checkbox.checked = config.hudPositionMode;
 }

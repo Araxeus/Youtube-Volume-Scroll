@@ -57,7 +57,6 @@ body:not(.custom-options-enabled) div.custom-options {
 }
 body .custom-options h2 {
   margin-block-start: 10px;
-  margin-block-end: 0;
 }
 
 a {
@@ -307,6 +306,10 @@ h2.hud {
   margin-right: 0.375em;
   transition: 0.25s ease;
   box-shadow: inset 0 0 0 0.125em #ae181d;
+}
+
+#hud_size_slider_container::before, #hud_size_slider_container::after {
+  --offset: 0;
 }
 
 .range-slider {

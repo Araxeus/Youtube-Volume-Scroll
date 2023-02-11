@@ -94,7 +94,6 @@ body {
 
   .custom-options h2 {
     margin-block-start: 10px;
-    margin-block-end: 0;
   }
 }
 
@@ -368,8 +367,15 @@ h2.hud {
 }
 
 ////////////////////////////////////////////////
-/// STEPS SLIDER
+/// SLIDERS
 ///
+
+#hud_size_slider_container {
+  &::before,
+  &::after {
+    --offset: 0;
+  }
+}
 
 .range-slider {
   --value-offset-y: var(--ticks-gap);

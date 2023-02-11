@@ -15,11 +15,16 @@ window.addEventListener('load', start, { once: true });
 
 // keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
+    // main config changed
     if (area === 'sync' && changes.config?.newValue) {
         if (!simpleAreEqual(changes.config.newValue, configFromPageAccess)) {
             sendConfig(changes.config.newValue);
         }
         configFromPageAccess = undefined;
+    }
+    // instant config changed
+    if (area === 'local' && changes.config?.newValue) {
+        sendConfig(changes.config.newValue);
     }
 });
 
@@ -60,17 +65,17 @@ function checkOverlay() {
 function init() {
     loadPageAccess();
 
-    window.addEventListener('message', event => {
-        if (event.data.type === 'YoutubeVolumeScroll-volume' && typeof event.data.newVolume === 'number') {
-            saveVolume(event.data.newVolume);
+    window.addEventListener('message', ({ data }) => {
+        if (data.type === 'YoutubeVolumeScroll-volume' && typeof data.newVolume === 'number') {
+            saveVolume(data.newVolume);
         }
     });
 
-    window.addEventListener('message', event => {
-        if (event.data.type === 'YoutubeVolumeScroll-config-save' && typeof event.data.config === 'object') {
-            configFromPageAccess = event.data.config;
-            console.log('saving config from pageAccess', event.data.config); // DELETE
-            browserApi.storage.sync.set({ config: event.data.config });
+    window.addEventListener('message', ({ data }) => {
+        if (data.type === 'YoutubeVolumeScroll-config-save' && typeof data.config === 'object') {
+            configFromPageAccess = data.config;
+            console.log('saving config from pageAccess', data.config); // DELETE
+            browserApi.storage.sync.set({ config: data.config });
         }
     });
 
