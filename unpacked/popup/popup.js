@@ -41,6 +41,7 @@ function init() {
 
     setupStepsSlider();
     setupHudRadio();
+    setupPositionModeCheckbox();
 
     const permissions = {
         origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*']
@@ -64,15 +65,19 @@ function init() {
     });
 }
 
+const setCustomOptionsEnabled = (b) => $('body').classList[b ? 'add' : 'remove']('custom-options-enabled');
+
 function setupHudRadio() {
     const radios = $$('input[name="hud"]');
     radios.forEach(radio => {
         radio.onchange = () => {
             config.hud = parseInt(radio.value, 10);
+            setCustomOptionsEnabled(config.hud === hudTypes.custom);
             saveConfig();
         };
     });
     radios[config.hud].checked = true;
+    setCustomOptionsEnabled(config.hud === hudTypes.custom);
 }
 
 function setupStepsSlider() {
@@ -99,4 +104,13 @@ function setupStepsSlider() {
         node.parentNode.style.setProperty('--value', node.value);
         node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
     }
+}
+
+function setupPositionModeCheckbox() {
+    const checkbox = $('#position_mode_checkbox');
+    checkbox.onchange = () => {
+        config.positionMode = checkbox.checked;
+        saveConfig();
+    };
+    checkbox.checked = config.positionMode;
 }

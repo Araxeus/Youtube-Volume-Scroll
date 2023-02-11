@@ -1,9 +1,11 @@
-const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
+const browserApi = globalThis.browser ?? globalThis.chrome ?? undefined;
 if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
 
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 let isMusic = window.location.href.includes('music.youtube');
+
+let configFromPageAccess = undefined;
 
 if (browserApi.extension.inIncognitoContext) {
     setupIncognito();
@@ -14,7 +16,10 @@ window.addEventListener('load', start, { once: true });
 // keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.config?.newValue) {
-        sendConfig(changes.config.newValue);
+        if (!simpleAreEqual(changes.config.newValue, configFromPageAccess)) {
+            sendConfig(changes.config.newValue);
+        }
+        configFromPageAccess = undefined;
     }
 });
 
@@ -61,6 +66,14 @@ function init() {
         }
     });
 
+    window.addEventListener('message', event => {
+        if (event.data.type === 'YoutubeVolumeScroll-config-save' && typeof event.data.config === 'object') {
+            configFromPageAccess = event.data.config;
+            console.log('saving config from pageAccess', event.data.config); // DELETE
+            browserApi.storage.sync.set({ config: event.data.config });
+        }
+    });
+
     console.log('loaded Youtube-Volume-Scroll on url: ', window.location.href);
 }
 
@@ -78,7 +91,7 @@ function loadPageAccess() {
 
 function sendConfig(config) {
     //send updated config to pageAccess.js
-    window.postMessage({ type: 'YoutubeVolumeScroll-config', config }, '*');
+    window.postMessage({ type: 'YoutubeVolumeScroll-config-change', config }, '*');
 }
 
 function setupIncognito() {
@@ -125,6 +138,29 @@ function saveVolume(newVolume) {
 
     saveTimeout = setTimeout(() => {
         browserApi.storage.sync.set({ savedVolume: newVolume });
-        saveTimeout = null;
+        saveTimeout = undefined;
     }, 500);
 }
+
+// recursive function to compare two position objects
+function simpleAreEqual(pos1, pos2) {
+    //return JSON.stringify(pos1) === JSON.stringify(pos2); // this is too slow
+    if (typeof pos1 !== typeof pos2) return false;
+
+    switch (typeof pos1) {
+        case 'object':
+            for (const p of Object.keys(pos1)) {
+                if (!this.simpleAreEqual(pos1[p], pos2[p])) return false;
+            }
+            break;
+        case 'string':
+        case 'number':
+        case 'boolean':
+            if (pos1 !== pos2) return false;
+            break;
+        default:
+            throw new Error(`.simpleAreEqual() encountered an unknown type: {${typeof (pos1)}} pos1: ${pos1}, pos2: ${pos2}`);
+    }
+
+    return true;
+}  

@@ -42,6 +42,22 @@
       <span>None</span>
     </label>
   </div>
+  <div style="display: flex;" class="header custom-options">
+    <h2 style="font-size: x-large;">HUD Position Mode:
+      <label class="switch">
+        <input id="position_mode_checkbox" type="checkbox">
+        <span class="slider round"></span>
+      </label>
+    </h2>
+  </div>
+  <div style="display: flex;" class="header custom-options">
+    <h2>Size:</h2>
+  </div>
+  <div class="range-slider custom-options" style='--min:1; --max:10; --step:1; --value:1; --text-value:"1";'>
+    <input id="size_slider" type="range" min="1" max="10" step="1" value="1">
+    <output></output>
+    <div class='range-slider__progress'></div>
+  </div>
   <script src="popup.js"></script>
 </body>
 
