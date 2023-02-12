@@ -69,7 +69,7 @@ class ytvs {
 
     static #hudSize = undefined;
     static get hudSize() {
-        return this.#hudSize ?? '46px';
+        return this.#hudSize ?? '50px';
     }
 
     static #hudPosition = {

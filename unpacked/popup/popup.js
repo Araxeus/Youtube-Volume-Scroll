@@ -13,7 +13,7 @@ const hudTypes = {
 const defaultConfig = {
     steps: 1,
     hud: hudTypes.native,
-    hudSize: '46px',
+    hudSize: '50px',
     hudPositionMode: false,
     hudPosition: {
         youtube: {
