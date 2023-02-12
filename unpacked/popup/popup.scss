@@ -67,7 +67,47 @@ $drk_background: #0d1117;
 }
 
 ////////////////////////////////////////////////
-// PAGE SETUP
+///  COLOR PICKER
+///
+
+.clr-picker {
+  left: unset !important;
+}
+
+.clr-field {
+  //color: rgb(250, 0, 0);
+  background: inherit;
+  border: 1px solid #252f3e;
+  border-radius: 34px;
+  padding: 6px;
+
+  input {
+    width: 155px;
+    background: inherit;
+    color: inherit;
+    border: none;
+    border-radius: inherit;
+    outline: none;
+
+    font-weight: 600;
+    font-size: 26px;
+    text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px,
+      rgb(0, 0, 0) -1px -1px 0px;
+    text-indent: 8px;
+  }
+
+  button {
+    //border-radius: inherit;
+    width: 45px !important;
+    border-radius: 20px;
+    right: -1px !important;
+  }
+}
+
+////////////////////////////////////////////////
+/// PAGE SETUP
+///
+
 $primary-color: #ae181d;
 $secondary-color: #ad0007;
 
@@ -93,7 +133,7 @@ body {
   padding: 0;
 
   &.custom-options-enabled:not(.permissions-mode) {
-    height: 380px !important;
+    height: 480px !important;
   }
 
   &:not(.custom-options-enabled) div.custom-options {
@@ -214,7 +254,7 @@ body.permissions-mode {
   #permissions_wrapper {
     display: flex !important;
   }
-  
+
   div:not(#permissions_wrapper) {
     display: none !important;
   }

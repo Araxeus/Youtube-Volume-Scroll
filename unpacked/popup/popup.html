@@ -4,6 +4,10 @@
 <head>
   <link rel="stylesheet" href="popup.css">
   <title>Youtube-Volume-Scroll Popup</title>
+
+  <link rel="stylesheet" href="coloris/coloris.min.css">
+  
+  <script src="coloris/coloris.min.js"></script>
 </head>
 
 <body style="min-height: 250px; min-width: 350px">
@@ -44,7 +48,7 @@
   </div>
   <div style="display: flex;" class="header custom-options">
     <h2 style="font-size: x-large; margin-block-end: 0;">Position Mode:
-      <label class="switch" style = "margin-left: 5px;">
+      <label class="switch" style="margin-left: 5px;">
         <input id="hud_position_mode_checkbox" type="checkbox">
         <span class="slider round"></span>
       </label>
@@ -53,11 +57,19 @@
   <div style="display: flex;" class="header custom-options">
     <h2>Font Size:</h2>
   </div>
-  <div id="hud_size_slider_container" class="range-slider custom-options" style='--min:10; --max:160; --step:5; --value:50; --text-value:"50";'>
+  <div id="hud_size_slider_container" class="range-slider custom-options"
+    style='--min:10; --max:160; --step:5; --value:50; --text-value:"50";'>
     <input id="hud_size_slider" type="range" min="10" max="160" step="5" value="50">
     <output></output>
     <div class="range-slider__progress" style="--start-end: 0;"></div>
   </div>
+  <div style="display: flex;" class="header custom-options">
+    <h2 style="margin-block-end: 13px;">Font Color:</h2>
+  </div>
+  <div class="custom-options">
+    <input type="text" data-coloris>
+  </div>
+  
   <script src="popup.js"></script>
 </body>
 

@@ -19,8 +19,9 @@
     "postbuild:chromium": "npm run manifest:add:gecko.id && npm run manifest:add:background-script",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "check_no_pack": "(eslint . && web-ext lint -w && remark .) || (del-cli dist && exit 1)",
-    "check": "eslint . && npm run pack && web-ext lint -w && remark .",
+    "check_no_pack": "(npm run check_internal) || (del-cli dist && exit 1)",
+    "check_internal": "eslint . && npm run pack && web-ext lint -w --ignore-files ./popup/coloris/* && remark .",
+    "check": "npm run check_internal",
     "postcheck": "del-cli dist",
     "sas": "sass --update unpacked/popup",
     "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix"

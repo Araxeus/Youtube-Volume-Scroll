@@ -52,52 +52,60 @@ class ytvs {
 
     // config
 
-    static #steps = undefined;
-    static get steps() {
-        return this.#steps ?? 1;
-    }
-
-    static #hud = undefined;
-    static get hud() {
-        return this.#hud ?? ytvs.hudTypes.custom;
-    }
-
-    static #hudPositionMode = false;
-    static get hudPositionMode() {
-        return this.#hudPositionMode;
-    }
-
-    static #hudSize = undefined;
-    static get hudSize() {
-        return this.#hudSize ?? '50px';
-    }
-
-    static #hudPosition = {
-        youtube: {
-            top: '5px',
-            bottom: 'unset',
-            left: 'unset',
-            right: '5px'
-        },
-        music: {
-            top: '10px',
-            bottom: 'unset',
-            left: 'unset',
-            right: '6%'
-        },
-        shorts: {
-            top: '0',
-            bottom: 'unset',
-            left: 'unset',
-            right: '35px'
+    static #config = {
+        steps: 1,
+        hud: this.hudTypes.custom,
+        hudSize: '50px',
+        hudColor: '#eee',
+        hudPositionMode: false,
+        hudPosition: {
+            youtube: {
+                top: '5px',
+                bottom: 'unset',
+                left: 'unset',
+                right: '5px'
+            },
+            music: {
+                top: '10px',
+                bottom: 'unset',
+                left: 'unset',
+                right: '6%'
+            },
+            shorts: {
+                top: '0',
+                bottom: 'unset',
+                left: 'unset',
+                right: '35px'
+            }
         }
     };
+
+    static get steps() {
+        return this.#config.steps ?? 1;
+    }
+
+    static get hud() {
+        return this.#config.hud ?? ytvs.hudTypes.custom;
+    }
+
+    static get hudPositionMode() {
+        return this.#config.hudPositionMode;
+    }
+
+    static get hudSize() {
+        return this.#config.hudSize ?? '50px';
+    }
+
+    static get hudColor() {
+        return this.#config.hudColor ?? '#eee';
+    }
+
     static get hudPosition() {
-        return this.#hudPosition;
+        return this.#config.hudPosition;
     }
     static set hudPosition(value) {
         const [type, hudPosition] = Object.entries(value)[0];
-        if (!this.#hudPosition[type]) {
+        if (!this.hudPosition[type]) {
             console.error(`ytvs.hudPosition.${type} is not a valid type`);
             return;
         }
@@ -106,7 +114,7 @@ class ytvs {
             return;
         }
 
-        this.#hudPosition[type] = hudPosition;
+        this.#config.hudPosition[type] = hudPosition;
         this.#save();
     }
 
@@ -116,17 +124,11 @@ class ytvs {
     static #save() {
         if (this.#saveTimeout) clearTimeout(this.#saveTimeout);
         this.#saveTimeout = setTimeout(() => {
-            console.log('ytvs.save'); // DELETE
+            console.log('ytvs.save', this.#config); // DELETE
             // send a message to the background script to save the config
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
-                config: {
-                    hud: this.hud,
-                    steps: this.steps,
-                    hudPositionMode: this.hudPositionMode,
-                    hudPosition: this.hudPosition,
-                    hudSize: this.hudSize
-                }
+                config: this.#config
             }, '*');
         }, 500);
     }
@@ -138,16 +140,16 @@ class ytvs {
     }
 
     static #handleDataChange = config => {
-        this.#steps = config.steps;
-        if (this.#hud !== config.hud) {
-            this.#hud = config.hud;
+        this.#config.steps = config.steps;
+        if (this.hud !== config.hud) {
+            this.#config.hud = config.hud;
             if (this.#initDone) {
                 this.#activeObjects.forEach(obj => obj.showVolume());
             }
         }
         if (config.hudPositionMode !== this.hudPositionMode) {
             console.log('config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
-            this.#hudPositionMode = config.hudPositionMode;
+            this.#config.hudPositionMode = config.hudPositionMode;
             if (this.hud === this.hudTypes.custom) {
                 this.#activeObjects.forEach(obj => obj.updateHudPositionMode());
             }
@@ -156,14 +158,21 @@ class ytvs {
         }
         if (config.hudSize && config.hudSize !== this.hudSize) {
             console.log('config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
-            this.#hudSize = config.hudSize;
+            this.#config.hudSize = config.hudSize;
             this.#activeObjects.forEach(obj => obj.updateHudSize());
         } else {//DELETE
             console.log('got config but hudSize are the same', 'config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
         }
+        if (config.hudColor && config.hudColor !== this.hudColor) {
+            console.log('config.hudColor', config.hudColor, 'this.hudColor', this.hudColor); // DELETE
+            this.#config.hudColor = config.hudColor;
+            this.#activeObjects.forEach(obj => obj.updateHudColor());
+        } else {//DELETE
+            console.log('got config but hudColor are the same', 'config.hudColor', config.hudColor, 'this.hudColor', this.hudColor); // DELETE
+        }
         if (config.hudPosition && !this.simpleAreEqual(config.hudPosition, this.hudPosition)) {
             console.log('config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition); // DELETE
-            this.#hudPosition = config.hudPosition;
+            this.#config.hudPosition = config.hudPosition;
             this.activeObjects.forEach(obj => obj.updateHudPosition());
         } else {//DELETE
             console.log('got config but hudPosition are the same', 'config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition, this.simpleAreEqual(config.hudPosition, this.hudPosition)); // DELETE
@@ -297,20 +306,21 @@ class YoutubeVolumeScroll {
     }
 
     updateHudSize(volumeHud = this.getVolumeHud()) {
-        if (!volumeHud) {
-            console.error('updateHudSize: hud not found', this.hudContainer);
-            return;
-        }
+        if (!volumeHud) return;
 
         console.log('updateHudSize', this.type, volumeHud.style.fontSize, ytvs.hudSize); //DELETE
         volumeHud.style.fontSize = ytvs.hudSize;
     }
 
+    updateHudColor(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) return;
+
+        console.log('updateHudColor', this.type, volumeHud.style.color, ytvs.hudColor); //DELETE
+        volumeHud.style.color = ytvs.hudColor;
+    }
+
     updateHudPosition(volumeHud = this.getVolumeHud()) {
-        if (!volumeHud) {
-            console.error('updateHudPosition: hud not found', this.hudContainer);
-            return;
-        }
+        if (!volumeHud) return;
 
         const newHudPosition = ytvs.hudPosition[this.type];
         console.log('updateHudPosition', this.type, newHudPosition); //DELETE
@@ -335,7 +345,7 @@ class YoutubeVolumeScroll {
             this.injectVolumeHud();
             draggedElement = getDraggedElement();
         }
-        if (!draggedElement) return console.error('draggedElement not found', `${this.hudContainer} .volume-hud-custom`);
+        if (!draggedElement) return;
 
         if (ytvs.hudPositionMode) {
             this.#enablePositionMode(draggedElement, dragTarget);
@@ -428,7 +438,7 @@ class YoutubeVolumeScroll {
     #disablePositionMode(draggedElement) {
         draggedElement.draggable = false;
         draggedElement.style.pointerEvents = 'none';
-        setTimeout(() => draggedElement.style.opacity = 0);
+        setTimeout(() => draggedElement.style.opacity = 0, 50);
     }
 
     printIncognitoError() {
@@ -557,6 +567,8 @@ class YoutubeVolumeScroll {
 
             const volumeHudWrapper = getWrapper();
             volumeHudWrapper.appendChild(volumeHud);
+
+            return volumeHud;
         };
 
         switch (ytvs.hud) {
@@ -570,10 +582,11 @@ class YoutubeVolumeScroll {
             case ytvs.hudTypes.custom:
             default:
                 if (!ytvs.$(`${this.hudContainer} .volume-hud-custom`)) {
-                    createCustom();
-                    this.updateHudSize();
-                    this.updateHudPositionMode();
-                    this.updateHudPosition();
+                    const volumeHud = createCustom();
+                    this.updateHudSize(volumeHud);
+                    this.updateHudColor(volumeHud);
+                    this.updateHudPositionMode(volumeHud);
+                    this.updateHudPosition(volumeHud);
                 }
         }
     }
@@ -590,14 +603,16 @@ class YoutubeVolumeScroll {
         });
     }
 
+    // ensures that only the current ytvs.hudType is visible
     checkWrapperClass() {
         const volumeHudWrapper = ytvs.$(`${this.hudContainer} .volume-hud-wrapper`);
 
-        if (ytvs.hud === ytvs.hudTypes.native) {
-            volumeHudWrapper.setAttribute('type', 'native');
-        } else if (ytvs.hud === ytvs.hudTypes.custom) {
-            volumeHudWrapper.setAttribute('type', 'custom');
-        }
+        const reverseLookup = {
+            [ytvs.hudTypes.none]: 'none',
+            [ytvs.hudTypes.native]: 'native',
+            [ytvs.hudTypes.custom]: 'custom',
+        };
+        volumeHudWrapper.setAttribute('type', reverseLookup[ytvs.hud]);
     }
 
     showVolume(volume = Math.round(this.api.getVolume())) {
@@ -611,7 +626,7 @@ class YoutubeVolumeScroll {
         };
 
         const setOpacity = (opacity) => {
-            if (opacity === 0 && ytvs.hudPositionMode && ytvs.hud === ytvs.hudTypes.custom) return;
+            if (ytvs.hudPositionMode && opacity === 0 && ytvs.hud === ytvs.hudTypes.custom) return;
             volumeHud.style.opacity = opacity;
             if (ytvs.hud === ytvs.hudTypes.native) {
                 volumeHud.parentElement.style.opacity = opacity;

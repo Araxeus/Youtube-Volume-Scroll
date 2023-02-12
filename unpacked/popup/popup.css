@@ -29,6 +29,34 @@
     background-color: #ae181d !important;
   }
 }
+.clr-picker {
+  left: unset !important;
+}
+
+.clr-field {
+  background: inherit;
+  border: 1px solid #252f3e;
+  border-radius: 34px;
+  padding: 6px;
+}
+.clr-field input {
+  width: 155px;
+  background: inherit;
+  color: inherit;
+  border: none;
+  border-radius: inherit;
+  outline: none;
+  font-weight: 600;
+  font-size: 26px;
+  text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px, rgb(0, 0, 0) -1px -1px 0px;
+  text-indent: 8px;
+}
+.clr-field button {
+  width: 45px !important;
+  border-radius: 20px;
+  right: -1px !important;
+}
+
 @media (prefers-color-scheme: light) {
   h2 {
     color: #ae181d;
@@ -50,7 +78,7 @@ body {
   padding: 0;
 }
 body.custom-options-enabled:not(.permissions-mode) {
-  height: 380px !important;
+  height: 480px !important;
 }
 body:not(.custom-options-enabled) div.custom-options {
   display: none !important;
