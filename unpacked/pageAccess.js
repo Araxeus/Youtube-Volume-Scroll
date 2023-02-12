@@ -329,8 +329,8 @@ class YoutubeVolumeScroll {
 
         const dragTarget = ytvs.$(this.hudContainer);
 
-        const getDraggedElement = () => volumeHud ?? ytvs.$(`${this.hudContainer} .volume-hud-custom`);
-        let draggedElement = getDraggedElement();
+        const getDraggedElement = () => ytvs.$(`${this.hudContainer} .volume-hud-custom`);
+        let draggedElement = volumeHud ?? getDraggedElement();
         if (!draggedElement && ytvs.hudTypes.custom === ytvs.hud) {
             this.injectVolumeHud();
             draggedElement = getDraggedElement();
@@ -338,89 +338,97 @@ class YoutubeVolumeScroll {
         if (!draggedElement) return console.error('draggedElement not found', `${this.hudContainer} .volume-hud-custom`);
 
         if (ytvs.hudPositionMode) {
-            let dragOffsetX;
-            let dragOffsetY;
-
-            const setShortsControlsPointerEvents = (value) => {
-                const shortsControls = [ytvs.$('.player-controls.ytd-reel-video-renderer')];
-                shortsControls.forEach(c => { if (c) c.style.pointerEvents = value; });
-            };
-
-            draggedElement.draggable = true;
-            draggedElement.style.pointerEvents = 'auto';
-
-            draggedElement.style.opacity = 1;
-            draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
-
-            draggedElement.ondragstart = (ev) => {
-                const rect = ev.target.getBoundingClientRect();
-
-                dragOffsetX = ev.clientX - rect.x;
-                dragOffsetY = ev.clientY - rect.y;
-
-                setShortsControlsPointerEvents('none');
-            };
-
-            dragTarget.ondrop = (ev) => {
-                ev.preventDefault();
-
-                const dragTargetRect = dragTarget.getBoundingClientRect();
-
-                draggedElement.style.hudPosition = 'absolute';
-
-                const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
-                const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
-
-                const padding = parseFloat(window.getComputedStyle(draggedElement, undefined).padding) - 2;
-
-                const controlsHeight = ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
-
-                const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
-                const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
-
-                const ogStyle = draggedElement.style;
-                const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
-
-                if (newLeft < dragTargetRect.width / 2) {
-                    const x = Math.max(newLeft, 0 - padding);
-                    hudPosition.left = pxToPercent_width(x) + '%';
-                    hudPosition.right = 'unset';
-                } else {
-                    const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
-                    hudPosition.right = (100 - pxToPercent_width(x)) + '%';
-                    hudPosition.left = 'unset';
-                }
-
-                if (newTop < dragTargetRect.height / 2) {
-                    const y = Math.max(newTop, 0 - padding);
-                    hudPosition.top = pxToPercent_height(y) + '%';
-                    hudPosition.bottom = 'unset';
-                } else {
-                    const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
-                    hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
-                    hudPosition.top = 'unset';
-                }
-
-                Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
-
-                const hudPositionToSend = {};
-                hudPositionToSend[this.type] = hudPosition;
-                ytvs.hudPosition = hudPositionToSend;
-
-                setShortsControlsPointerEvents('auto');
-            };
-
-            dragTarget.ondragover = (ev) => {
-                ev.preventDefault();
-                ev.dataTransfer.dropEffect = 'move';
-            };
+            this.#enablePositionMode(draggedElement, dragTarget);
         } else {
-            draggedElement.draggable = false;
-            draggedElement.style.pointerEvents = 'none';
-            setTimeout(() => draggedElement.style.opacity = 0); // DELETE testing
+            this.#disablePositionMode(draggedElement);
         }
 
         this.hudPositionMode = ytvs.hudPositionMode;
+    }
+
+    #enablePositionMode(draggedElement, dragTarget) {
+        let dragOffsetX;
+        let dragOffsetY;
+
+        const setShortsControlsPointerEvents = (value) => {
+            const shortsControls = [ytvs.$('.player-controls.ytd-reel-video-renderer')];
+            shortsControls.forEach(c => { if (c) c.style.pointerEvents = value; });
+        };
+
+        draggedElement.draggable = true;
+        draggedElement.style.pointerEvents = 'auto';
+
+        draggedElement.style.opacity = 1;
+        draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
+
+        draggedElement.ondragstart = (ev) => {
+            const rect = ev.target.getBoundingClientRect();
+
+            dragOffsetX = ev.clientX - rect.x;
+            dragOffsetY = ev.clientY - rect.y;
+
+            setShortsControlsPointerEvents('none');
+        };
+
+        dragTarget.ondrop = (ev) => {
+            ev.preventDefault();
+
+            const dragTargetRect = dragTarget.getBoundingClientRect();
+
+            draggedElement.style.hudPosition = 'absolute';
+
+            const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
+            const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
+
+            const padding = parseFloat(window.getComputedStyle(draggedElement, undefined).padding) - 2;
+
+            const controlsHeight = ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
+
+            const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
+            const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
+
+            const ogStyle = draggedElement.style;
+            const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
+
+            if (newLeft < dragTargetRect.width / 2) {
+                const x = Math.max(newLeft, 0 - padding);
+                hudPosition.left = pxToPercent_width(x) + '%';
+                hudPosition.right = 'unset';
+            } else {
+                const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
+                hudPosition.right = (100 - pxToPercent_width(x)) + '%';
+                hudPosition.left = 'unset';
+            }
+
+            if (newTop < dragTargetRect.height / 2) {
+                const y = Math.max(newTop, 0 - padding);
+                hudPosition.top = pxToPercent_height(y) + '%';
+                hudPosition.bottom = 'unset';
+            } else {
+                const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
+                hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
+                hudPosition.top = 'unset';
+            }
+
+            Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
+
+            const hudPositionToSend = {};
+            hudPositionToSend[this.type] = hudPosition;
+            ytvs.hudPosition = hudPositionToSend;
+
+            setShortsControlsPointerEvents('auto');
+        };
+
+        dragTarget.ondragover = (ev) => {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = 'move';
+        };
+    }
+
+    #disablePositionMode(draggedElement) {
+        draggedElement.draggable = false;
+        draggedElement.style.pointerEvents = 'none';
+        setTimeout(() => draggedElement.style.opacity = 0);
     }
 
     printIncognitoError() {
