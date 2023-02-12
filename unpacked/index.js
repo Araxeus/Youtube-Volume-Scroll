@@ -68,13 +68,8 @@ function init() {
     window.addEventListener('message', ({ data }) => {
         if (data.type === 'YoutubeVolumeScroll-volume' && typeof data.newVolume === 'number') {
             saveVolume(data.newVolume);
-        }
-    });
-
-    window.addEventListener('message', ({ data }) => {
-        if (data.type === 'YoutubeVolumeScroll-config-save' && typeof data.config === 'object') {
+        } else if (data.type === 'YoutubeVolumeScroll-config-save' && typeof data.config === 'object') {
             configFromPageAccess = data.config;
-            console.log('saving config from pageAccess', data.config); // DELETE
             browserApi.storage.sync.set({ config: data.config });
         }
     });
