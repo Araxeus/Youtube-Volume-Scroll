@@ -13,10 +13,20 @@
   }
   .radio-container label span::before {
     background-color: unset !important;
-    box-shadow: inset 0 0 0 0.125em #ae181d;
+    box-shadow: inset 0 0 0 0.125em #ae181d !important;
   }
   .radio-container label input:checked + span::before {
     box-shadow: inset 0 0 0 0.4375em #bd003f !important;
+  }
+  .switch .slider {
+    background-color: #2d0e12 !important;
+  }
+  .switch .slider::before {
+    background-color: #bd003f !important;
+    box-shadow: 0 0 3px rgb(0, 0, 0), 0 0 3px rgb(0, 0, 0) inset, 0 0 0 99px #d5003c inset !important;
+  }
+  input:checked + .slider {
+    background-color: #ae181d !important;
   }
 }
 @media (prefers-color-scheme: light) {
@@ -32,14 +42,15 @@ h2 {
 }
 
 body {
+  overflow: hidden;
   display: grid;
   place-content: space-evenly;
   place-items: center;
   gap: 2%;
   padding: 0;
 }
-body.custom-options-enabled {
-  height: 361px !important;
+body.custom-options-enabled:not(.permissions-mode) {
+  height: 380px !important;
 }
 body:not(.custom-options-enabled) div.custom-options {
   display: none !important;
@@ -105,7 +116,7 @@ label[dir=rtl] .range-slider {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #eee;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -116,15 +127,12 @@ label[dir=rtl] .range-slider {
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: #eee;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 .switch input:checked + .slider {
   background-color: #ad0007;
-}
-.switch input:focus + .slider {
-  box-shadow: 0 0 1px #ad0007;
 }
 .switch input:checked + .slider:before {
   -webkit-transform: translateX(26px);
@@ -136,6 +144,17 @@ label[dir=rtl] .range-slider {
 }
 .switch .slider.round:before {
   border-radius: 50%;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px white inset;
+}
+
+body.permissions-mode {
+  height: 250px !important;
+}
+body.permissions-mode #permissions_wrapper {
+  display: flex !important;
+}
+body.permissions-mode div:not(#permissions_wrapper) {
+  display: none !important;
 }
 
 #permissions_wrapper {

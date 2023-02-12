@@ -141,7 +141,9 @@ class ytvs {
         this.#steps = config.steps;
         if (this.#hud !== config.hud) {
             this.#hud = config.hud;
-            this.#activeObjects.forEach(obj => obj.showVolume());
+            if (this.#initDone) {
+                this.#activeObjects.forEach(obj => obj.showVolume());
+            }
         }
         if (config.hudPositionMode !== this.hudPositionMode) {
             console.log('config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
@@ -170,19 +172,17 @@ class ytvs {
 
     static #initDone = false;
     static init() {
-        if (this.#initDone) return console.warn('ytvs.init() was already called');
         window.addEventListener('message', ({ data }) => {
             if (data.type === 'YoutubeVolumeScroll-config-change' && typeof data.config === 'object') {
                 console.log('got config', data.config); // DELETE
                 this.#handleDataChange(data.config);
+                this.#initDone ||= true;
             }
         }, false);
-        this.#initDone = true;
     }
 
     // recursive function to compare two hudPosition objects
     static simpleAreEqual(pos1, pos2) {
-        //return JSON.stringify(pos1) === JSON.stringify(pos2); // this is too slow
         if (typeof pos1 !== typeof pos2) return false;
 
         switch (typeof pos1) {
@@ -326,9 +326,8 @@ class YoutubeVolumeScroll {
         if (ytvs.hudPositionMode === this.hudPositionMode) return;
 
         console.log('updateHudPositionMode', ytvs.hudPositionMode); //DELETE
- 
+
         const dragTarget = ytvs.$(this.hudContainer);
-        if (!dragTarget) return console.error('dragTarget not found', this.hudContainer);
 
         const getDraggedElement = () => volumeHud ?? ytvs.$(`${this.hudContainer} .volume-hud-custom`);
         let draggedElement = getDraggedElement();
@@ -354,9 +353,6 @@ class YoutubeVolumeScroll {
             draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
 
             draggedElement.ondragstart = (ev) => {
-                // const { width, height } = window.getComputedStyle(draggedElement, undefined);
-                // ev.dataTransfer.setDragImage(draggedElement, parseFloat(width) / 2, parseFloat(height) / 2);
-
                 const rect = ev.target.getBoundingClientRect();
 
                 dragOffsetX = ev.clientX - rect.x;

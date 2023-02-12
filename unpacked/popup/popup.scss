@@ -41,12 +41,28 @@ $drk_background: #0d1117;
   // unselected radio buttons
   .radio-container label span::before {
     background-color: unset !important;
-    box-shadow: inset 0 0 0 0.125em $red3_outlines;
+    box-shadow: inset 0 0 0 0.125em $red3_outlines !important;
   }
 
   // selected radio button
   .radio-container label input:checked + span::before {
     box-shadow: inset 0 0 0 0.4375em $pnk2_selected !important;
+  }
+
+  // toggle switch
+  .switch .slider {
+    background-color: $red_deep !important;
+    //border: 1px solid $red3_outlines;
+
+    // thumb
+    &::before {
+      background-color: $pnk2_selected !important;
+      box-shadow: 0 0 3px rgb(0 0 0), 0 0 3px rgb(0 0 0) inset, 0 0 0 99px $pnk1_title inset !important;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $red3_outlines !important;
   }
 }
 
@@ -69,14 +85,15 @@ h2 {
 }
 
 body {
+  overflow: hidden;
   display: grid;
   place-content: space-evenly;
   place-items: center;
   gap: 2%;
   padding: 0;
 
-  &.custom-options-enabled {
-    height: 361px !important;
+  &.custom-options-enabled:not(.permissions-mode) {
+    height: 380px !important;
   }
 
   &:not(.custom-options-enabled) div.custom-options {
@@ -147,7 +164,7 @@ label[dir="rtl"] .range-slider {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #eee;
     -webkit-transition: 0.4s;
     transition: 0.4s;
   }
@@ -159,17 +176,13 @@ label[dir="rtl"] .range-slider {
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: #eee;
     -webkit-transition: 0.4s;
     transition: 0.4s;
   }
 
   input:checked + .slider {
     background-color: $secondary-color;
-  }
-
-  input:focus + .slider {
-    box-shadow: 0 0 1px $secondary-color;
   }
 
   input:checked + .slider:before {
@@ -185,12 +198,27 @@ label[dir="rtl"] .range-slider {
 
   .slider.round:before {
     border-radius: 50%;
+
+    box-shadow: 0 0 3px rgb(0 0 0 / 40%), 0 0 1px rgb(0 0 0 / 50%) inset, 0 0 0 99px white inset;
   }
 }
 
 ////////////////////////////////////////////////
 /// PERMISSIONS PROMPT
 ///
+
+body.permissions-mode {
+  height: 250px !important;
+  //background: linear-gradient(to left top, #c32c71 50%, #b33771 50%);
+
+  #permissions_wrapper {
+    display: flex !important;
+  }
+  
+  div:not(#permissions_wrapper) {
+    display: none !important;
+  }
+}
 
 #permissions_wrapper {
   flex-direction: column;

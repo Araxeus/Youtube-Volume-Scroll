@@ -149,7 +149,6 @@ function saveVolume(newVolume) {
 
 // recursive function to compare two position objects
 function simpleAreEqual(pos1, pos2) {
-    //return JSON.stringify(pos1) === JSON.stringify(pos2); // this is too slow
     if (typeof pos1 !== typeof pos2) return false;
 
     switch (typeof pos1) {

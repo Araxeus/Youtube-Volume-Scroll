@@ -75,15 +75,11 @@ function init() {
     };
     browserApi.permissions.contains(permissions, result => {
         if (!result) {
-            $('#permissions_wrapper').style.display = 'flex';
-            $$('div:not(#permissions_wrapper)').forEach(node => node.style.display = 'none');
-            $('body').style.setProperty('min-height', '145px');
+            $('body').classList.add('permissions-mode');
             $('#permissions_button').onclick = () => {
                 browserApi.permissions.request(permissions, granted => {
                     if (granted) {
-                        $('#permissions_wrapper').style.display = 'none';
-                        $$('div:not(#permissions_wrapper)').forEach(node => node.style.display = 'flex');
-                        $('body').style.setProperty('height', '250px');
+                        $('body').classList.remove('permissions-mode');
                     }
                 });
                 window.close();
