@@ -1,1 +1,1 @@
-https://github.com/mdbassit/Coloris/tree/v0.17.1/dist
+https://github.com/mdbassit/Coloris/tree/v0.18.0/dist

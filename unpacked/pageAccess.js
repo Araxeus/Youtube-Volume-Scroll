@@ -124,7 +124,6 @@ class ytvs {
     static #save() {
         if (this.#saveTimeout) clearTimeout(this.#saveTimeout);
         this.#saveTimeout = setTimeout(() => {
-            console.log('ytvs.save', this.#config); // DELETE
             // send a message to the background script to save the config
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
@@ -147,35 +146,27 @@ class ytvs {
                 this.#activeObjects.forEach(obj => obj.showVolume());
             }
         }
+
         if (config.hudPositionMode !== this.hudPositionMode) {
-            console.log('config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
             this.#config.hudPositionMode = config.hudPositionMode;
             if (this.hud === this.hudTypes.custom) {
                 this.#activeObjects.forEach(obj => obj.updateHudPositionMode());
             }
-        } else {//DELETE
-            console.log('got config but hudPositionMode are the same', 'config.hudPositionMode', config.hudPositionMode, 'this.hudPositionMode', this.hudPositionMode); // DELETE
         }
+
         if (config.hudSize && config.hudSize !== this.hudSize) {
-            console.log('config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
             this.#config.hudSize = config.hudSize;
             this.#activeObjects.forEach(obj => obj.updateHudSize());
-        } else {//DELETE
-            console.log('got config but hudSize are the same', 'config.hudSize', config.hudSize, 'this.hudSize', this.hudSize); // DELETE
         }
+
         if (config.hudColor && config.hudColor !== this.hudColor) {
-            console.log('config.hudColor', config.hudColor, 'this.hudColor', this.hudColor); // DELETE
             this.#config.hudColor = config.hudColor;
             this.#activeObjects.forEach(obj => obj.updateHudColor());
-        } else {//DELETE
-            console.log('got config but hudColor are the same', 'config.hudColor', config.hudColor, 'this.hudColor', this.hudColor); // DELETE
         }
+
         if (config.hudPosition && !this.simpleAreEqual(config.hudPosition, this.hudPosition)) {
-            console.log('config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition); // DELETE
             this.#config.hudPosition = config.hudPosition;
             this.activeObjects.forEach(obj => obj.updateHudPosition());
-        } else {//DELETE
-            console.log('got config but hudPosition are the same', 'config.hudPosition', config.hudPosition, 'this.hudPosition', this.hudPosition, this.simpleAreEqual(config.hudPosition, this.hudPosition)); // DELETE
         }
     };
 
@@ -183,7 +174,6 @@ class ytvs {
     static init() {
         window.addEventListener('message', ({ data }) => {
             if (data.type === 'YoutubeVolumeScroll-config-change' && typeof data.config === 'object') {
-                console.log('got config', data.config); // DELETE
                 this.#handleDataChange(data.config);
                 this.#initDone ||= true;
             }
@@ -212,7 +202,6 @@ class ytvs {
         return true;
     }
 }
-
 
 class YoutubeVolumeScroll {
     static types = {
@@ -303,142 +292,6 @@ class YoutubeVolumeScroll {
         if (!isShorts) {
             ytvs.isLoaded = true;
         }
-    }
-
-    updateHudSize(volumeHud = this.getVolumeHud()) {
-        if (!volumeHud) return;
-
-        console.log('updateHudSize', this.type, volumeHud.style.fontSize, ytvs.hudSize); //DELETE
-        volumeHud.style.fontSize = ytvs.hudSize;
-    }
-
-    updateHudColor(volumeHud = this.getVolumeHud()) {
-        if (!volumeHud) return;
-
-        console.log('updateHudColor', this.type, volumeHud.style.color, ytvs.hudColor); //DELETE
-        volumeHud.style.color = ytvs.hudColor;
-    }
-
-    updateHudPosition(volumeHud = this.getVolumeHud()) {
-        if (!volumeHud) return;
-
-        const newHudPosition = ytvs.hudPosition[this.type];
-        console.log('updateHudPosition', this.type, newHudPosition); //DELETE
-
-        Object.keys(newHudPosition).forEach(key => {
-            volumeHud.style[key] = newHudPosition[key];
-            console.log('updateHudPosition', key, newHudPosition[key]); //DELETE
-        });
-    }
-
-    hudPositionMode = false;
-    updateHudPositionMode(volumeHud) {
-        if (ytvs.hudPositionMode === this.hudPositionMode) return;
-
-        console.log('updateHudPositionMode', ytvs.hudPositionMode); //DELETE
-
-        const dragTarget = ytvs.$(this.hudContainer);
-
-        const getDraggedElement = () => ytvs.$(`${this.hudContainer} .volume-hud-custom`);
-        let draggedElement = volumeHud ?? getDraggedElement();
-        if (!draggedElement && ytvs.hudTypes.custom === ytvs.hud) {
-            this.injectVolumeHud();
-            draggedElement = getDraggedElement();
-        }
-        if (!draggedElement) return;
-
-        if (ytvs.hudPositionMode) {
-            this.#enablePositionMode(draggedElement, dragTarget);
-        } else {
-            this.#disablePositionMode(draggedElement);
-        }
-
-        this.hudPositionMode = ytvs.hudPositionMode;
-    }
-
-    #enablePositionMode(draggedElement, dragTarget) {
-        let dragOffsetX;
-        let dragOffsetY;
-
-        const setShortsControlsPointerEvents = (value) => {
-            const shortsControls = [ytvs.$('.player-controls.ytd-reel-video-renderer')];
-            shortsControls.forEach(c => { if (c) c.style.pointerEvents = value; });
-        };
-
-        draggedElement.draggable = true;
-        draggedElement.style.pointerEvents = 'auto';
-
-        draggedElement.style.opacity = 1;
-        draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
-
-        draggedElement.ondragstart = (ev) => {
-            const rect = ev.target.getBoundingClientRect();
-
-            dragOffsetX = ev.clientX - rect.x;
-            dragOffsetY = ev.clientY - rect.y;
-
-            setShortsControlsPointerEvents('none');
-        };
-
-        dragTarget.ondrop = (ev) => {
-            ev.preventDefault();
-
-            const dragTargetRect = dragTarget.getBoundingClientRect();
-
-            draggedElement.style.hudPosition = 'absolute';
-
-            const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
-            const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
-
-            const padding = parseFloat(window.getComputedStyle(draggedElement, undefined).padding) - 2;
-
-            const controlsHeight = ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
-
-            const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
-            const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
-
-            const ogStyle = draggedElement.style;
-            const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
-
-            if (newLeft < dragTargetRect.width / 2) {
-                const x = Math.max(newLeft, 0 - padding);
-                hudPosition.left = pxToPercent_width(x) + '%';
-                hudPosition.right = 'unset';
-            } else {
-                const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
-                hudPosition.right = (100 - pxToPercent_width(x)) + '%';
-                hudPosition.left = 'unset';
-            }
-
-            if (newTop < dragTargetRect.height / 2) {
-                const y = Math.max(newTop, 0 - padding);
-                hudPosition.top = pxToPercent_height(y) + '%';
-                hudPosition.bottom = 'unset';
-            } else {
-                const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
-                hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
-                hudPosition.top = 'unset';
-            }
-
-            Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
-
-            const hudPositionToSend = {};
-            hudPositionToSend[this.type] = hudPosition;
-            ytvs.hudPosition = hudPositionToSend;
-
-            setShortsControlsPointerEvents('auto');
-        };
-
-        dragTarget.ondragover = (ev) => {
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = 'move';
-        };
-    }
-
-    #disablePositionMode(draggedElement) {
-        draggedElement.draggable = false;
-        draggedElement.style.pointerEvents = 'none';
-        setTimeout(() => draggedElement.style.opacity = 0, 50);
     }
 
     printIncognitoError() {
@@ -643,6 +496,136 @@ class YoutubeVolumeScroll {
             setOpacity(0);
             this.hudFadeTimeout = undefined;
         }, hudTimes[ytvs.hud]);
+    }
+
+    updateHudSize(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) return;
+
+        volumeHud.style.fontSize = ytvs.hudSize;
+    }
+
+    updateHudColor(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) return;
+
+        volumeHud.style.color = ytvs.hudColor;
+    }
+
+    updateHudPosition(volumeHud = this.getVolumeHud()) {
+        if (!volumeHud) return;
+
+        const newHudPosition = ytvs.hudPosition[this.type];
+
+        Object.keys(newHudPosition).forEach(key =>
+            volumeHud.style[key] = newHudPosition[key]
+        );
+    }
+
+    hudPositionMode = false;
+    updateHudPositionMode(volumeHud) {
+        if (ytvs.hudPositionMode === this.hudPositionMode) return;
+
+        const dragTarget = ytvs.$(this.hudContainer);
+
+        const getDraggedElement = () => ytvs.$(`${this.hudContainer} .volume-hud-custom`);
+        let draggedElement = volumeHud ?? getDraggedElement();
+        if (!draggedElement && ytvs.hudTypes.custom === ytvs.hud) {
+            this.injectVolumeHud();
+            draggedElement = getDraggedElement();
+        }
+        if (!draggedElement) return;
+
+        if (ytvs.hudPositionMode) {
+            this.#enablePositionMode(draggedElement, dragTarget);
+        } else {
+            this.#disablePositionMode(draggedElement);
+        }
+
+        this.hudPositionMode = ytvs.hudPositionMode;
+    }
+
+    #enablePositionMode(draggedElement, dragTarget) {
+        let dragOffsetX;
+        let dragOffsetY;
+
+        const setShortsControlsPointerEvents = (value) => {
+            const shortsControls = [ytvs.$('.player-controls.ytd-reel-video-renderer')];
+            shortsControls.forEach(c => { if (c) c.style.pointerEvents = value; });
+        };
+
+        draggedElement.draggable = true;
+        draggedElement.style.pointerEvents = 'auto';
+
+        draggedElement.style.opacity = 1;
+        draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
+
+        draggedElement.ondragstart = (ev) => {
+            const rect = ev.target.getBoundingClientRect();
+
+            dragOffsetX = ev.clientX - rect.x;
+            dragOffsetY = ev.clientY - rect.y;
+
+            setShortsControlsPointerEvents('none');
+        };
+
+        dragTarget.ondrop = (ev) => {
+            ev.preventDefault();
+
+            const dragTargetRect = dragTarget.getBoundingClientRect();
+
+            draggedElement.style.hudPosition = 'absolute';
+
+            const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
+            const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
+
+            const padding = parseFloat(window.getComputedStyle(draggedElement, undefined).padding) - 2;
+
+            const controlsHeight = ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
+
+            const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
+            const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
+
+            const ogStyle = draggedElement.style;
+            const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
+
+            if (newLeft < dragTargetRect.width / 2) {
+                const x = Math.max(newLeft, 0 - padding);
+                hudPosition.left = pxToPercent_width(x) + '%';
+                hudPosition.right = 'unset';
+            } else {
+                const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
+                hudPosition.right = (100 - pxToPercent_width(x)) + '%';
+                hudPosition.left = 'unset';
+            }
+
+            if (newTop < dragTargetRect.height / 2) {
+                const y = Math.max(newTop, 0 - padding);
+                hudPosition.top = pxToPercent_height(y) + '%';
+                hudPosition.bottom = 'unset';
+            } else {
+                const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
+                hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
+                hudPosition.top = 'unset';
+            }
+
+            Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
+
+            const hudPositionToSend = {};
+            hudPositionToSend[this.type] = hudPosition;
+            ytvs.hudPosition = hudPositionToSend;
+
+            setShortsControlsPointerEvents('auto');
+        };
+
+        dragTarget.ondragover = (ev) => {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = 'move';
+        };
+    }
+
+    #disablePositionMode(draggedElement) {
+        draggedElement.draggable = false;
+        draggedElement.style.pointerEvents = 'none';
+        setTimeout(() => draggedElement.style.opacity = 0, 50);
     }
 }
 
