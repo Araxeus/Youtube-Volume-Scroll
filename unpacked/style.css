@@ -30,13 +30,16 @@
 
 .volume-hud-wrapper[type=native] .volume-hud-custom {
   opacity: 0 !important;
+  font-size: 0 !important;
 }
 
 .volume-hud-wrapper[type=custom] .volume-hud-native-wrapper {
   opacity: 0 !important;
+  font-size: 0 !important;
 }
 
 .volume-hud-wrapper[type=none] .volume-hud-custom,
 .volume-hud-wrapper[type=none] .volume-hud-native-wrapper {
   opacity: 0 !important;
+  font-size: 0 !important;
 }

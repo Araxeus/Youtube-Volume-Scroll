@@ -51,8 +51,7 @@ function sendConfig(timeout = 0) {
 }
 
 browserApi.storage.sync.get('config', data => {
-    const res = data.config;
-    if (res) config = { ...defaultConfig, ...res }; // merge with default config
+    config = { ...defaultConfig, ...(data?.config || {}) };
     if ($('#steps_slider')) init();
     else {
         window.addEventListener('DOMContentLoaded', init, { once: true });
