@@ -64,6 +64,66 @@ $drk_background: #0d1117;
   input:checked + .slider {
     background-color: $red3_outlines !important;
   }
+
+  tooltip-icon .tooltip-spacing .tooltip-bg2 {
+    background-color: #626262 !important;
+  }
+}
+
+////////////////////////////////////////////////
+/// Tooltips
+///
+
+tooltip-icon {
+  width: 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: black;
+  margin-top: 2px;
+  position: relative;
+
+  &:hover {
+    cursor: help;
+  }
+
+  .tooltip-spacing {
+    height: 20px;
+    margin-left: 6px;
+    position: relative;
+    width: 20px;
+
+    .tooltip-bg1 {
+      background-color: #000;
+      border-radius: 10px;
+      content: " ";
+      display: flex;
+      height: 20px;
+      position: absolute;
+      top: 0;
+      width: 20px;
+    }
+
+    .tooltip-bg2 {
+      background-color: #fff;
+      border-radius: 8px;
+      content: " ";
+      display: flex;
+      height: 16px;
+      left: 2px;
+      position: absolute;
+      top: 2px;
+      width: 16px;
+    }
+
+    .tooltip-text {
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 20px;
+      position: relative;
+      text-align: center;
+      width: 20px;
+    }
+  }
 }
 
 ////////////////////////////////////////////////
@@ -89,12 +149,12 @@ $drk_background: #0d1117;
     border-radius: inherit;
     outline: none;
 
-    font-family: Courier;
+    font-family: Courier, "Courier New", monospace;
     font-weight: 600;
-    font-size: 26px;
+    font-size: 24px;
     text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px,
       rgb(0, 0, 0) -1px -1px 0px;
-    text-indent: 8px;
+    text-indent: 11px;
   }
 
   button {
@@ -119,9 +179,10 @@ $secondary-color: #ad0007;
 }
 
 h2 {
+  display: flex;
   user-select: none;
   text-align: center;
-  font-family: "Segoe UI", "Tahoma", "sans-serif";
+  font-family: "Segoe UI", Tahoma, sans-serif;
   font-size: 25px;
 }
 
@@ -137,7 +198,7 @@ body {
     height: 480px !important;
   }
 
-  &:not(.custom-options-enabled) div.custom-options {
+  &:not(.custom-options-enabled) > div.custom-options {
     display: none !important;
   }
 
@@ -147,11 +208,51 @@ body {
   }
 
   @media screen and (min-width: 500px) {
-    height: 250px;
+    height: 350px;
   }
 
-  .custom-options h2 {
-    margin-block-start: 10px;
+  div.max-width {
+    display: grid;
+    width: 325px;
+    h2 {
+      justify-content: center;
+    }
+  }
+
+  div.custom-options {
+    &.grid {
+      display: grid;
+      grid-template-columns: 180px 180px;
+      grid-row: auto;
+      grid-column-gap: 15px;
+      grid-row-gap: 0;
+
+      h2 {
+        font-size: 21px;
+        margin-block-end: 10px;
+        margin-top: 20px;
+        justify-content: center;
+      }
+
+      div {
+        justify-content: center;
+        display: flex;
+
+        .switch {
+          margin-left: 5px;
+          margin-top: 6px;
+        }
+      }
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    h2 {
+      margin-block-start: 10px;
+    }
   }
 }
 
@@ -256,7 +357,7 @@ body.permissions-mode {
     display: flex !important;
   }
 
-  div:not(#permissions_wrapper) {
+  & > div:not(#permissions_wrapper) {
     display: none !important;
   }
 }
@@ -278,7 +379,7 @@ body.permissions-mode {
     color: #fff;
     font-size: 23px;
     letter-spacing: 3px;
-    font-family: "Lato", "sans-serif";
+    font-family: Lato, sans-serif;
     font-weight: 600;
     text-align: center;
     outline: none;
@@ -409,7 +510,7 @@ h2.hud {
     }
     span {
       user-select: none;
-      font-family: "Segoe UI Semibold", "sans-serif";
+      font-family: "Segoe UI Semibold", sans-serif;
       font-size: medium;
       display: flex;
       align-items: center;
@@ -439,10 +540,14 @@ h2.hud {
 /// SLIDERS
 ///
 
-#hud_size_slider_container {
+#hud_size_slider {
   &::before,
   &::after {
     --offset: 0;
+  }
+
+  .range-slider__progress {
+    --start-end: 0;
   }
 }
 

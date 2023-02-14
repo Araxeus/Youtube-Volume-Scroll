@@ -106,48 +106,22 @@ function setupHudRadio() {
 
 function setupStepsSlider() {
     const slider = $('#steps_slider');
-    slider.oninput = updateOutput;
-    slider.onwheel = e => {
-        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-        if (e.deltaY !== 0) e.deltaY < 0 ? slider.value++ : slider.value--;
-        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-        if (e.deltaX !== 0) e.deltaX < 0 ? slider.value-- : slider.value++;
-        updateOutput();
-    };
+    slider.value = parseFloat(config.steps);
 
-    slider.value = config.steps;
-    setSliderValue(slider, 500);
-
-    function updateOutput() {
+    slider.addEventListener('input', () => {
         config.steps = slider.value;
-        setSliderValue(slider, 500);
-    }
+        sendConfig(350);
+    });
 }
 
 function setupSizeSlider() {
     const slider = $('#hud_size_slider');
-    slider.oninput = updateOutput;
-    slider.onwheel = e => {
-        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-        if (e.deltaY !== 0) e.deltaY < 0 ? slider.value++ : slider.value--;
-        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-        if (e.deltaX !== 0) e.deltaX < 0 ? slider.value-- : slider.value++;
-        updateOutput();
-    };
-
     slider.value = parseFloat(config.hudSize);
-    setSliderValue(slider);
 
-    function updateOutput() {
+    slider.addEventListener('input', () => {
         config.hudSize = slider.value + 'px';
-        setSliderValue(slider);
-    }
-}
-
-function setSliderValue(node, saveTimeout = 0) {
-    node.parentNode.style.setProperty('--value', node.value);
-    node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
-    sendConfig(saveTimeout);
+        sendConfig(0);
+    });
 }
 
 function setupHudPositionModeCheckbox() {
@@ -168,8 +142,7 @@ function setupColorPicker() {
     colorInput.value = config.hudColor;
     colorInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-    // eslint-disable-next-line no-undef
-    Coloris({
+    globalThis.Coloris?.({
         // Available themes: default, large, polaroid, pill (horizontal).
         theme: 'large',
 
@@ -206,9 +179,6 @@ function setupColorPicker() {
 
         // Focus the color value input when the color picker dialog is opened.
         focusInput: true,
-
-        // Select and focus the color value input when the color picker dialog is opened.
-        selectInput: false,
 
         // Show an optional clear button
         clearButton: false,

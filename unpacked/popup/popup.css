@@ -28,7 +28,57 @@
   input:checked + .slider {
     background-color: #ae181d !important;
   }
+  tooltip-icon .tooltip-spacing .tooltip-bg2 {
+    background-color: #626262 !important;
+  }
 }
+tooltip-icon {
+  width: 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: black;
+  margin-top: 2px;
+  position: relative;
+}
+tooltip-icon:hover {
+  cursor: help;
+}
+tooltip-icon .tooltip-spacing {
+  height: 20px;
+  margin-left: 6px;
+  position: relative;
+  width: 20px;
+}
+tooltip-icon .tooltip-spacing .tooltip-bg1 {
+  background-color: #000;
+  border-radius: 10px;
+  content: " ";
+  display: flex;
+  height: 20px;
+  position: absolute;
+  top: 0;
+  width: 20px;
+}
+tooltip-icon .tooltip-spacing .tooltip-bg2 {
+  background-color: #fff;
+  border-radius: 8px;
+  content: " ";
+  display: flex;
+  height: 16px;
+  left: 2px;
+  position: absolute;
+  top: 2px;
+  width: 16px;
+}
+tooltip-icon .tooltip-spacing .tooltip-text {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  position: relative;
+  text-align: center;
+  width: 20px;
+}
+
 .clr-picker {
   left: unset !important;
 }
@@ -46,11 +96,11 @@
   border: none;
   border-radius: inherit;
   outline: none;
-  font-family: Courier;
+  font-family: Courier, "Courier New", monospace;
   font-weight: 600;
-  font-size: 26px;
+  font-size: 24px;
   text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px, rgb(0, 0, 0) -1px -1px 0px;
-  text-indent: 8px;
+  text-indent: 11px;
 }
 .clr-field button {
   right: 9px !important;
@@ -65,9 +115,10 @@
   }
 }
 h2 {
+  display: flex;
   user-select: none;
   text-align: center;
-  font-family: "Segoe UI", "Tahoma", "sans-serif";
+  font-family: "Segoe UI", Tahoma, sans-serif;
   font-size: 25px;
 }
 
@@ -82,7 +133,7 @@ body {
 body.custom-options-enabled:not(.permissions-mode) {
   height: 480px !important;
 }
-body:not(.custom-options-enabled) div.custom-options {
+body:not(.custom-options-enabled) > div.custom-options {
   display: none !important;
 }
 @media screen and (max-width: 500px) {
@@ -93,10 +144,43 @@ body:not(.custom-options-enabled) div.custom-options {
 }
 @media screen and (min-width: 500px) {
   body {
-    height: 250px;
+    height: 350px;
   }
 }
-body .custom-options h2 {
+body div.max-width {
+  display: grid;
+  width: 325px;
+}
+body div.max-width h2 {
+  justify-content: center;
+}
+body div.custom-options.grid {
+  display: grid;
+  grid-template-columns: 180px 180px;
+  grid-row: auto;
+  grid-column-gap: 15px;
+  grid-row-gap: 0;
+}
+body div.custom-options.grid h2 {
+  font-size: 21px;
+  margin-block-end: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+body div.custom-options.grid div {
+  justify-content: center;
+  display: flex;
+}
+body div.custom-options.grid div .switch {
+  margin-left: 5px;
+  margin-top: 6px;
+}
+body div.custom-options .column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body div.custom-options h2 {
   margin-block-start: 10px;
 }
 
@@ -183,7 +267,7 @@ body.permissions-mode {
 body.permissions-mode #permissions_wrapper {
   display: flex !important;
 }
-body.permissions-mode div:not(#permissions_wrapper) {
+body.permissions-mode > div:not(#permissions_wrapper) {
   display: none !important;
 }
 
@@ -205,7 +289,7 @@ body.permissions-mode div:not(#permissions_wrapper) {
   color: #fff;
   font-size: 23px;
   letter-spacing: 3px;
-  font-family: "Lato", "sans-serif";
+  font-family: Lato, sans-serif;
   font-weight: 600;
   text-align: center;
   outline: none;
@@ -333,7 +417,7 @@ h2.hud {
 }
 .radio-container label span {
   user-select: none;
-  font-family: "Segoe UI Semibold", "sans-serif";
+  font-family: "Segoe UI Semibold", sans-serif;
   font-size: medium;
   display: flex;
   align-items: center;
@@ -357,8 +441,11 @@ h2.hud {
   box-shadow: inset 0 0 0 0.125em #ae181d;
 }
 
-#hud_size_slider_container::before, #hud_size_slider_container::after {
+#hud_size_slider::before, #hud_size_slider::after {
   --offset: 0;
+}
+#hud_size_slider .range-slider__progress {
+  --start-end: 0;
 }
 
 .range-slider {

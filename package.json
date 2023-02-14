@@ -20,11 +20,11 @@
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
     "check_no_pack": "(npm run check_internal) || (del-cli dist && exit 1)",
-    "check_internal": "eslint . && npm run pack && web-ext lint -w --ignore-files ./popup/coloris/* && remark .",
-    "check": "npm run check_internal",
+    "check_internal": "eslint . && web-ext lint -w --ignore-files ./popup/vendors/* && remark .",
+    "check": "npm run pack && npm run check_internal",
     "postcheck": "del-cli dist",
     "sas": "sass --update unpacked/popup",
-    "format": "remark . --output --frail && eslint . --fix && web-ext lint --fix"
+    "format": "remark . --output --frail && eslint . --fix"
   },
   "repository": {
     "type": "git",

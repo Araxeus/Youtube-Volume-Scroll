@@ -5,13 +5,21 @@
   <link rel="stylesheet" href="popup.css">
   <title>Youtube-Volume-Scroll Popup</title>
 
+  <script src="elements/tooltip.js"></script>
+  <script src="elements/slider.js"></script>
+
+  <link rel="stylesheet" href="vendors/cooltipz/cooltipz.min.css">
+
   <link rel="stylesheet" href="vendors/coloris/coloris.min.css">
   <script src="vendors/coloris/coloris.min.js"></script>
 </head>
 
-<body style="min-height: 250px; min-width: 350px">
+<body style="min-height: 220px; min-width: 350px">
   <div id="permissions_wrapper" style="display: none;">
-    <h2>Permissions Needed!</h2>
+    <h2>Permissions Required!
+      <tooltip-icon label="The extension require permission to access youtube.com and music.youtube.com"
+        position="top-right" size="large" />
+    </h2>
     <button id="permissions_button">
       Request Permissions
       <span></span>
@@ -20,15 +28,11 @@
       <span></span>
     </button>
   </div>
-  <div class="header">
+  <div class="max-width">
     <h2>Volume Steps:</h2>
+    <custom-slider id="steps_slider" min="1" max="20" step="1" value="1"></custom-slider>
   </div>
-  <div class="range-slider" style='--min:1; --max:20; --step:1; --value:1; --text-value:"1";'>
-    <input id="steps_slider" type="range" min="1" max="20" step="1" value="1">
-    <output></output>
-    <div class="range-slider__progress"></div>
-  </div>
-  <div class="header">
+  <div>
     <h2 class="hud">Overlay Style:</h2>
   </div>
   <div class="radio-container">
@@ -45,30 +49,29 @@
       <span>Hidden</span>
     </label>
   </div>
-  <div style="display: flex;" class="header custom-options">
-    <h2 style="font-size: x-large; margin-block-end: 0;">Position Mode:
-      <label class="switch" style="margin-left: 5px;">
+  <div class="custom-options grid">
+    <h2>Position Mode:
+      <tooltip-icon label="When enabled - Drag the volume overlay with your mouse to reposition it" position="top"
+        size="medium" />
+    </h2>
+    <h2>Font Color:</h2>
+    <div>
+      <label class="switch">
         <input id="hud_position_mode_checkbox" type="checkbox">
         <span class="slider round"></span>
       </label>
-    </h2>
+    </div>
+    <div>
+      <div class="column" style="width: 87%;">
+        <input type="text" data-coloris>
+      </div>
+    </div>
   </div>
-  <div style="display: flex;" class="header custom-options">
+  <div class="max-width custom-options">
     <h2>Font Size:</h2>
+    <custom-slider id="hud_size_slider" min="10" max="160" step="5" value="50"></custom-slider>
   </div>
-  <div id="hud_size_slider_container" class="range-slider custom-options"
-    style='--min:10; --max:160; --step:5; --value:50; --text-value:"50";'>
-    <input id="hud_size_slider" type="range" min="10" max="160" step="5" value="50">
-    <output></output>
-    <div class="range-slider__progress" style="--start-end: 0;"></div>
-  </div>
-  <div style="display: flex;" class="header custom-options">
-    <h2 style="margin-block-end: 13px;">Font Color:</h2>
-  </div>
-  <div class="custom-options">
-    <input type="text" data-coloris>
-  </div>
-  
+
   <script src="popup.js"></script>
 </body>
 
