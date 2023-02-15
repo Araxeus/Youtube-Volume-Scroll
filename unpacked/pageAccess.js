@@ -493,19 +493,23 @@ class YoutubeVolumeScroll {
         }, hudTimes[ytvs.hud]);
     }
 
-    updateHudSize(volumeHud = this.getVolumeHud()) {
+    getCustomHud() {
+        return ytvs.$(`${this.hudContainer} .volume-hud-custom`);
+    }
+
+    updateHudSize(volumeHud = this.getCustomHud()) {
         if (!volumeHud) return;
 
         volumeHud.style.fontSize = ytvs.hudSize;
     }
 
-    updateHudColor(volumeHud = this.getVolumeHud()) {
+    updateHudColor(volumeHud = this.getCustomHud()) {
         if (!volumeHud) return;
 
         volumeHud.style.color = ytvs.hudColor;
     }
 
-    updateHudPosition(volumeHud = this.getVolumeHud()) {
+    updateHudPosition(volumeHud = this.getCustomHud()) {
         if (!volumeHud) return;
 
         const newHudPosition = ytvs.hudPosition[this.type];
@@ -521,11 +525,10 @@ class YoutubeVolumeScroll {
 
         const dragTarget = ytvs.$(this.hudContainer);
 
-        const getDraggedElement = () => ytvs.$(`${this.hudContainer} .volume-hud-custom`);
-        let draggedElement = volumeHud ?? getDraggedElement();
+        let draggedElement = volumeHud ?? this.getCustomHud();
         if (!draggedElement && ytvs.hudTypes.custom === ytvs.hud) {
             this.injectVolumeHud();
-            draggedElement = getDraggedElement();
+            draggedElement = this.getCustomHud();
         }
         if (!draggedElement) return;
 
