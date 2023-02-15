@@ -15,14 +15,13 @@ window.addEventListener('load', start, { once: true });
 
 // keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
-    // main config changed
+    // sync is the main storage, local is used for instant changes
     if (area === 'sync' && changes.config?.newValue) {
         if (!simpleAreEqual(changes.config.newValue, configFromPageAccess)) {
             sendConfig(changes.config.newValue);
         }
         configFromPageAccess = undefined;
     }
-    // instant config changed
     if (area === 'local' && changes.config?.newValue) {
         sendConfig(changes.config.newValue);
     }
@@ -44,7 +43,7 @@ function start() {
     documentObserver.observe(document.documentElement, { childList: true, subtree: true });
 }
 
-// check the extension is inside a youtube embedded iframe that isn't active yet
+// check if the extension is inside a youtube embedded iframe that isn't active yet
 function checkOverlay() {
     const overlay = $('.ytp-cued-thumbnail-overlay-image');
     const noOverlay = () => !overlay || !overlay.style.backgroundImage || overlay.parentNode.style.display === 'none';
@@ -142,23 +141,22 @@ function saveVolume(newVolume) {
     }, 500);
 }
 
-// recursive function to compare two position objects
-function simpleAreEqual(pos1, pos2) {
-    if (typeof pos1 !== typeof pos2) return false;
+function simpleAreEqual(obj1, obj2) {
+    if (typeof obj1 !== typeof obj2) return false;
 
-    switch (typeof pos1) {
+    switch (typeof obj1) {
         case 'object':
-            for (const p of Object.keys(pos1)) {
-                if (!this.simpleAreEqual(pos1[p], pos2[p])) return false;
+            for (const p of Object.keys(obj1)) {
+                if (!this.simpleAreEqual(obj1[p], obj2[p])) return false;
             }
             break;
         case 'string':
         case 'number':
         case 'boolean':
-            if (pos1 !== pos2) return false;
+            if (obj1 !== obj2) return false;
             break;
         default:
-            throw new Error(`.simpleAreEqual() encountered an unknown type: {${typeof (pos1)}} pos1: ${pos1}, pos2: ${pos2}`);
+            throw new Error(`.simpleAreEqual() encountered an unknown type: {${typeof (obj1)}} pos1: ${obj1}, pos2: ${obj2}`);
     }
 
     return true;

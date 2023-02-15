@@ -1,6 +1,7 @@
 
 // set last active time to now every 15min (blocks "are you there?" popup)
 setInterval(() => window._lact = Date.now(), 9e5);
+
 class ytvs {
     static #$ = document.querySelector.bind(document);
     static get $() {
@@ -38,19 +39,17 @@ class ytvs {
         this.#isLoaded = value;
     }
 
-    static #activeObjects = new Set();
-    static get activeObjects() {
-        return this.#activeObjects;
+    static #activeInstances = new Set();
+    static get activeInstances() {
+        return this.#activeInstances;
     }
-    static addActiveObject(ytvsObject) {
-        if (!(ytvsObject instanceof YoutubeVolumeScroll)) {
-            console.error('ytvs.addActiveObject() expects a YoutubeVolumeScroll object');
+    static addInstance(instance) {
+        if (!(instance instanceof YoutubeVolumeScroll)) {
+            console.error('ytvs.addInstance() expects a YoutubeVolumeScroll object');
             return;
         }
-        this.#activeObjects.add(ytvsObject);
+        this.#activeInstances.add(instance);
     }
-
-    // config
 
     static #config = {
         steps: 1,
@@ -118,13 +117,10 @@ class ytvs {
         this.#save();
     }
 
-    // save config
-
     static #saveTimeout = undefined;
     static #save() {
         if (this.#saveTimeout) clearTimeout(this.#saveTimeout);
         this.#saveTimeout = setTimeout(() => {
-            // send a message to the background script to save the config
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
                 config: this.#config
@@ -143,30 +139,30 @@ class ytvs {
         if (this.hud !== config.hud) {
             this.#config.hud = config.hud;
             if (this.#initDone) {
-                this.#activeObjects.forEach(obj => obj.showVolume());
+                this.#activeInstances.forEach(obj => obj.showVolume());
             }
         }
 
         if (config.hudPositionMode !== this.hudPositionMode) {
             this.#config.hudPositionMode = config.hudPositionMode;
             if (this.hud === this.hudTypes.custom) {
-                this.#activeObjects.forEach(obj => obj.updateHudPositionMode());
+                this.#activeInstances.forEach(obj => obj.updateHudPositionMode());
             }
         }
 
         if (config.hudSize && config.hudSize !== this.hudSize) {
             this.#config.hudSize = config.hudSize;
-            this.#activeObjects.forEach(obj => obj.updateHudSize());
+            this.#activeInstances.forEach(obj => obj.updateHudSize());
         }
 
         if (config.hudColor && config.hudColor !== this.hudColor) {
             this.#config.hudColor = config.hudColor;
-            this.#activeObjects.forEach(obj => obj.updateHudColor());
+            this.#activeInstances.forEach(obj => obj.updateHudColor());
         }
 
         if (config.hudPosition && !this.simpleAreEqual(config.hudPosition, this.hudPosition)) {
             this.#config.hudPosition = config.hudPosition;
-            this.activeObjects.forEach(obj => obj.updateHudPosition());
+            this.activeInstances.forEach(obj => obj.updateHudPosition());
         }
     };
 
@@ -180,23 +176,22 @@ class ytvs {
         }, false);
     }
 
-    // recursive function to compare two hudPosition objects
-    static simpleAreEqual(pos1, pos2) {
-        if (typeof pos1 !== typeof pos2) return false;
+    static simpleAreEqual(obj1, obj2) {
+        if (typeof obj1 !== typeof obj2) return false;
 
-        switch (typeof pos1) {
+        switch (typeof obj1) {
             case 'object':
-                for (const p of Object.keys(pos1)) {
-                    if (!this.simpleAreEqual(pos1[p], pos2[p])) return false;
+                for (const p of Object.keys(obj1)) {
+                    if (!this.simpleAreEqual(obj1[p], obj2[p])) return false;
                 }
                 break;
             case 'string':
             case 'number':
             case 'boolean':
-                if (pos1 !== pos2) return false;
+                if (obj1 !== obj2) return false;
                 break;
             default:
-                throw new Error(`ytvs.simpleAreEqual() encountered an unknown type: {${typeof (pos1)}} pos1: ${pos1}, pos2: ${pos2}`);
+                throw new Error(`ytvs.simpleAreEqual() encountered an unknown type: {${typeof (obj1)}} pos1: ${obj1}, pos2: ${obj2}`);
         }
 
         return true;
@@ -287,7 +282,7 @@ class YoutubeVolumeScroll {
 
         this.setupHudOnVolume();
 
-        ytvs.addActiveObject(this);
+        ytvs.addInstance(this);
 
         if (!isShorts) {
             ytvs.isLoaded = true;
