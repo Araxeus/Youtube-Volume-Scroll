@@ -30,13 +30,13 @@
 
 ★ Display the new volume for 1 second on the video when changing volume
 
+★ Customizable options in the extension settings (with [light](https://raw.githubusercontent.com/Araxeus/Youtube-Volume-Scroll/main/external_assets/popup-light.png) / [dark](https://raw.githubusercontent.com/Araxeus/Youtube-Volume-Scroll/main/external_assets/popup-dark.png) mode support)
+
 ★ Remember volume even in incognito mode
 
 ★ Works on [youtube.com](youtube.com) and [music.youtube.com](music.youtube.com)
 
-★ Works in embedded videos
-
-★ Clicking the extension [icon](https://user-images.githubusercontent.com/78568641/152661730-3b6be926-a163-47d8-a337-ddd929183317.png) allows Changing the volume scroll 'steps'
+★ Works in embedded videos (Like in Reddit, WhatsApp, etc.)
 
 ★ Automatically blocks the ["Continue watching?" popup](https://user-images.githubusercontent.com/61631665/129977894-01c60740-7ec6-4bf0-9a2c-25da24491b0e.png) that appears after some time
 

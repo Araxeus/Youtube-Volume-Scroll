@@ -13,30 +13,128 @@
   }
   .radio-container label span::before {
     background-color: unset !important;
-    box-shadow: inset 0 0 0 0.125em #ae181d;
+    box-shadow: inset 0 0 0 0.125em #ae181d !important;
   }
   .radio-container label input:checked + span::before {
     box-shadow: inset 0 0 0 0.4375em #bd003f !important;
   }
+  .switch .slider {
+    background-color: #2d0e12 !important;
+  }
+  .switch .slider::before {
+    background-color: #bd003f !important;
+    box-shadow: 0 0 3px rgb(0, 0, 0), 0 0 3px rgb(0, 0, 0) inset, 0 0 0 99px #d5003c inset !important;
+  }
+  input:checked + .slider {
+    background-color: #ae181d !important;
+  }
+  tooltip-icon .tooltip-spacing .tooltip-bg2 {
+    background-color: #626262 !important;
+  }
 }
+tooltip-icon {
+  width: 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: black;
+  margin-top: 2px;
+  position: relative;
+}
+tooltip-icon:hover {
+  cursor: help;
+}
+tooltip-icon .tooltip-spacing {
+  height: 20px;
+  margin-left: 6px;
+  position: relative;
+  width: 20px;
+}
+tooltip-icon .tooltip-spacing .tooltip-bg1 {
+  background-color: #000;
+  border-radius: 10px;
+  content: " ";
+  display: flex;
+  height: 20px;
+  position: absolute;
+  top: 0;
+  width: 20px;
+}
+tooltip-icon .tooltip-spacing .tooltip-bg2 {
+  background-color: #fff;
+  border-radius: 8px;
+  content: " ";
+  display: flex;
+  height: 16px;
+  left: 2px;
+  position: absolute;
+  top: 2px;
+  width: 16px;
+}
+tooltip-icon .tooltip-spacing .tooltip-text {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  position: relative;
+  text-align: center;
+  width: 20px;
+}
+
+.clr-picker {
+  left: unset !important;
+}
+
+.clr-field {
+  background: inherit;
+  border: 1px solid #252f3e;
+  border-radius: 34px;
+  padding: 6px;
+}
+.clr-field input {
+  width: 155px;
+  background: inherit;
+  color: inherit;
+  border: none;
+  border-radius: inherit;
+  outline: none;
+  font-family: Courier, "Courier New", monospace;
+  font-weight: 600;
+  font-size: 24px;
+  text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px, rgb(0, 0, 0) -1px -1px 0px;
+  text-indent: 11px;
+}
+.clr-field button {
+  right: 9px !important;
+  width: 24px !important;
+  border-radius: 20px;
+  height: 50% !important;
+}
+
 @media (prefers-color-scheme: light) {
   h2 {
     color: #ae181d;
   }
 }
 h2 {
+  display: flex;
   user-select: none;
   text-align: center;
-  font-family: "Segoe UI", "Tahoma", "sans-serif";
+  font-family: "Segoe UI", Tahoma, sans-serif;
   font-size: 25px;
 }
 
 body {
+  overflow: hidden;
   display: grid;
   place-content: space-evenly;
   place-items: center;
   gap: 2%;
   padding: 0;
+}
+body.custom-options-enabled:not(.permissions-mode) {
+  height: 480px !important;
+}
+body:not(.custom-options-enabled) > div.custom-options {
+  display: none !important;
 }
 @media screen and (max-width: 500px) {
   body {
@@ -46,8 +144,44 @@ body {
 }
 @media screen and (min-width: 500px) {
   body {
-    height: 250px;
+    height: 350px;
   }
+}
+body div.max-width {
+  display: grid;
+  width: 325px;
+}
+body div.max-width h2 {
+  justify-content: center;
+}
+body div.custom-options.grid {
+  display: grid;
+  grid-template-columns: 180px 180px;
+  grid-row: auto;
+  grid-column-gap: 15px;
+  grid-row-gap: 0;
+}
+body div.custom-options.grid h2 {
+  font-size: 21px;
+  margin-block-end: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+body div.custom-options.grid div {
+  justify-content: center;
+  display: flex;
+}
+body div.custom-options.grid div .switch {
+  margin-left: 5px;
+  margin-top: 6px;
+}
+body div.custom-options .column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body div.custom-options h2 {
+  margin-block-start: 10px;
 }
 
 a {
@@ -74,6 +208,69 @@ label[dir=rtl] .range-slider {
   min-width: 200px;
 }
 
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  /* Hide default HTML checkbox */
+  /* The slider */
+  /* Rounded sliders */
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #eee;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #eee;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.switch input:checked + .slider {
+  background-color: #ad0007;
+}
+.switch input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+.switch .slider.round {
+  border-radius: 34px;
+}
+.switch .slider.round:before {
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px white inset;
+}
+
+body.permissions-mode {
+  height: 250px !important;
+}
+body.permissions-mode #permissions_wrapper {
+  display: flex !important;
+}
+body.permissions-mode > div:not(#permissions_wrapper) {
+  display: none !important;
+}
+
 #permissions_wrapper {
   flex-direction: column;
   align-items: center;
@@ -92,7 +289,7 @@ label[dir=rtl] .range-slider {
   color: #fff;
   font-size: 23px;
   letter-spacing: 3px;
-  font-family: "Lato", "sans-serif";
+  font-family: Lato, sans-serif;
   font-weight: 600;
   text-align: center;
   outline: none;
@@ -198,6 +395,7 @@ h2.hud {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content: center;
 }
 .radio-container label {
   display: flex;
@@ -219,7 +417,7 @@ h2.hud {
 }
 .radio-container label span {
   user-select: none;
-  font-family: "Segoe UI Semibold", "sans-serif";
+  font-family: "Segoe UI Semibold", sans-serif;
   font-size: medium;
   display: flex;
   align-items: center;
@@ -241,6 +439,13 @@ h2.hud {
   margin-right: 0.375em;
   transition: 0.25s ease;
   box-shadow: inset 0 0 0 0.125em #ae181d;
+}
+
+#hud_size_slider::before, #hud_size_slider::after {
+  --offset: 0;
+}
+#hud_size_slider .range-slider__progress {
+  --start-end: 0;
 }
 
 .range-slider {

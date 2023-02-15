@@ -9,6 +9,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
+    "ignorePatterns": ["**/popup/vendors/*"],
     "rules": {
         "indent": [
             "error",

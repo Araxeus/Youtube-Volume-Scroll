@@ -3,7 +3,7 @@
   position: absolute;
   pointer-events: none;
   user-select: none;
-  font-size: xxx-large;
+  font-size: 50px;
   padding: 10px;
   transition: opacity 0.6s;
   font-weight: 600;
@@ -28,10 +28,20 @@
   color: #dedddd;
 }
 
+/* font-size: 0; fixes a bug with position mode, where after its disabled and hidden the browser still allows dragging it
+   when the font size is 0 - the bug is still present but the draggable area shrinks to 1 pixel which drastically lowers the effect of the bug */
 .volume-hud-wrapper[type=native] .volume-hud-custom {
-  display: none;
+  opacity: 0 !important;
+  font-size: 0 !important;
 }
 
 .volume-hud-wrapper[type=custom] .volume-hud-native-wrapper {
-  display: none;
+  opacity: 0 !important;
+  font-size: 0 !important;
+}
+
+.volume-hud-wrapper[type=none] .volume-hud-custom,
+.volume-hud-wrapper[type=none] .volume-hud-native-wrapper {
+  opacity: 0 !important;
+  font-size: 0 !important;
 }

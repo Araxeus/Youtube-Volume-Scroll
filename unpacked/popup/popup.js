@@ -10,24 +10,48 @@ const hudTypes = {
     none: 2
 };
 
-let config = {
+const defaultConfig = {
     steps: 1,
     hud: hudTypes.native,
+    hudSize: '50px',
+    hudColor: '#eee',
+    hudPositionMode: false,
+    hudPosition: {
+        youtube: {
+            top: '5px',
+            bottom: 'unset',
+            left: 'unset',
+            right: '5px'
+        },
+        music: {
+            top: '10px',
+            bottom: 'unset',
+            left: 'unset',
+            right: '6%'
+        },
+        shorts: {
+            top: '0',
+            bottom: 'unset',
+            left: 'unset',
+            right: '35px'
+        }
+    }
 };
 
+let config;
+
 let saveTimeout;
-function saveConfig() {
+function sendConfig(timeout = 0) {
     if (saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
-        browserApi.storage.sync.set({ config });
+        browserApi.storage.local.set({ config });
         saveTimeout = null;
-    }, 500);
+    }, timeout);
 }
 
 browserApi.storage.sync.get('config', data => {
-    const res = data.config;
-    if (res) config = { ...config, ...res }; // merge with default config
+    config = { ...defaultConfig, ...(data?.config || {}) };
     if ($('#steps_slider')) init();
     else {
         window.addEventListener('DOMContentLoaded', init, { once: true });
@@ -42,20 +66,21 @@ function init() {
     setupStepsSlider();
     setupHudRadio();
 
+    // only shown if custom hud is selected
+    setupSizeSlider();
+    setupHudPositionModeCheckbox();
+    setupColorPicker();
+
     const permissions = {
         origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*']
     };
     browserApi.permissions.contains(permissions, result => {
         if (!result) {
-            $('#permissions_wrapper').style.display = 'flex';
-            $$('div:not(#permissions_wrapper)').forEach(node => node.style.display = 'none');
-            $('body').style.setProperty('min-height', '145px');
+            $('body').classList.add('permissions-mode');
             $('#permissions_button').onclick = () => {
                 browserApi.permissions.request(permissions, granted => {
                     if (granted) {
-                        $('#permissions_wrapper').style.display = 'none';
-                        $$('div:not(#permissions_wrapper)').forEach(node => node.style.display = 'flex');
-                        $('body').style.setProperty('height', '250px');
+                        $('body').classList.remove('permissions-mode');
                     }
                 });
                 window.close();
@@ -64,39 +89,118 @@ function init() {
     });
 }
 
+const setCustomOptionsEnabled = (b) => $('body').classList[b ? 'add' : 'remove']('custom-options-enabled');
+
 function setupHudRadio() {
     const radios = $$('input[name="hud"]');
     radios.forEach(radio => {
         radio.onchange = () => {
             config.hud = parseInt(radio.value, 10);
-            saveConfig();
+            setCustomOptionsEnabled(config.hud === hudTypes.custom);
+            sendConfig();
         };
     });
     radios[config.hud].checked = true;
+    setCustomOptionsEnabled(config.hud === hudTypes.custom);
 }
 
 function setupStepsSlider() {
     const slider = $('#steps_slider');
-    slider.oninput = updateOutput;
-    slider.onwheel = e => {
-        // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-        if (e.deltaY !== 0) e.deltaY < 0 ? slider.value++ : slider.value--;
-        // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-        if (e.deltaX !== 0) e.deltaX < 0 ? slider.value-- : slider.value++;
-        updateOutput();
-    };
+    slider.value = parseFloat(config.steps);
 
-    slider.value = config.steps;
-    setValue(slider);
-
-    function updateOutput() {
-        setValue(slider);
+    slider.addEventListener('input', () => {
         config.steps = slider.value;
-        saveConfig();
-    }
+        sendConfig(350);
+    });
+}
 
-    function setValue(node) {
-        node.parentNode.style.setProperty('--value', node.value);
-        node.parentNode.style.setProperty('--text-value', JSON.stringify(node.value));
-    }
+function setupSizeSlider() {
+    const slider = $('#hud_size_slider');
+    slider.value = parseFloat(config.hudSize);
+
+    slider.addEventListener('input', () => {
+        config.hudSize = slider.value + 'px';
+        sendConfig(0);
+    });
+}
+
+function setupHudPositionModeCheckbox() {
+    const checkbox = $('#hud_position_mode_checkbox');
+    checkbox.onchange = () => {
+        config.hudPositionMode = checkbox.checked;
+        sendConfig();
+    };
+    checkbox.checked = config.hudPositionMode;
+}
+
+function setupColorPicker() {
+    document.addEventListener('coloris:pick', ({ detail }) => {
+        config.hudColor = detail.color;
+        sendConfig();
+    });
+    const colorInput = $('input[data-coloris');
+    colorInput.value = config.hudColor;
+    colorInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+    globalThis.Coloris?.({
+        // Available themes: default, large, polaroid, pill (horizontal).
+        theme: 'large',
+
+        // Set the theme to light or dark mode:
+        // * light: light mode (default).
+        // * dark: dark mode.
+        // * auto: automatically enables dark mode when the user prefers a dark color scheme.
+        themeMode: 'auto',
+
+        // The margin in pixels between the input fields and the color picker's dialog.
+        margin: 10,
+
+        // Set the preferred color string format:
+        // * hex: outputs #RRGGBB or #RRGGBBAA (default).
+        // * rgb: outputs rgb(R, G, B) or rgba(R, G, B, A).
+        // * hsl: outputs hsl(H, S, L) or hsla(H, S, L, A).
+        // * auto: guesses the format from the active input field. Defaults to hex if it fails.
+        // * mixed: outputs #RRGGBB when alpha is 1; otherwise rgba(R, G, B, A).
+        format: 'auto',
+
+        // Set to true to enable format toggle buttons in the color picker dialog.
+        // This will also force the format option (above) to auto.
+        formatToggle: false,
+
+        // Enable or disable alpha support.
+        // When disabled, it will strip the alpha value from the existing color string in all formats.
+        alpha: false,
+
+        // Set to true to always include the alpha value in the color value even if the opacity is 100%.
+        forceAlpha: false,
+
+        // Set to true to hide all the color picker widgets (spectrum, hue, ...) except the swatches.
+        swatchesOnly: false,
+
+        // Focus the color value input when the color picker dialog is opened.
+        focusInput: true,
+
+        // Show an optional clear button
+        clearButton: false,
+
+        // An array of the desired color swatches to display. If omitted or the array is empty,
+        // the color swatches will be disabled.
+        swatches: [
+            '#eee',
+            '#99506d',
+            '#e9c46a',
+            '#f4a261',
+            '#e76f51',
+            '#d62828',
+            '#da003a',
+            '#f82359',
+            '#264653',
+            '#2a9d8f',
+            '#691ffd',
+            '#be73ff',
+            '#07b',
+            '#0096c7',
+            '#00b4d8',
+        ],
+    });
 }
