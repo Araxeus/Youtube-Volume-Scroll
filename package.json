@@ -24,7 +24,10 @@
     "check": "npm run pack && npm run check_internal",
     "postcheck": "del-cli dist",
     "sas": "sass --update unpacked/popup",
-    "format": "remark . --output --frail && eslint . --fix"
+    "format": "remark . --output --frail && eslint . --fix",
+    "install": "npip install",
+    "peru:check": "nopenv peru reup",
+    "peru:update": "nopenv peru reup -f && nopenv peru sync -f"
   },
   "repository": {
     "type": "git",
@@ -49,7 +52,8 @@
     "remark-preset-lint-recommended": "^6.1.2",
     "sass": "^1.58.1",
     "web-ext": "^7.5.0",
-    "x-var": "^0.0.1"
+    "x-var": "^0.0.1",
+    "nopy": "^0.2.8"
   },
   "webExt": {
     "sourceDir": "dist",
@@ -102,5 +106,11 @@
       "remark-preset-lint-consistent",
       "remark-preset-lint-recommended"
     ]
+  },
+  "python": {
+    "dependencies": {
+      "peru": ">=1.3.1"
+    },
+    "execPath": ["python", "python3"]
   }
 }

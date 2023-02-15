@@ -1,0 +1,22 @@
+imports:
+    coloris: ./unpacked/popup/vendors/coloris
+    cooltipz: ./unpacked/popup/vendors/cooltipz
+
+git module coloris:
+    url: https://github.com/mdbassit/Coloris
+    move:
+        dist/coloris.min.js: coloris.min.js
+        dist/coloris.min.css: coloris.min.css
+    # Only copy this file. Can be a list of files. Accepts * and ** globs.
+    pick:
+        - coloris.min.js
+        - coloris.min.css
+        - LICENSE
+    rev: 672e4c1ed76b5f15b333f2f1639661cdf79c4e41
+
+git module cooltipz:
+    url: https://github.com/jackdomleo7/Cooltipz.css
+    pick:
+        - cooltipz.min.css
+        - LICENSE
+    rev: 221c78fc845f4272b8e81f9c9a55ff5416949903
