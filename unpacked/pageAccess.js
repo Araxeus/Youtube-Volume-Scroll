@@ -235,8 +235,14 @@ class YoutubeVolumeScroll {
             customFunction: () => {
                 ytvs.$('.ytp-cards-button-icon').style.display = 'none';
                 ytvs.$('.ytp-chrome-top-buttons').style.display = 'none';
-                // remove the real native volume hud
-                ytvs.$('.ytp-bezel-text-wrapper').parentElement.remove();
+
+                // hide the real native volume hud when its in volume mode - aka text ends with %
+                const bezelText = ytvs.$('.ytp-bezel-text');
+                const parent = bezelText.parentElement.parentElement;
+                const observer = new MutationObserver(() => {
+                    parent.style.opacity = bezelText.textContent.endsWith('%') ? 0 : 1;
+                });
+                observer.observe(bezelText, { childList: true });
             }
         });
     }
