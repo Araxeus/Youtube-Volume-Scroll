@@ -5,3 +5,7 @@ external_assets/uncompressed/
 node_modules
 keys.json
 *.crx
+python_modules
+__pycache__
+*.pyc
+.peru/*
