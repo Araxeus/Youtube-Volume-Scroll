@@ -461,16 +461,6 @@ class YoutubeVolumeScroll {
     }
 
     injectVolumeHud() {
-        const getWrapper = () => {
-            let volumeHudWrapper = ytvs.$(`${this.hudContainer} .volume-hud-wrapper`);
-            if (!volumeHudWrapper) {
-                volumeHudWrapper = document.createElement('div');
-                volumeHudWrapper.classList.add('volume-hud-wrapper');
-                ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHudWrapper);
-            }
-            return volumeHudWrapper;
-        };
-
         const createNative = () => {
             const volumeHudNativeWrapper = document.createElement('div');
             volumeHudNativeWrapper.style.opacity = 0;
@@ -478,8 +468,8 @@ class YoutubeVolumeScroll {
             const volumeHudNative = document.createElement('div');
             volumeHudNative.classList.add('ytp-bezel-text', 'volume-hud-native');
             volumeHudNativeWrapper.appendChild(volumeHudNative);
-            const volumeHudWrapper = getWrapper();
-            volumeHudWrapper.appendChild(volumeHudNativeWrapper);
+
+            ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHudNativeWrapper);
         };
 
         const createCustom = () => {
@@ -487,8 +477,7 @@ class YoutubeVolumeScroll {
             volumeHud.classList.add('volume-hud', 'volume-hud-custom');
             if (ytvs.isMusic) volumeHud.classList.add('music');
 
-            const volumeHudWrapper = getWrapper();
-            volumeHudWrapper.appendChild(volumeHud);
+            ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHud);
 
             return volumeHud;
         };
@@ -526,15 +515,13 @@ class YoutubeVolumeScroll {
     }
 
     // ensures that only the current ytvs.hudType is visible
-    checkWrapperClass() {
-        const volumeHudWrapper = ytvs.$(`${this.hudContainer} .volume-hud-wrapper`);
-
+    checkYtvsTypeClass() {
         const reverseLookup = {
             [ytvs.hudTypes.none]: 'none',
             [ytvs.hudTypes.native]: 'native',
             [ytvs.hudTypes.custom]: 'custom',
         };
-        volumeHudWrapper.setAttribute('type', reverseLookup[ytvs.hud]);
+        document.body.setAttribute('ytvs_type', reverseLookup[ytvs.hud]);
     }
 
     showVolume(volume = Math.round(this.api.getVolume())) {
@@ -555,7 +542,7 @@ class YoutubeVolumeScroll {
             }
         };
 
-        this.checkWrapperClass();
+        this.checkYtvsTypeClass();
 
         volumeHud.textContent = volume + '%';
         setOpacity(1);
