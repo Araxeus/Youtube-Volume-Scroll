@@ -64,12 +64,13 @@ function checkOverlay() {
 function init() {
     loadPageAccess();
 
-    window.addEventListener('message', ({ data }) => {
-        if (data.type === 'YoutubeVolumeScroll-volume' && typeof data.newVolume === 'number') {
-            saveVolume(data.newVolume);
-        } else if (data.type === 'YoutubeVolumeScroll-config-save' && typeof data.config === 'object') {
-            configFromPageAccess = data.config;
-            browserApi.storage.sync.set({ config: data.config });
+    window.addEventListener('message', (e) => {
+        if (e.origin !== window.location.origin) return;
+        if (e.data.type === 'YoutubeVolumeScroll-volume' && typeof e.data.newVolume === 'number') {
+            saveVolume(e.data.newVolume);
+        } else if (e.data.type === 'YoutubeVolumeScroll-config-save' && typeof e.data.config === 'object') {
+            configFromPageAccess = e.data.config;
+            browserApi.storage.sync.set({ config: e.data.config });
         }
     });
 
@@ -90,7 +91,7 @@ function loadPageAccess() {
 
 function sendConfig(config) {
     //send updated config to pageAccess.js
-    window.postMessage({ type: 'YoutubeVolumeScroll-config-change', config }, '*');
+    window.postMessage({ type: 'YoutubeVolumeScroll-config-change', config }, window.location.origin);
 }
 
 function setupIncognito() {

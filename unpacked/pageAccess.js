@@ -27,6 +27,20 @@ class ytvs {
         return this.#hudTypes;
     }
 
+    static #activationModifiers = {
+        none: 0,
+        shift: 1,
+        rightClick: 2
+    };
+    static get activationModifiers() {
+        return this.#activationModifiers;
+    }
+
+    static #isRightMouseDown = false;
+    static get isRightMouseDown() {
+        return this.#isRightMouseDown;
+    }
+
     static #isLoaded = false;
     static get isLoaded() {
         return this.#isLoaded;
@@ -39,7 +53,7 @@ class ytvs {
         this.#isLoaded = value;
     }
 
-    static #activeInstances = new Set();
+    static #activeInstances = [];
     static get activeInstances() {
         return this.#activeInstances;
     }
@@ -48,7 +62,7 @@ class ytvs {
             console.error('ytvs.addInstance() expects a YoutubeVolumeScroll object');
             return;
         }
-        this.#activeInstances.add(instance);
+        this.#activeInstances.push(instance);
     }
 
     static #config = {
@@ -57,6 +71,7 @@ class ytvs {
         hudSize: '50px',
         hudColor: '#eee',
         hudPositionMode: false,
+        activationModifier: this.activationModifiers.none,
         hudPosition: {
             youtube: {
                 top: '5px',
@@ -83,8 +98,12 @@ class ytvs {
         return this.#config.steps ?? 1;
     }
 
+    static get activationModifier() {
+        return this.#config.activationModifier ?? this.activationModifiers.none;
+    }
+
     static get hud() {
-        return this.#config.hud ?? ytvs.hudTypes.custom;
+        return this.#config.hud ?? this.hudTypes.custom;
     }
 
     static get hudPositionMode() {
@@ -124,7 +143,7 @@ class ytvs {
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
                 config: this.#config
-            }, '*');
+            }, window.location.origin);
         }, 500);
     }
 
@@ -134,6 +153,47 @@ class ytvs {
             .find((row) => row.startsWith(`${n}=`));
     }
 
+    static #setupMouseObserver = () => {
+        let changedVolumeWhileRightMouseDown = false;
+
+        document.addEventListener('mousedown', e => {
+            if (e.button === 2) {
+                this.#isRightMouseDown = true;
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (e.button === 2) {
+                this.#isRightMouseDown = false;
+                if (changedVolumeWhileRightMouseDown) {
+                    changedVolumeWhileRightMouseDown = false;
+                    setTimeout(() => this.$('body').oncontextmenu = undefined);
+                    if (!this.isMusic) {
+                        // send left click event to movie player
+                        setTimeout(() => {
+                            this.$('ytd-app')?.dispatchEvent(new MouseEvent('click', {
+                                view: window,
+                                bubbles: true,
+                                cancelable: true
+                            }));
+                        });
+                    }
+                    return false;
+                }
+            }
+        });
+
+        window.addEventListener('message', e => {
+            if (e.origin !== window.location.origin) return;
+            if (e.data.type === 'YoutubeVolumeScroll-volume') {
+                if (this.#isRightMouseDown) {
+                    changedVolumeWhileRightMouseDown = true;
+                    this.$('body').oncontextmenu = () => false;
+                }
+            }
+        });
+    };
+
     static #handleDataChange = config => {
         this.#config.steps = config.steps;
         if (this.hud !== config.hud) {
@@ -141,6 +201,10 @@ class ytvs {
             if (this.#initDone) {
                 this.#activeInstances.forEach(obj => obj.showVolume());
             }
+        }
+
+        if (config.activationModifier !== this.activationModifier) {
+            this.#config.activationModifier = config.activationModifier;
         }
 
         if (config.hudPositionMode !== this.hudPositionMode) {
@@ -168,12 +232,15 @@ class ytvs {
 
     static #initDone = false;
     static init() {
-        window.addEventListener('message', ({ data }) => {
-            if (data.type === 'YoutubeVolumeScroll-config-change' && typeof data.config === 'object') {
-                this.#handleDataChange(data.config);
+        window.addEventListener('message', (e) => {
+            if (e.origin !== window.location.origin) return;
+            if (e.data.type === 'YoutubeVolumeScroll-config-change' && typeof e.data.config === 'object') {
+                this.#handleDataChange(e.data.config);
                 this.#initDone ||= true;
             }
         }, false);
+
+        this.#setupMouseObserver();
     }
 
     static simpleAreEqual(obj1, obj2) {
@@ -204,13 +271,13 @@ class YoutubeVolumeScroll {
         music: 'music',
         shorts: 'shorts'
     };
-
     type = undefined;
+
+    isShorts = () => this.type === this.constructor.types.shorts;
 
     volume = undefined;
     hudFadeTimeout = undefined;
 
-    isShorts = false;
     api = undefined;
     scrollTarget = undefined;
     hudContainer = undefined;
@@ -254,7 +321,6 @@ class YoutubeVolumeScroll {
             scrollTarget: 'ytd-player.ytd-shorts',
             hudContainer: 'ytd-player.ytd-shorts',
             hudAfter: 'ytd-player.ytd-shorts div',
-            isShorts: true
         });
     }
 
@@ -268,20 +334,19 @@ class YoutubeVolumeScroll {
         });
     }
 
-    constructor({ type, api, scrollTarget, hudContainer, hudAfter, isShorts, customFunction }) {
+    constructor({ type, api, scrollTarget, hudContainer, hudAfter, customFunction }) {
         this.type = type;
         this.api = api;
         // Saves the volume locally so that hudOnVolume doesn't show hud if volume wasn't actually changed 
         // (e.g. the sponsorblock skip function triggers a volume change without actually changing the volume)
         this.volume = this.api.getVolume();
-        if (!isShorts && !ytvs.isLoaded) {
+        if (!this.isShorts() && !ytvs.isLoaded) {
             this.#setupIncognito();
         }
 
         this.scrollTarget = scrollTarget;
         this.hudContainer = hudContainer;
         this.hudAfter = hudAfter;
-        this.isShorts = isShorts;
 
         this.setupOnWheel();
         customFunction?.(this);
@@ -290,7 +355,7 @@ class YoutubeVolumeScroll {
 
         ytvs.addInstance(this);
 
-        if (!isShorts) {
+        if (!this.isShorts()) {
             ytvs.isLoaded = true;
         }
     }
@@ -316,10 +381,13 @@ class YoutubeVolumeScroll {
 
     setupOnWheel() {
         ytvs.$(this.scrollTarget).onwheel = event => {
+            if (ytvs.activationModifier === ytvs.activationModifiers.shift && !event.shiftKey) return;
+            if (ytvs.activationModifier === ytvs.activationModifiers.rightClick && !ytvs.isRightMouseDown) return;
+            const multiplier = event.shiftKey && ytvs.activationModifier !== ytvs.activationModifiers.shift ? 2 : 1;
             // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-            if (event.deltaY !== 0) this.changeVolume(event.deltaY < 0, event.shiftKey ? 2 : 1);
+            if (event.deltaY !== 0) this.changeVolume(event.deltaY < 0, multiplier);
             // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-            if (event.deltaX !== 0) this.changeVolume(event.deltaX > 0, event.shiftKey ? 2 : 1);
+            if (event.deltaX !== 0) this.changeVolume(event.deltaX > 0, multiplier);
             return false;
         };
     }
@@ -338,11 +406,11 @@ class YoutubeVolumeScroll {
 
         this.api.setVolume(newVolume);
 
-        if (this.isShorts) return;
+        if (this.isShorts()) return;
 
         this.saveNativeVolume(newVolume);
 
-        window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, '*');
+        window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, window.location.origin);
     }
 
     saveNativeVolume(volume) {

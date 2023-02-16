@@ -140,10 +140,10 @@ body {
 }
 body .last-item {
   margin-top: 4px;
-  margin-bottom: 15px;
+  margin-bottom: 7px;
 }
 body.custom-options-enabled:not(.permissions-mode) {
-  height: 468px !important;
+  height: 574px !important;
 }
 body:not(.custom-options-enabled) > div.custom-options {
   display: none !important;
