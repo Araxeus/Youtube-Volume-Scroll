@@ -143,7 +143,7 @@ class ytvs {
             window.postMessage({
                 type: 'YoutubeVolumeScroll-config-save',
                 config: this.#config
-            }, '*');
+            }, window.location.origin);
         }, 500);
     }
 
@@ -184,6 +184,7 @@ class ytvs {
         });
 
         window.addEventListener('message', e => {
+            if (e.origin !== window.location.origin) return;
             if (e.data.type === 'YoutubeVolumeScroll-volume') {
                 if (this.#isRightMouseDown) {
                     changedVolumeWhileRightMouseDown = true;
@@ -231,9 +232,10 @@ class ytvs {
 
     static #initDone = false;
     static init() {
-        window.addEventListener('message', ({ data }) => {
-            if (data.type === 'YoutubeVolumeScroll-config-change' && typeof data.config === 'object') {
-                this.#handleDataChange(data.config);
+        window.addEventListener('message', (e) => {
+            if (e.origin !== window.location.origin) return;
+            if (e.data.type === 'YoutubeVolumeScroll-config-change' && typeof e.data.config === 'object') {
+                this.#handleDataChange(e.data.config);
                 this.#initDone ||= true;
             }
         }, false);
@@ -408,7 +410,7 @@ class YoutubeVolumeScroll {
 
         this.saveNativeVolume(newVolume);
 
-        window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, '*');
+        window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, window.location.origin);
     }
 
     saveNativeVolume(volume) {
