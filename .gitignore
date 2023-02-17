@@ -7,5 +7,5 @@ keys.json
 *.crx
 python_modules
 __pycache__
-.peru/*
 *.pyc
+.peru/*

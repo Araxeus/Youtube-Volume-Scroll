@@ -10,12 +10,19 @@ const hudTypes = {
     none: 2
 };
 
+const activationModifiers = {
+    none: 0,
+    shift: 1,
+    rightClick: 2
+};
+
 const defaultConfig = {
     steps: 1,
     hud: hudTypes.native,
     hudSize: '50px',
     hudColor: '#eee',
     hudPositionMode: false,
+    activationModifier: activationModifiers.none,
     hudPosition: {
         youtube: {
             top: '5px',
@@ -64,6 +71,7 @@ function init() {
     };
 
     setupStepsSlider();
+    setupActivationModifierRadio();
     setupHudRadio();
 
     // only shown if custom hud is selected
@@ -102,6 +110,17 @@ function setupHudRadio() {
     });
     radios[config.hud].checked = true;
     setCustomOptionsEnabled(config.hud === hudTypes.custom);
+}
+
+function setupActivationModifierRadio() {
+    const radios = $$('input[name="activation_modifier"]');
+    radios.forEach(radio => {
+        radio.onchange = () => {
+            config.activationModifier = parseInt(radio.value, 10);
+            sendConfig();
+        };
+    });
+    radios[config.activationModifier].checked = true;
 }
 
 function setupStepsSlider() {

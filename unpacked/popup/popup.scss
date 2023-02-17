@@ -65,8 +65,16 @@ $drk_background: #0d1117;
     background-color: $red3_outlines !important;
   }
 
-  tooltip-icon .tooltip-spacing .tooltip-bg2 {
-    background-color: #626262 !important;
+  tooltip-icon .tooltip-spacing {
+    .tooltip-bg1 {
+      background-color: #000 !important;
+    }
+    .tooltip-bg2 {
+      background-color: #626262 !important;
+    }
+    .tooltip-text {
+      color: #000 !important;
+    }
   }
 }
 
@@ -93,7 +101,7 @@ tooltip-icon {
     width: 20px;
 
     .tooltip-bg1 {
-      background-color: #000;
+      background-color: #555;
       border-radius: 10px;
       content: " ";
       display: flex;
@@ -116,6 +124,7 @@ tooltip-icon {
     }
 
     .tooltip-text {
+      color: #555;
       font-size: 14px;
       font-weight: bold;
       line-height: 20px;
@@ -187,15 +196,21 @@ h2 {
 }
 
 body {
+  min-height: 220px;
+  min-width: 350px;
   overflow: hidden;
   display: grid;
   place-content: space-evenly;
+  grid-row-gap: 5px;
   place-items: center;
-  gap: 2%;
-  padding: 0;
+
+  .last-item {
+    margin-top: 4px;
+    margin-bottom: 7px;
+  }
 
   &.custom-options-enabled:not(.permissions-mode) {
-    height: 480px !important;
+    height: 574px !important;
   }
 
   &:not(.custom-options-enabled) > div.custom-options {
@@ -203,12 +218,13 @@ body {
   }
 
   @media screen and (max-width: 500px) {
-    padding-bottom: 1.2em;
-    gap: 1%;
+    padding-bottom: 10px;
+    width: 350px;
   }
 
   @media screen and (min-width: 500px) {
     height: 350px;
+    padding-bottom: 20px;
   }
 
   div.max-width {
@@ -226,6 +242,7 @@ body {
       grid-row: auto;
       grid-column-gap: 15px;
       grid-row-gap: 0;
+      margin-top: 5px;
 
       h2 {
         font-size: 21px;

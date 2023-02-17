@@ -30,18 +30,18 @@
 
 /* font-size: 0; fixes a bug with position mode, where after its disabled and hidden the browser still allows dragging it
    when the font size is 0 - the bug is still present but the draggable area shrinks to 1 pixel which drastically lowers the effect of the bug */
-.volume-hud-wrapper[type=native] .volume-hud-custom {
+body[ytvs_type=native] .volume-hud-custom {
   opacity: 0 !important;
   font-size: 0 !important;
 }
 
-.volume-hud-wrapper[type=custom] .volume-hud-native-wrapper {
+body[ytvs_type=custom] .volume-hud-native-wrapper {
   opacity: 0 !important;
   font-size: 0 !important;
 }
 
-.volume-hud-wrapper[type=none] .volume-hud-custom,
-.volume-hud-wrapper[type=none] .volume-hud-native-wrapper {
+body[ytvs_type=none] .volume-hud-custom,
+body[ytvs_type=none] .volume-hud-native-wrapper {
   opacity: 0 !important;
   font-size: 0 !important;
 }
