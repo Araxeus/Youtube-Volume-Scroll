@@ -23,6 +23,8 @@ class ytvs {
         native: 1,
         none: 2
     };
+    static #reversedHudTypes = Object.fromEntries(Object.entries(this.#hudTypes).map(([key, value]) => [value, key]));
+
     static get hudTypes() {
         return this.#hudTypes;
     }
@@ -199,6 +201,7 @@ class ytvs {
         if (this.hud !== config.hud) {
             this.#config.hud = config.hud;
             if (this.#initDone) {
+                document.body.setAttribute('ytvs_type', this.#reversedHudTypes[ytvs.hud]);
                 this.#activeInstances.forEach(obj => obj.showVolume());
             }
         }
@@ -514,16 +517,6 @@ class YoutubeVolumeScroll {
         });
     }
 
-    // ensures that only the current ytvs.hudType is visible
-    checkYtvsTypeClass() {
-        const reverseLookup = {
-            [ytvs.hudTypes.none]: 'none',
-            [ytvs.hudTypes.native]: 'native',
-            [ytvs.hudTypes.custom]: 'custom',
-        };
-        document.body.setAttribute('ytvs_type', reverseLookup[ytvs.hud]);
-    }
-
     showVolume(volume = Math.round(this.api.getVolume())) {
         const volumeHud = this.getVolumeHud();
         if (!volumeHud) return;
@@ -541,8 +534,6 @@ class YoutubeVolumeScroll {
                 volumeHud.parentElement.style.opacity = opacity;
             }
         };
-
-        this.checkYtvsTypeClass();
 
         volumeHud.textContent = volume + '%';
         setOpacity(1);
