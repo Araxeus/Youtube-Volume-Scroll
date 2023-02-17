@@ -395,11 +395,11 @@ class YoutubeVolumeScroll {
         };
     }
 
-    changeVolume(toIncrease, modifier) {
+    changeVolume(toIncrease, multiplier) {
         const newVolume = Math.round(
             toIncrease ?
-                Math.min(this.api.getVolume() + (ytvs.steps * modifier), 100) :
-                Math.max(this.api.getVolume() - (ytvs.steps * modifier), 0)
+                Math.min(this.api.getVolume() + (ytvs.steps * multiplier), 100) :
+                Math.max(this.api.getVolume() - (ytvs.steps * multiplier), 0)
         );
 
         // Have to manually mute/unmute on youtube.com
