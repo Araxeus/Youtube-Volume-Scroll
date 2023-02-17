@@ -4,6 +4,7 @@ imports:
 
 git module coloris:
     url: https://github.com/mdbassit/Coloris
+    fetch-tags: true
     move:
         dist/coloris.min.js: coloris.min.js
         dist/coloris.min.css: coloris.min.css
@@ -12,11 +13,12 @@ git module coloris:
         - coloris.min.js
         - coloris.min.css
         - LICENSE
-    rev: 672e4c1ed76b5f15b333f2f1639661cdf79c4e41
+    rev: v0.18.0
 
 git module cooltipz:
     url: https://github.com/jackdomleo7/Cooltipz.css
+    fetch-tags: true
     pick:
         - cooltipz.min.css
         - LICENSE
-    rev: 221c78fc845f4272b8e81f9c9a55ff5416949903
+    rev: v2.2.1
