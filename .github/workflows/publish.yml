@@ -9,16 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
+      # caching is problematic with yarn3 pnp
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: latest
+      #     cache: yarn
 
       - name: Install dependencies
-        run: npm install
+        run: yarn
 
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Publish to Chrome/Edge/Firefox stores
         uses: PlasmoHQ/bpp@v3

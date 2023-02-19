@@ -3,31 +3,33 @@
   "version": "3.0.0",
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
+  "type": "module",
+  "engines": {
+    "npm": "please-use-yarn",
+    "yarn": ">3"
+  },
   "scripts": {
-    "manifest:add:gecko.id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
-    "manifest:remove:gecko.id": "dot-json dist/manifest.json -d browser_specific_settings",
-    "manifest:add:background-script": "dot-json dist/manifest.json background.scripts.0 background-script.js",
-    "manifest:remove:background-script": "dot-json dist/manifest.json -d background",
-    "pack": "cpy . ../dist --cwd=unpacked",
-    "postpack": "npm run manifest:add:gecko.id && npm run manifest:add:background-script",
-    "prebuild": "npm run sas && npm run pack && npm run check_no_pack",
-    "build": "npm run build:firefox && npm run build:chromium",
-    "postbuild": "del-cli dist",
-    "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
-    "prebuild:chromium": "npm run manifest:remove:gecko.id && npm run manifest:remove:background-script && del-cli dist/background-script.js",
-    "build:chromium": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
-    "postbuild:chromium": "npm run manifest:add:gecko.id && npm run manifest:add:background-script",
+    "check": "yarn copy_to_dist && yarn check_internal && del-cli dist",
+    "check_internal": "eslint . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
+    "check_no_copy": "(yarn check_internal) || (del-cli dist && exit 1)",
+    "format": "eslint . --fix",
+    "sas": "sass --update unpacked/popup",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "check_no_pack": "(npm run check_internal) || (del-cli dist && exit 1)",
-    "check_internal": "eslint . && web-ext lint -w --ignore-files ./popup/vendors/* && remark .",
-    "check": "npm run pack && npm run check_internal",
-    "postcheck": "del-cli dist",
-    "sas": "sass --update unpacked/popup",
-    "format": "remark . --output --frail && eslint . --fix",
-    "install": "npip install",
-    "peru:check": "nopenv peru reup",
-    "peru:update": "nopenv peru reup -f && nopenv peru sync -f"
+    "build": "yarn sas && yarn copy_to_dist && yarn check_no_copy && yarn build:firefox && yarn build:chromium && del-cli dist",
+    "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
+    "build:chromium": "yarn manifest:chromium && x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
+    "manifest:firefox": "yarn manifest:add:gecko.id && yarn manifest:add:background-script",
+    "manifest:chromium": "yarn manifest:remove:gecko.id && yarn manifest:remove:background-script",
+    "manifest:add:gecko.id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "manifest:remove:gecko.id": "dot-json dist/manifest.json -d browser_specific_settings",
+    "manifest:add:background-script": "dot-json dist/manifest.json background.scripts.0 background-script.js && cpy background-script.js ../dist --cwd=unpacked",
+    "manifest:remove:background-script": "dot-json dist/manifest.json -d background && del-cli dist/background-script.js",
+    "copy_to_dist": "cpy . !popup/vendors/.peru ../dist --cwd=unpacked --dot && yarn manifest:firefox",
+    "postinstall": "npip install",
+    "peru": "nopenv peru reup",
+    "peru:ci": "node ./scripts/peru-ci.js",
+    "python-deps": "node ./scripts/python-deps.js"
   },
   "repository": {
     "type": "git",
@@ -46,14 +48,14 @@
     "del-cli": "^5.0.0",
     "dot-json": "^1.2.2",
     "eslint": "^8.34.0",
+    "load-json-file": "^7.0.1",
+    "nopy": "^0.2.8",
     "release-it": "^15.6.0",
-    "remark-cli": "^11.0.0",
-    "remark-preset-lint-consistent": "^5.1.1",
-    "remark-preset-lint-recommended": "^6.1.2",
     "sass": "^1.58.2",
     "web-ext": "^7.5.0",
+    "write-json-file": "^5.0.0",
     "x-var": "^0.0.1",
-    "nopy": "^0.2.8"
+    "yaml": "^2.2.1"
   },
   "webExt": {
     "sourceDir": "dist",
@@ -79,8 +81,8 @@
     },
     "hooks": {
       "before:init": [
-        "npm run check",
-        "npm run build"
+        "yarn check",
+        "yarn build"
       ],
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     },
@@ -97,20 +99,13 @@
       "publish": false
     }
   },
-  "remarkConfig": {
-    "settings": {
-      "emphasis": "*",
-      "strong": "*"
-    },
-    "plugins": [
-      "remark-preset-lint-consistent",
-      "remark-preset-lint-recommended"
-    ]
-  },
   "python": {
     "dependencies": {
-      "peru": ">=1.3.1"
+      "peru": "==1.3.0"
     },
-    "execPath": ["python", "python3"]
+    "execPath": [
+      "python",
+      "python3"
+    ]
   }
 }

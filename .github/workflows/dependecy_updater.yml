@@ -1,0 +1,68 @@
+name: Dependency Updater
+
+on:
+  schedule:
+    # every day at 07:33
+    - cron: "33 7 * * *"
+
+jobs:
+  # check "yarn peru:update" then open a pull request with the changes if any
+  update-vendors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # caching is problematic with yarn3 pnp
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: latest
+      #     cache: yarn
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run peru:ci
+        id: peru:ci
+        run: yarn peru:ci
+
+      - name: Create Pull Request
+        if: steps.peru:ci.outputs.stdout != 0
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: "[peru-ci] Bump vendors"
+          committer: "peru-ci[bot] <oaeben@gmail.com>"
+          author: "peru-ci[bot] <oaeben@gmail.com>"
+          branch: bump-vendors
+          title: "[peru-ci] Bump vendors"
+          body: ${{ steps.peru:ci.outputs.stdout }}
+          delete-branch: true
+          labels: dependencies, peru-ci
+          reviewers: ${{ github.repository_owner }}
+          assignees: ${{ github.repository_owner }}
+
+  update-python-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run python-deps upgrade
+        id: python-deps
+        run: yarn python-deps upgrade --ci
+
+      - name: Create Pull Request
+        if: steps.python-deps.outputs.stdout != 0
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: "[python-deps] Bump python dependencies"
+          committer: "python-deps[bot] <oaeben@gmail.com>"
+          author: "python-deps[bot] <oaeben@gmail.com>"
+          branch: bump-python-deps
+          title: "[python-deps] Bump python dependencies"
+          body: ${{ steps.python-deps.outputs.stdout }}
+          delete-branch: true
+          labels: dependencies, python-deps
+          reviewers: ${{ github.repository_owner }}
+          assignees: ${{ github.repository_owner }}
