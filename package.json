@@ -49,7 +49,7 @@
     "dot-json": "^1.2.2",
     "eslint": "^8.34.0",
     "load-json-file": "^7.0.1",
-    "nopy": "^0.2.8",
+    "nopy": "^0.2.9",
     "release-it": "^15.6.0",
     "sass": "^1.58.2",
     "web-ext": "^7.5.0",

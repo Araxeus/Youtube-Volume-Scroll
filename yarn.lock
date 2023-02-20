@@ -4887,14 +4887,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nopy@npm:^0.2.8":
-  version: 0.2.8
-  resolution: "nopy@npm:0.2.8"
+"nopy@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "nopy@npm:0.2.9"
   bin:
-    nopenv: ./src/nopenv.js
-    nopy: ./src/nopy.js
-    npip: ./src/npip.js
-  checksum: 37f4f2bda33add2e6b80d0504099832a87ae0bc436ce0c69609511ce0736032d292761ca5d5c5c9976b6149af44864ab9afa70cd8a0216ca8ebc06cbcd6cc0ee
+    nopenv: src/nopenv.js
+    nopy: src/nopy.js
+    npip: src/npip.js
+  checksum: da5c4e16264f361fb3aca070c05e0e1fc1766dd5cba63af85c22aa38d7a59d17140fab791b257ae424b76c122c154d829d3cc2f9a51eced56e59a9bc973eaeb6
   languageName: node
   linkType: hard
 
@@ -7504,7 +7504,7 @@ __metadata:
     dot-json: ^1.2.2
     eslint: ^8.34.0
     load-json-file: ^7.0.1
-    nopy: ^0.2.8
+    nopy: ^0.2.9
     release-it: ^15.6.0
     sass: ^1.58.2
     web-ext: ^7.5.0

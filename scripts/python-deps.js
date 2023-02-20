@@ -4,7 +4,6 @@ import { writeJsonFile } from 'write-json-file';
 import { loadJsonFile } from 'load-json-file';
 
 const pkg = await loadJsonFile('./package.json');
-const deps = Object.keys(pkg.python.dependencies);
 
 // import pkg from './package.json' assert { type: 'json' }; // es-lint not yet supported: https://github.com/eslint/eslint/discussions/15305
 
@@ -60,8 +59,7 @@ if (flags.outdated) {
 
 if (flags.upgrade) {
     const updatedDeps = [];
-    for (const dep of deps) {
-        const oldVersion = pkg.python.dependencies[dep];
+    for (const [dep, oldVersion] of Object.entries(pkg.python.dependencies)) {
         const oldVersionFormatted = removePrefix(oldVersion);
 
         const output = JSON.parse(
@@ -97,7 +95,7 @@ if (flags.upgrade) {
 function getOutdatedDeps() {
     const output = execSync('yarn npip list --outdated --format=json').toString().trim();
 
-    return JSON.parse(output)?.filter(dep => deps.includes(dep.name));
+    return JSON.parse(output)?.filter(dep => !!pkg.python.dependencies[dep.name]);
 }
 
 function formatWithPrefixes(existingVersion, newVersion) {

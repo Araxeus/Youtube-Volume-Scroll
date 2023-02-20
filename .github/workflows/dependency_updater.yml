@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Yarn PnP Setup
-        uses: Araxeus/setup-yarn-pnp-action@v1.0.1
+        uses: Araxeus/setup-yarn-pnp-action@v1
 
       - name: Run peru:ci
         id: peru:ci
