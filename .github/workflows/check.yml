@@ -1,24 +1,15 @@
 name: Check
 
 on:
-  push:
-  pull_request:
+  - push
+  - pull_request
 
 jobs:
   Check:
     runs-on: ubuntu-latest
     steps:
-      - uses:
-          actions/checkout@v3
-
-      # caching is problematic with yarn3 pnp
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: latest
-      #     cache: yarn
-
-      - name: Install dependencies
-        run: yarn
+      - name: Yarn PnP Setup
+        uses: Araxeus/setup-yarn-pnp-action@v1.0.1
 
       - name: Run Checks
         run: yarn check

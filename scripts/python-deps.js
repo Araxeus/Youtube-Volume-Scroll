@@ -10,7 +10,7 @@ const deps = Object.keys(pkg.python.dependencies);
 
 import { execSync } from 'child_process';
 
-const prefixesRegex = /^([^0-9]*)?.*$/;
+const prefixesRegex = /^(\D*)\d/;
 const semverPrefixes = ['==', '~=', '<', '<=', '>', '>=', '~>'];
 
 const flagKeys = {
@@ -62,15 +62,16 @@ if (flags.upgrade) {
     const updatedDeps = [];
     for (const dep of deps) {
         const oldVersion = pkg.python.dependencies[dep];
+        const oldVersionFormatted = removePrefix(oldVersion);
 
         const output = JSON.parse(
-            execSync(`yarn npip install ${dep} --upgrade --quiet --report -`) ?? '{}'
+            execSync(`yarn npip install ${oldVersionFormatted} --upgrade --quiet --report -`) ?? '{}'
         );
         const newVersion = output.install?.[0]?.metadata?.version;
         if (newVersion) {
             pkg.python.dependencies[dep] = formatWithPrefixes(oldVersion, newVersion);
 
-            log(`Updated ${dep} from ${removePrefix(oldVersion)} to ${newVersion}`);
+            log(`Updated ${dep} from ${oldVersionFormatted} to ${newVersion}`);
 
             updatedDeps.push({
                 name: dep.name,
@@ -135,19 +136,3 @@ ${deps.map(dep => `* Bump [${dep.name}](https://pypi.org/project/${dep.name}) fr
 This is an automated pull request by ${links.dependencyUpdater} using ${links.nopy} && ${links.pythonDeps}
 `;
 }
-
-// spawn a child process to run `yarn npip show ${dep}`
-// parse the output to get the version number
-// function getVersion(dep) {
-//     const output = execSync(`npm run npip show ${dep}`).toString().trim();
-//     const lines = output.split('\n');
-//     for (const line of lines) {
-//         if (line.trim().startsWith('Version:')) {
-//             return line.split(':').at(-1).trim();
-//         }
-//     }
-
-//     throw new Error(`Package ${dep} is not installed`);
-// }
-
-

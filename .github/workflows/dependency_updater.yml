@@ -10,16 +10,8 @@ jobs:
   update-vendors:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      # caching is problematic with yarn3 pnp
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: latest
-      #     cache: yarn
-
-      - name: Install dependencies
-        run: yarn
+      - name: Yarn PnP Setup
+        uses: Araxeus/setup-yarn-pnp-action@v1.0.1
 
       - name: Run peru:ci
         id: peru:ci
@@ -43,10 +35,8 @@ jobs:
   update-python-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: yarn
+      - name: Setup Yarn PnP env
+        uses: Araxeus/setup-yarn-pnp-action@v1
 
       - name: Run python-deps upgrade
         id: python-deps
