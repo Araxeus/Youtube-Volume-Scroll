@@ -4,11 +4,19 @@ import { parse } from 'yaml';
 
 const deps = getDependencies();
 
-execSync('yarn peru');
+try {
+    execSync('yarn peru');
+} catch (e) {
+    console.error(`Failed to run 'yarn peru'\n${JSON.stringify({
+        output: e.output.toString(),
+        stdout: e.stdout.toString(),
+    }, null, 4)}`);
+    process.exit(1);
+}
 
-const depsNew = getDependencies().filter(dep => dep.version !== deps[dep.name].version);
+const depsNew = Object.entries(getDependencies()).map(([name, val]) => ({ ...val, name })).filter(dep => dep.version !== deps[dep.name].version);
 
-const newDepsList = depsNew.map(dep => `* Bump [${dep.name}](${dep.origin}) from ❌ ${dep.version} to ✅ ${dep.versionNew}`).join('\n');
+const newDepsList = depsNew.map(dep => `* Bump [${dep.name}](${dep.origin}) from ❌ ${deps[dep.name].version} to ✅ ${dep.version}`).join('\n');
 
 const repoLink = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
 

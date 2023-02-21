@@ -27,7 +27,7 @@
     "manifest:remove:background-script": "dot-json dist/manifest.json -d background && del-cli dist/background-script.js",
     "copy_to_dist": "cpy . !popup/vendors/.peru ../dist --cwd=unpacked --dot && yarn manifest:firefox",
     "postinstall": "npip install",
-    "peru": "nopenv peru reup",
+    "peru": "nopenv peru reup -f",
     "peru:ci": "node ./scripts/peru-ci.js",
     "python-deps": "node ./scripts/python-deps.js"
   },

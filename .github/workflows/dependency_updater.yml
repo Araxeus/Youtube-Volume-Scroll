@@ -14,11 +14,19 @@ jobs:
         uses: Araxeus/setup-yarn-pnp-action@v1
 
       - name: Run peru:ci
-        id: peru:ci
-        run: yarn peru:ci
+        id: peru-ci
+        run: |
+          echo "PR_BODY<<EOF" >> $GITHUB_OUTPUT
+          echo "$(yarn peru:ci)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      # - name: TEST
+      #   run: printf '${{ steps.peru-ci.outputs.PR_BODY }}'
+      # - name: Show git status
+      #   run: git status
 
       - name: Create Pull Request
-        if: steps.peru:ci.outputs.stdout != 0
+        if: steps.peru-ci.outputs.PR_BODY != 0
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: "[peru-ci] Bump vendors"
@@ -26,7 +34,7 @@ jobs:
           author: "peru-ci[bot] <oaeben@gmail.com>"
           branch: bump-vendors
           title: "[peru-ci] Bump vendors"
-          body: ${{ steps.peru:ci.outputs.stdout }}
+          body: ${{ steps.peru-ci.outputs.PR_BODY }}
           delete-branch: true
           labels: dependencies, peru-ci
           reviewers: ${{ github.repository_owner }}
@@ -35,15 +43,32 @@ jobs:
   update-python-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Yarn PnP env
+      - name: Yarn PnP Setup
         uses: Araxeus/setup-yarn-pnp-action@v1
+
+      # required for pnp 23+ which is required by https://pip.pypa.io/en/stable/reference/installation-report/
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.2"
+          check-latest: true
+
+      - name: show pip versions
+        run: pip --version && yarn npip --version
 
       - name: Run python-deps upgrade
         id: python-deps
-        run: yarn python-deps upgrade --ci
+        run: |
+          echo "PR_BODY<<EOF" >> $GITHUB_OUTPUT
+          echo "$(yarn python-deps upgrade --ci)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      # - name: TEST
+      #   run: printf "${{ steps.python-deps.outputs.PR_BODY }}"
+      # - name: Show git status
+      #   run: git status
 
       - name: Create Pull Request
-        if: steps.python-deps.outputs.stdout != 0
+        if: steps.python-deps.outputs.PR_BODY != 0
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: "[python-deps] Bump python dependencies"
@@ -51,7 +76,7 @@ jobs:
           author: "python-deps[bot] <oaeben@gmail.com>"
           branch: bump-python-deps
           title: "[python-deps] Bump python dependencies"
-          body: ${{ steps.python-deps.outputs.stdout }}
+          body: ${{ steps.python-deps.outputs.PR_BODY }}
           delete-branch: true
           labels: dependencies, python-deps
           reviewers: ${{ github.repository_owner }}

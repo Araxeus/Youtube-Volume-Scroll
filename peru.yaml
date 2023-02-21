@@ -13,7 +13,7 @@ git module coloris:
         - coloris.min.js
         - coloris.min.css
         - LICENSE
-    rev: 672e4c1ed76b5f15b333f2f1639661cdf79c4e41
+    rev: v0.17.0
 
 git module cooltipz:
     url: https://github.com/jackdomleo7/Cooltipz.css
@@ -21,4 +21,4 @@ git module cooltipz:
     pick:
         - cooltipz.min.css
         - LICENSE
-    rev: 221c78fc845f4272b8e81f9c9a55ff5416949903
+    rev: v2.1.0

@@ -62,9 +62,14 @@ if (flags.upgrade) {
     for (const [dep, oldVersion] of Object.entries(pkg.python.dependencies)) {
         const oldVersionFormatted = removePrefix(oldVersion);
 
-        const output = JSON.parse(
-            execSync(`yarn npip install ${oldVersionFormatted} --upgrade --quiet --report -`) ?? '{}'
-        );
+        let execOutput;
+        try {
+            execOutput = execSync(`yarn npip install ${dep} --report - --upgrade --quiet`);
+        } catch (e) {
+            log(`Failed to update ${dep} from ${oldVersionFormatted} to ${dep.latest_version}\n${e.output.toString()}`);
+        }
+
+        const output = JSON.parse(execOutput.toString() ?? '{}');
         const newVersion = output.install?.[0]?.metadata?.version;
         if (newVersion) {
             pkg.python.dependencies[dep] = formatWithPrefixes(oldVersion, newVersion);
@@ -72,9 +77,9 @@ if (flags.upgrade) {
             log(`Updated ${dep} from ${oldVersionFormatted} to ${newVersion}`);
 
             updatedDeps.push({
-                name: dep.name,
-                version: dep.version,
-                latest_version: dep.latest_version
+                name: dep,
+                version: oldVersionFormatted,
+                latest_version: newVersion
             });
         }
     }
