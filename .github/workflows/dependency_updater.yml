@@ -34,7 +34,7 @@ jobs:
           author: "peru-ci[bot] <oaeben@gmail.com>"
           branch: bump-vendors
           title: "[peru-ci] Bump vendors"
-          body: ${{ steps.peru-ci.outputs.PR_BODY }}
+          body: '${{ steps.peru-ci.outputs.PR_BODY }}'
           delete-branch: true
           labels: dependencies, peru-ci
           reviewers: ${{ github.repository_owner }}
@@ -63,7 +63,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       # - name: TEST
-      #   run: printf "${{ steps.python-deps.outputs.PR_BODY }}"
+      #   run: printf '${{ steps.python-deps.outputs.PR_BODY }}'
       # - name: Show git status
       #   run: git status
 
@@ -76,7 +76,7 @@ jobs:
           author: "python-deps[bot] <oaeben@gmail.com>"
           branch: bump-python-deps
           title: "[python-deps] Bump python dependencies"
-          body: ${{ steps.python-deps.outputs.PR_BODY }}
+          body: '${{ steps.python-deps.outputs.PR_BODY }}'
           delete-branch: true
           labels: dependencies, python-deps
           reviewers: ${{ github.repository_owner }}
