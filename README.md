@@ -64,7 +64,7 @@ cd Youtube-Volume-Scroll
 yarn
 
 # Build the extension
-$ yarn build
+yarn build
 ```
 
 The resulting unsigned xpi/zip file will be in the `web-ext-artifacts` folder.
