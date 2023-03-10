@@ -448,18 +448,23 @@ class YoutubeVolumeScroll {
         }
     }
 
+    cachedVolumeHud = undefined;
     getVolumeHud() {
-        const selector = ytvs.hud === ytvs.hudTypes.native ? '.volume-hud-native' : '.volume-hud-custom';
-        let volumeHud = ytvs.$(`${this.hudContainer} ${selector}`);
+        const selector = `${this.hudContainer} ${ytvs.hud === ytvs.hudTypes.native ? '.volume-hud-native' : '.volume-hud-custom'}`;
+
+        let volumeHud = this.cachedVolumeHud?.matches(selector) ? this.cachedVolumeHud : ytvs.$(selector);
 
         if (!volumeHud) {
             this.injectVolumeHud();
-            volumeHud = ytvs.$(`${this.hudContainer} ${selector}`);
+            volumeHud = ytvs.$(selector);
+
+            if (!volumeHud) {
+                console.error('Cannot Create Youtube-Volume-Scroll HUD', `$('${selector}')`);
+                return undefined;
+            }
         }
-        if (!volumeHud) {
-            console.error('Cannot Create Youtube-Volume-Scroll HUD', `$('${this.hudContainer} ${selector}')`);
-            return undefined;
-        }
+
+        this.cachedVolumeHud = volumeHud;
         return volumeHud;
     }
 
