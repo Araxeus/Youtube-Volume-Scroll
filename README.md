@@ -61,10 +61,10 @@ git clone https://github.com/Araxeus/Youtube-Volume-Scroll.git
 cd Youtube-Volume-Scroll
 
 # Install build dependencies
-npm install
+yarn
 
 # Build the extension
-$ npm run build
+yarn build
 ```
 
 The resulting unsigned xpi/zip file will be in the `web-ext-artifacts` folder.

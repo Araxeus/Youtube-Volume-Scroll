@@ -8,4 +8,6 @@ keys.json
 python_modules
 __pycache__
 *.pyc
-.peru/*
+**/.peru/*
+.pnp.*
+.yarn

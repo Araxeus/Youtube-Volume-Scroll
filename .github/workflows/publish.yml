@@ -7,18 +7,11 @@ jobs:
   Publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
+      - name: Yarn PnP Setup
+        uses: Araxeus/setup-yarn-pnp-action@v1
 
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Publish to Chrome/Edge/Firefox stores
         uses: PlasmoHQ/bpp@v3
