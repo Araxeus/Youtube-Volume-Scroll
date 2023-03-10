@@ -10,9 +10,9 @@
   },
   "scripts": {
     "check": "yarn copy_to_dist && yarn check_internal && del-cli dist",
-    "check_internal": "eslint . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
+    "check_internal": "eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
     "check_no_copy": "(yarn check_internal) || (del-cli dist && exit 1)",
-    "format": "eslint . --fix",
+    "format": "eslint . --fix && rome format . --write",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
@@ -45,6 +45,7 @@
     "dot-json": "^1.2.2",
     "eslint": "^8.35.0",
     "release-it": "^15.8.0",
+    "rome": "^11.0.0",
     "sass": "^1.58.3",
     "web-ext": "^7.5.0",
     "x-var": "^0.0.1"

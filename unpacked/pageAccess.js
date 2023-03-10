@@ -1,6 +1,5 @@
-
 // set last active time to now every 15min (blocks "are you there?" popup)
-setInterval(() => window._lact = Date.now(), 9e5);
+setInterval(() => (window._lact = Date.now()), 9e5);
 
 class ytvs {
     static #$ = document.querySelector.bind(document);
@@ -21,9 +20,11 @@ class ytvs {
     static #hudTypes = {
         custom: 0,
         native: 1,
-        none: 2
+        none: 2,
     };
-    static #reversedHudTypes = Object.fromEntries(Object.entries(this.#hudTypes).map(([key, value]) => [value, key]));
+    static #reversedHudTypes = Object.fromEntries(
+        Object.entries(this.#hudTypes).map(([key, value]) => [value, key]),
+    );
 
     static get hudTypes() {
         return this.#hudTypes;
@@ -32,7 +33,7 @@ class ytvs {
     static #activationModifiers = {
         none: 0,
         shift: 1,
-        rightClick: 2
+        rightClick: 2,
     };
     static get activationModifiers() {
         return this.#activationModifiers;
@@ -61,7 +62,9 @@ class ytvs {
     }
     static addInstance(instance) {
         if (!(instance instanceof YoutubeVolumeScroll)) {
-            console.error('ytvs.addInstance() expects a YoutubeVolumeScroll object');
+            console.error(
+                'ytvs.addInstance() expects a YoutubeVolumeScroll object',
+            );
             return;
         }
         this.#activeInstances.push(instance);
@@ -79,21 +82,21 @@ class ytvs {
                 top: '5px',
                 bottom: 'unset',
                 left: 'unset',
-                right: '5px'
+                right: '5px',
             },
             music: {
                 top: '10px',
                 bottom: 'unset',
                 left: 'unset',
-                right: '6%'
+                right: '6%',
             },
             shorts: {
                 top: '0',
                 bottom: 'unset',
                 left: 'unset',
-                right: '35px'
-            }
-        }
+                right: '35px',
+            },
+        },
     };
 
     static get steps() {
@@ -142,10 +145,13 @@ class ytvs {
     static #save() {
         if (this.#saveTimeout) clearTimeout(this.#saveTimeout);
         this.#saveTimeout = setTimeout(() => {
-            window.postMessage({
-                type: 'YoutubeVolumeScroll-config-save',
-                config: this.#config
-            }, window.location.origin);
+            window.postMessage(
+                {
+                    type: 'YoutubeVolumeScroll-config-save',
+                    config: this.#config,
+                },
+                window.location.origin,
+            );
         }, 500);
     }
 
@@ -158,26 +164,30 @@ class ytvs {
     static #setupMouseObserver = () => {
         let changedVolumeWhileRightMouseDown = false;
 
-        document.addEventListener('mousedown', e => {
+        document.addEventListener('mousedown', (e) => {
             if (e.button === 2) {
                 this.#isRightMouseDown = true;
             }
         });
 
-        document.addEventListener('mouseup', e => {
+        document.addEventListener('mouseup', (e) => {
             if (e.button === 2) {
                 this.#isRightMouseDown = false;
                 if (changedVolumeWhileRightMouseDown) {
                     changedVolumeWhileRightMouseDown = false;
-                    setTimeout(() => this.$('body').oncontextmenu = undefined);
+                    setTimeout(
+                        () => (this.$('body').oncontextmenu = undefined),
+                    );
                     if (!this.isMusic) {
                         // send left click event to movie player
                         setTimeout(() => {
-                            this.$('ytd-app')?.dispatchEvent(new MouseEvent('click', {
-                                view: window,
-                                bubbles: true,
-                                cancelable: true
-                            }));
+                            this.$('ytd-app')?.dispatchEvent(
+                                new MouseEvent('click', {
+                                    view: window,
+                                    bubbles: true,
+                                    cancelable: true,
+                                }),
+                            );
                         });
                     }
                     return false;
@@ -185,7 +195,7 @@ class ytvs {
             }
         });
 
-        window.addEventListener('message', e => {
+        window.addEventListener('message', (e) => {
             if (e.origin !== window.location.origin) return;
             if (e.data.type === 'YoutubeVolumeScroll-volume') {
                 if (this.#isRightMouseDown) {
@@ -196,13 +206,16 @@ class ytvs {
         });
     };
 
-    static #handleDataChange = config => {
+    static #handleDataChange = (config) => {
         this.#config.steps = config.steps;
         if (this.hud !== config.hud) {
             this.#config.hud = config.hud;
             if (this.#initDone) {
-                document.body.setAttribute('ytvs_type', this.#reversedHudTypes[ytvs.hud]);
-                this.#activeInstances.forEach(obj => obj.showVolume());
+                document.body.setAttribute(
+                    'ytvs_type',
+                    this.#reversedHudTypes[ytvs.hud],
+                );
+                this.#activeInstances.forEach((obj) => obj.showVolume());
             }
         }
 
@@ -213,35 +226,47 @@ class ytvs {
         if (config.hudPositionMode !== this.hudPositionMode) {
             this.#config.hudPositionMode = config.hudPositionMode;
             if (this.hud === this.hudTypes.custom) {
-                this.#activeInstances.forEach(obj => obj.updateHudPositionMode());
+                this.#activeInstances.forEach((obj) =>
+                    obj.updateHudPositionMode(),
+                );
             }
         }
 
         if (config.hudSize && config.hudSize !== this.hudSize) {
             this.#config.hudSize = config.hudSize;
-            this.#activeInstances.forEach(obj => obj.updateHudSize());
+            this.#activeInstances.forEach((obj) => obj.updateHudSize());
         }
 
         if (config.hudColor && config.hudColor !== this.hudColor) {
             this.#config.hudColor = config.hudColor;
-            this.#activeInstances.forEach(obj => obj.updateHudColor());
+            this.#activeInstances.forEach((obj) => obj.updateHudColor());
         }
 
-        if (config.hudPosition && !this.simpleAreEqual(config.hudPosition, this.hudPosition)) {
+        if (
+            config.hudPosition &&
+            !this.simpleAreEqual(config.hudPosition, this.hudPosition)
+        ) {
             this.#config.hudPosition = config.hudPosition;
-            this.activeInstances.forEach(obj => obj.updateHudPosition());
+            this.activeInstances.forEach((obj) => obj.updateHudPosition());
         }
     };
 
     static #initDone = false;
     static init() {
-        window.addEventListener('message', (e) => {
-            if (e.origin !== window.location.origin) return;
-            if (e.data.type === 'YoutubeVolumeScroll-config-change' && typeof e.data.config === 'object') {
-                this.#handleDataChange(e.data.config);
-                this.#initDone ||= true;
-            }
-        }, false);
+        window.addEventListener(
+            'message',
+            (e) => {
+                if (e.origin !== window.location.origin) return;
+                if (
+                    e.data.type === 'YoutubeVolumeScroll-config-change' &&
+                    typeof e.data.config === 'object'
+                ) {
+                    this.#handleDataChange(e.data.config);
+                    this.#initDone ||= true;
+                }
+            },
+            false,
+        );
 
         this.#setupMouseObserver();
     }
@@ -261,7 +286,9 @@ class ytvs {
                 if (obj1 !== obj2) return false;
                 break;
             default:
-                throw new Error(`ytvs.simpleAreEqual() encountered an unknown type: {${typeof (obj1)}} pos1: ${obj1}, pos2: ${obj2}`);
+                throw new Error(
+                    `ytvs.simpleAreEqual() encountered an unknown type: {${typeof obj1}} pos1: ${obj1}, pos2: ${obj2}`,
+                );
         }
 
         return true;
@@ -272,7 +299,7 @@ class YoutubeVolumeScroll {
     static types = {
         youtube: 'youtube',
         music: 'music',
-        shorts: 'shorts'
+        shorts: 'shorts',
     };
     type = undefined;
 
@@ -310,10 +337,12 @@ class YoutubeVolumeScroll {
                 const bezelText = ytvs.$('.ytp-bezel-text');
                 const parent = bezelText.parentElement.parentElement;
                 const observer = new MutationObserver(() => {
-                    parent.style.opacity = bezelText.textContent.endsWith('%') ? 0 : 1;
+                    parent.style.opacity = bezelText.textContent.endsWith('%')
+                        ? 0
+                        : 1;
                 });
                 observer.observe(bezelText, { childList: true });
-            }
+            },
         });
     }
 
@@ -337,13 +366,20 @@ class YoutubeVolumeScroll {
         });
     }
 
-    constructor({ type, api, scrollTarget, hudContainer, hudAfter, customFunction }) {
+    constructor({
+        type,
+        api,
+        scrollTarget,
+        hudContainer,
+        hudAfter,
+        customFunction,
+    }) {
         this.type = type;
         this.api = api;
-        // Saves the volume locally so that hudOnVolume doesn't show hud if volume wasn't actually changed 
+        // Saves the volume locally so that hudOnVolume doesn't show hud if volume wasn't actually changed
         // (e.g. the sponsorblock skip function triggers a volume change without actually changing the volume)
         this.volume = this.api.getVolume();
-        if (!this.isShorts() && !ytvs.isLoaded) {
+        if (!(this.isShorts() || ytvs.isLoaded)) {
             this.#setupIncognito();
         }
 
@@ -364,18 +400,25 @@ class YoutubeVolumeScroll {
     }
 
     printIncognitoError() {
-        console.error('Youtube-Volume-Scroll: Could not save volume in incognito mode');
+        console.error(
+            'Youtube-Volume-Scroll: Could not save volume in incognito mode',
+        );
     }
 
     #setupIncognito() {
         let volumeCookie;
         try {
-            volumeCookie = JSON.parse(window.localStorage.getItem('Youtube-Volume-Scroll'));
+            volumeCookie = JSON.parse(
+                window.localStorage.getItem('Youtube-Volume-Scroll'),
+            );
         } catch {
             this.printIncognitoError();
         }
         if (volumeCookie) {
-            if (volumeCookie.incognito === true && volumeCookie.savedVolume !== this.api.getVolume()) {
+            if (
+                volumeCookie.incognito === true &&
+                volumeCookie.savedVolume !== this.api.getVolume()
+            ) {
                 this.api.setVolume(volumeCookie.savedVolume);
                 this.saveNativeVolume(volumeCookie.savedVolume);
             }
@@ -383,23 +426,38 @@ class YoutubeVolumeScroll {
     }
 
     setupOnWheel() {
-        ytvs.$(this.scrollTarget).onwheel = event => {
-            if (ytvs.activationModifier === ytvs.activationModifiers.shift && !event.shiftKey) return;
-            if (ytvs.activationModifier === ytvs.activationModifiers.rightClick && !ytvs.isRightMouseDown) return;
-            const multiplier = event.shiftKey && ytvs.activationModifier !== ytvs.activationModifiers.shift ? 2 : 1;
+        ytvs.$(this.scrollTarget).onwheel = (event) => {
+            if (
+                ytvs.activationModifier === ytvs.activationModifiers.shift &&
+                !event.shiftKey
+            )
+                return;
+            if (
+                ytvs.activationModifier ===
+                    ytvs.activationModifiers.rightClick &&
+                !ytvs.isRightMouseDown
+            )
+                return;
+            const multiplier =
+                event.shiftKey &&
+                ytvs.activationModifier !== ytvs.activationModifiers.shift
+                    ? 2
+                    : 1;
             // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
-            if (event.deltaY !== 0) this.changeVolume(event.deltaY < 0, multiplier);
+            if (event.deltaY !== 0)
+                this.changeVolume(event.deltaY < 0, multiplier);
             // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
-            if (event.deltaX !== 0) this.changeVolume(event.deltaX > 0, multiplier);
+            if (event.deltaX !== 0)
+                this.changeVolume(event.deltaX > 0, multiplier);
             return false;
         };
     }
 
     changeVolume(toIncrease, multiplier) {
         const newVolume = Math.round(
-            toIncrease ?
-                Math.min(this.api.getVolume() + (ytvs.steps * multiplier), 100) :
-                Math.max(this.api.getVolume() - (ytvs.steps * multiplier), 0)
+            toIncrease
+                ? Math.min(this.api.getVolume() + ytvs.steps * multiplier, 100)
+                : Math.max(this.api.getVolume() - ytvs.steps * multiplier, 0),
         );
 
         // Have to manually mute/unmute on youtube.com
@@ -413,15 +471,20 @@ class YoutubeVolumeScroll {
 
         this.saveNativeVolume(newVolume);
 
-        window.postMessage({ type: 'YoutubeVolumeScroll-volume', newVolume }, window.location.origin);
+        window.postMessage(
+            { type: 'YoutubeVolumeScroll-volume', newVolume },
+            window.location.origin,
+        );
     }
 
     saveNativeVolume(volume) {
         if (!ytvs.isMusic) this.saveVolumeToStorage(volume);
 
-        const pref = ytvs.getCookie('PREF');
+        const pref = ytvs
+            .getCookie('PREF')
+            .replace(/volume=(\d+)/, `volume=${volume}`);
         if (pref) {
-            document.cookie = pref.replace(/volume=(\d+)/, 'volume=' + volume) + ';domain=.youtube.com';
+            document.cookie = `${pref};domain=.youtube.com`;
         }
     }
 
@@ -433,16 +496,22 @@ class YoutubeVolumeScroll {
         const timeNow = Date.now();
 
         try {
-            window.localStorage.setItem('yt-player-volume', JSON.stringify({
-                data: data,
-                expiration: timeNow + ytvs.oneMonth,
-                creation: timeNow,
-            }));
+            window.localStorage.setItem(
+                'yt-player-volume',
+                JSON.stringify({
+                    data: data,
+                    expiration: timeNow + ytvs.oneMonth,
+                    creation: timeNow,
+                }),
+            );
 
-            window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
-                data: data,
-                creation: timeNow,
-            }));
+            window.sessionStorage.setItem(
+                'yt-player-volume',
+                JSON.stringify({
+                    data: data,
+                    creation: timeNow,
+                }),
+            );
         } catch {
             this.printIncognitoError();
         }
@@ -450,16 +519,25 @@ class YoutubeVolumeScroll {
 
     cachedVolumeHud = undefined;
     getVolumeHud() {
-        const selector = `${this.hudContainer} ${ytvs.hud === ytvs.hudTypes.native ? '.volume-hud-native' : '.volume-hud-custom'}`;
+        const selector = `${this.hudContainer} ${
+            ytvs.hud === ytvs.hudTypes.native
+                ? '.volume-hud-native'
+                : '.volume-hud-custom'
+        }`;
 
-        let volumeHud = this.cachedVolumeHud?.matches(selector) ? this.cachedVolumeHud : ytvs.$(selector);
+        let volumeHud = this.cachedVolumeHud?.matches(selector)
+            ? this.cachedVolumeHud
+            : ytvs.$(selector);
 
         if (!volumeHud) {
             this.injectVolumeHud();
             volumeHud = ytvs.$(selector);
 
             if (!volumeHud) {
-                console.error('Cannot Create Youtube-Volume-Scroll HUD', `$('${selector}')`);
+                console.error(
+                    'Cannot Create Youtube-Volume-Scroll HUD',
+                    `$('${selector}')`,
+                );
                 return undefined;
             }
         }
@@ -472,12 +550,21 @@ class YoutubeVolumeScroll {
         const createNative = () => {
             const volumeHudNativeWrapper = document.createElement('div');
             volumeHudNativeWrapper.style.opacity = 0;
-            volumeHudNativeWrapper.classList.add('ytp-bezel-text-wrapper', 'volume-hud-native-wrapper');
+            volumeHudNativeWrapper.classList.add(
+                'ytp-bezel-text-wrapper',
+                'volume-hud-native-wrapper',
+            );
             const volumeHudNative = document.createElement('div');
-            volumeHudNative.classList.add('ytp-bezel-text', 'volume-hud-native');
+            volumeHudNative.classList.add(
+                'ytp-bezel-text',
+                'volume-hud-native',
+            );
             volumeHudNativeWrapper.appendChild(volumeHudNative);
 
-            ytvs.$(this.hudAfter).insertAdjacentElement('afterend', volumeHudNativeWrapper);
+            ytvs.$(this.hudAfter).insertAdjacentElement(
+                'afterend',
+                volumeHudNativeWrapper,
+            );
         };
 
         const createCustom = () => {
@@ -514,7 +601,10 @@ class YoutubeVolumeScroll {
         const video = ytvs.$(`${this.hudContainer} video`);
         setTimeout(() => {
             video.addEventListener('volumechange', () => {
-                if (ytvs.hud !== ytvs.hudTypes.none && this.volume !== this.api.getVolume()) {
+                if (
+                    ytvs.hud !== ytvs.hudTypes.none &&
+                    this.volume !== this.api.getVolume()
+                ) {
                     this.showVolume();
                 }
                 this.volume = this.api.getVolume();
@@ -533,14 +623,19 @@ class YoutubeVolumeScroll {
         };
 
         const setOpacity = (opacity) => {
-            if (ytvs.hudPositionMode && opacity === 0 && ytvs.hud === ytvs.hudTypes.custom) return;
+            if (
+                ytvs.hudPositionMode &&
+                opacity === 0 &&
+                ytvs.hud === ytvs.hudTypes.custom
+            )
+                return;
             volumeHud.style.opacity = opacity;
             if (ytvs.hud === ytvs.hudTypes.native) {
                 volumeHud.parentElement.style.opacity = opacity;
             }
         };
 
-        volumeHud.textContent = volume + '%';
+        volumeHud.textContent = `${volume}%`;
         setOpacity(1);
 
         if (this.hudFadeTimeout) clearTimeout(this.hudFadeTimeout);
@@ -571,8 +666,8 @@ class YoutubeVolumeScroll {
 
         const newHudPosition = ytvs.hudPosition[this.type];
 
-        Object.keys(newHudPosition).forEach(key =>
-            volumeHud.style[key] = newHudPosition[key]
+        Object.keys(newHudPosition).forEach(
+            (key) => (volumeHud.style[key] = newHudPosition[key]),
         );
     }
 
@@ -603,15 +698,19 @@ class YoutubeVolumeScroll {
         let dragOffsetY;
 
         const setShortsControlsPointerEvents = (value) => {
-            const shortsControls = [ytvs.$('.player-controls.ytd-reel-video-renderer')];
-            shortsControls.forEach(c => { if (c) c.style.pointerEvents = value; });
+            const shortsControls = [
+                ytvs.$('.player-controls.ytd-reel-video-renderer'),
+            ];
+            shortsControls.forEach((c) => {
+                if (c) c.style.pointerEvents = value;
+            });
         };
 
         draggedElement.draggable = true;
         draggedElement.style.pointerEvents = 'auto';
 
         draggedElement.style.opacity = 1;
-        draggedElement.textContent ||= Math.round(this.api.getVolume()) + '%';
+        draggedElement.textContent ||= `${Math.round(this.api.getVolume())}%`;
 
         draggedElement.ondragstart = (ev) => {
             const rect = ev.target.getBoundingClientRect();
@@ -632,37 +731,54 @@ class YoutubeVolumeScroll {
             const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
             const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
 
-            const padding = parseFloat(window.getComputedStyle(draggedElement, undefined).padding) - 2;
+            const padding =
+                parseFloat(
+                    window.getComputedStyle(draggedElement, undefined).padding,
+                ) - 2;
 
-            const controlsHeight = ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
+            const controlsHeight =
+                ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
 
-            const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
-            const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
+            const pxToPercent_width = (x) => (x / dragTargetRect.width) * 100;
+            const pxToPercent_height = (y) => (y / dragTargetRect.height) * 100;
 
             const ogStyle = draggedElement.style;
-            const hudPosition = { left: ogStyle.left, right: ogStyle.right, top: ogStyle.top, bottom: ogStyle.bottom };
+            const hudPosition = {
+                left: ogStyle.left,
+                right: ogStyle.right,
+                top: ogStyle.top,
+                bottom: ogStyle.bottom,
+            };
 
             if (newLeft < dragTargetRect.width / 2) {
                 const x = Math.max(newLeft, 0 - padding);
-                hudPosition.left = pxToPercent_width(x) + '%';
+                hudPosition.left = `${pxToPercent_width(x)}%`;
                 hudPosition.right = 'unset';
             } else {
-                const x = Math.min(newLeft + draggedElement.clientWidth, dragTargetRect.width + padding);
-                hudPosition.right = (100 - pxToPercent_width(x)) + '%';
+                const x = Math.min(
+                    newLeft + draggedElement.clientWidth,
+                    dragTargetRect.width + padding,
+                );
+                hudPosition.right = `${100 - pxToPercent_width(x)}%`;
                 hudPosition.left = 'unset';
             }
 
             if (newTop < dragTargetRect.height / 2) {
                 const y = Math.max(newTop, 0 - padding);
-                hudPosition.top = pxToPercent_height(y) + '%';
+                hudPosition.top = `${pxToPercent_height(y)}%`;
                 hudPosition.bottom = 'unset';
             } else {
-                const y = Math.min(newTop + draggedElement.clientHeight, dragTargetRect.height + padding - controlsHeight);
-                hudPosition.bottom = (100 - pxToPercent_height(y)) + '%';
+                const y = Math.min(
+                    newTop + draggedElement.clientHeight,
+                    dragTargetRect.height + padding - controlsHeight,
+                );
+                hudPosition.bottom = `${100 - pxToPercent_height(y)}%`;
                 hudPosition.top = 'unset';
             }
 
-            Object.keys(hudPosition).forEach(pos => draggedElement.style[pos] = hudPosition[pos]);
+            Object.keys(hudPosition).forEach(
+                (pos) => (draggedElement.style[pos] = hudPosition[pos]),
+            );
 
             const hudPositionToSend = {};
             hudPositionToSend[this.type] = hudPosition;
@@ -680,7 +796,7 @@ class YoutubeVolumeScroll {
     #disablePositionMode(draggedElement) {
         draggedElement.draggable = false;
         draggedElement.style.pointerEvents = 'none';
-        setTimeout(() => draggedElement.style.opacity = 0, 50);
+        setTimeout(() => (draggedElement.style.opacity = 0), 50);
     }
 }
 
@@ -696,7 +812,10 @@ if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
         }
     });
 
-    documentObserver.observe(ytvs.$('ytd-page-manager'), { childList: true, subtree: true });
+    documentObserver.observe(ytvs.$('ytd-page-manager'), {
+        childList: true,
+        subtree: true,
+    });
 }
 
 if (!ytvs.isMusic) {
@@ -712,7 +831,13 @@ if (!ytvs.isMusic) {
                         shortsVideoListener.disconnect();
                     }
                 });
-                shortsVideoListener.observe(ytvs.$('ytd-page-manager ytd-shorts'), { childList: true, subtree: true });
+                shortsVideoListener.observe(
+                    ytvs.$('ytd-page-manager ytd-shorts'),
+                    {
+                        childList: true,
+                        subtree: true,
+                    },
+                );
             }
         });
         shortsListener.observe(ytvs.$('ytd-page-manager'), { childList: true });
