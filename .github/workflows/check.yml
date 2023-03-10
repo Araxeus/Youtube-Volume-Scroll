@@ -1,28 +1,18 @@
-# make a github action configuration for a check workflow that runs on every push and pull request
-# and runs the check script (npm run check)
-
 name: Check
 
 on:
-  push:
-  pull_request:
+  - push
+  - pull_request
 
 jobs:
   Check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
+      - name: Yarn PnP Setup
+        uses: Araxeus/setup-yarn-pnp-action@v1
 
       - name: Run Checks
-        run: npm run check
+        run: yarn check
 
       - name: Run build
-        run: npm run build
+        run: yarn build
