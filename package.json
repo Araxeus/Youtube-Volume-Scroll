@@ -72,10 +72,8 @@
       }
     },
     "hooks": {
-      "before:init": [
-        "yarn check",
-        "yarn build"
-      ],
+      "before:init": "yarn check",
+      "after:bump": "yarn build",
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     },
     "git": {
