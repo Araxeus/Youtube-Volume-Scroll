@@ -1,0 +1,28 @@
+{
+  "files": {
+    "ignore": ["**/popup/vendors/*", "./.pnp.*"]
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentSize": 4
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUndeclaredVariables": "error",
+        "noUnusedVariables": "error"
+      },
+      "nursery": {
+        "recommended": true
+      }
+    }
+  }
+}

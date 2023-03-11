@@ -1,9 +1,12 @@
 const browserApi = globalThis.browser ?? globalThis.chrome ?? undefined;
-if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
+if (!browserApi)
+    throw new Error(
+        'Youtube-Volume-Scroll could not find a browser api to use',
+    );
 
 const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
-let isMusic = window.location.href.includes('music.youtube');
+const isMusic = window.location.href.includes('music.youtube');
 
 let configFromPageAccess = undefined;
 
@@ -40,13 +43,18 @@ function start() {
         }
     });
 
-    documentObserver.observe(document.documentElement, { childList: true, subtree: true });
+    documentObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+    });
 }
 
 // check if the extension is inside a youtube embedded iframe that isn't active yet
 function checkOverlay() {
     const overlay = $('.ytp-cued-thumbnail-overlay-image');
-    const noOverlay = () => !overlay || !overlay.style.backgroundImage || overlay.parentNode.style.display === 'none';
+    const noOverlay = () =>
+        !overlay?.style.backgroundImage ||
+        overlay.parentNode.style.display === 'none';
     if (noOverlay()) {
         init();
     } else {
@@ -57,7 +65,9 @@ function checkOverlay() {
             }
         });
 
-        overlayObserver.observe(overlay.parentNode, { attributeFilter: ['style'] });
+        overlayObserver.observe(overlay.parentNode, {
+            attributeFilter: ['style'],
+        });
     }
 }
 
@@ -66,9 +76,15 @@ function init() {
 
     window.addEventListener('message', (e) => {
         if (e.origin !== window.location.origin) return;
-        if (e.data.type === 'YoutubeVolumeScroll-volume' && typeof e.data.newVolume === 'number') {
+        if (
+            e.data.type === 'YoutubeVolumeScroll-volume' &&
+            typeof e.data.newVolume === 'number'
+        ) {
             saveVolume(e.data.newVolume);
-        } else if (e.data.type === 'YoutubeVolumeScroll-config-save' && typeof e.data.config === 'object') {
+        } else if (
+            e.data.type === 'YoutubeVolumeScroll-config-save' &&
+            typeof e.data.config === 'object'
+        ) {
             configFromPageAccess = e.data.config;
             browserApi.storage.sync.set({ config: e.data.config });
         }
@@ -78,11 +94,11 @@ function init() {
 }
 
 function loadPageAccess() {
-    let pageAccess = document.createElement('script');
+    const pageAccess = document.createElement('script');
     pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        browserApi.storage.sync.get('config', data => {
+        browserApi.storage.sync.get('config', (data) => {
             if (data.config) sendConfig(data.config);
         });
     };
@@ -91,18 +107,24 @@ function loadPageAccess() {
 
 function sendConfig(config) {
     //send updated config to pageAccess.js
-    window.postMessage({ type: 'YoutubeVolumeScroll-config-change', config }, window.location.origin);
+    window.postMessage(
+        { type: 'YoutubeVolumeScroll-config-change', config },
+        window.location.origin,
+    );
 }
 
 function setupIncognito() {
-    browserApi.storage.sync.get('savedVolume', data => {
+    browserApi.storage.sync.get('savedVolume', (data) => {
         if (data?.savedVolume !== undefined) {
             try {
                 // indicate to pageAccess that we are in incognito
-                window.localStorage.setItem('Youtube-Volume-Scroll', JSON.stringify({
-                    incognito: true,
-                    savedVolume: data.savedVolume
-                }));
+                window.localStorage.setItem(
+                    'Youtube-Volume-Scroll',
+                    JSON.stringify({
+                        incognito: true,
+                        savedVolume: data.savedVolume,
+                    }),
+                );
                 if (!isMusic) {
                     // setup native youtube volume cookie
                     const cookieData = JSON.stringify({
@@ -111,19 +133,27 @@ function setupIncognito() {
                     });
                     const timeNow = Date.now();
 
-                    window.localStorage.setItem('yt-player-volume', JSON.stringify({
-                        data: cookieData,
-                        expiration: timeNow + oneMonth,
-                        creation: timeNow,
-                    }));
+                    window.localStorage.setItem(
+                        'yt-player-volume',
+                        JSON.stringify({
+                            data: cookieData,
+                            expiration: timeNow + oneMonth,
+                            creation: timeNow,
+                        }),
+                    );
 
-                    window.sessionStorage.setItem('yt-player-volume', JSON.stringify({
-                        data: cookieData,
-                        creation: timeNow,
-                    }));
+                    window.sessionStorage.setItem(
+                        'yt-player-volume',
+                        JSON.stringify({
+                            data: cookieData,
+                            creation: timeNow,
+                        }),
+                    );
                 }
             } catch {
-                console.error('Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png');
+                console.error(
+                    'Youtube-Volume-Scroll could not save volume cookies, see https://i.stack.imgur.com/mEidB.png',
+                );
             }
         }
     });
@@ -157,8 +187,10 @@ function simpleAreEqual(obj1, obj2) {
             if (obj1 !== obj2) return false;
             break;
         default:
-            throw new Error(`.simpleAreEqual() encountered an unknown type: {${typeof (obj1)}} pos1: ${obj1}, pos2: ${obj2}`);
+            throw new Error(
+                `.simpleAreEqual() encountered an unknown type: {${typeof obj1}} pos1: ${obj1}, pos2: ${obj2}`,
+            );
     }
 
     return true;
-}  
+}

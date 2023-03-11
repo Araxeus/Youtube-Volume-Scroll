@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "node": true,
         "es2022": true
     },
     "extends": "eslint:recommended",
@@ -11,6 +12,7 @@
     },
     "ignorePatterns": ["**/popup/vendors/*"],
     "rules": {
+        "no-mixed-spaces-and-tabs": "off",
         "indent": [
             "error",
             4,

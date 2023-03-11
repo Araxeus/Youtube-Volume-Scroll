@@ -11,3 +11,6 @@ __pycache__
 **/.peru/*
 .pnp.*
 .yarn
+
+# Ignore the .vscode recommended extensions file
+!.vscode/extensions.json

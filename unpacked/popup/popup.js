@@ -1,5 +1,8 @@
 const browserApi = globalThis.browser ?? globalThis.chrome ?? null;
-if (!browserApi) throw new Error('Youtube-Volume-Scroll could not find a browser api to use');
+if (!browserApi)
+    throw new Error(
+        'Youtube-Volume-Scroll could not find a browser api to use',
+    );
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -7,13 +10,13 @@ const $$ = document.querySelectorAll.bind(document);
 const hudTypes = {
     custom: 0,
     native: 1,
-    none: 2
+    none: 2,
 };
 
 const activationModifiers = {
     none: 0,
     shift: 1,
-    rightClick: 2
+    rightClick: 2,
 };
 
 const defaultConfig = {
@@ -28,21 +31,21 @@ const defaultConfig = {
             top: '5px',
             bottom: 'unset',
             left: 'unset',
-            right: '5px'
+            right: '5px',
         },
         music: {
             top: '10px',
             bottom: 'unset',
             left: 'unset',
-            right: '6%'
+            right: '6%',
         },
         shorts: {
             top: '0',
             bottom: 'unset',
             left: 'unset',
-            right: '35px'
-        }
-    }
+            right: '35px',
+        },
+    },
 };
 
 let config;
@@ -57,7 +60,7 @@ function sendConfig(timeout = 0) {
     }, timeout);
 }
 
-browserApi.storage.sync.get('config', data => {
+browserApi.storage.sync.get('config', (data) => {
     config = { ...defaultConfig, ...(data?.config || {}) };
     if ($('#steps_slider')) init();
     else {
@@ -80,13 +83,13 @@ function init() {
     setupColorPicker();
 
     const permissions = {
-        origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*']
+        origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*'],
     };
-    browserApi.permissions.contains(permissions, result => {
+    browserApi.permissions.contains(permissions, (result) => {
         if (!result) {
             $('body').classList.add('permissions-mode');
             $('#permissions_button').onclick = () => {
-                browserApi.permissions.request(permissions, granted => {
+                browserApi.permissions.request(permissions, (granted) => {
                     if (granted) {
                         $('body').classList.remove('permissions-mode');
                     }
@@ -97,11 +100,12 @@ function init() {
     });
 }
 
-const setCustomOptionsEnabled = (b) => $('body').classList[b ? 'add' : 'remove']('custom-options-enabled');
+const setCustomOptionsEnabled = (b) =>
+    $('body').classList[b ? 'add' : 'remove']('custom-options-enabled');
 
 function setupHudRadio() {
     const radios = $$('input[name="hud"]');
-    radios.forEach(radio => {
+    radios.forEach((radio) => {
         radio.onchange = () => {
             config.hud = parseInt(radio.value, 10);
             setCustomOptionsEnabled(config.hud === hudTypes.custom);
@@ -114,7 +118,7 @@ function setupHudRadio() {
 
 function setupActivationModifierRadio() {
     const radios = $$('input[name="activation_modifier"]');
-    radios.forEach(radio => {
+    radios.forEach((radio) => {
         radio.onchange = () => {
             config.activationModifier = parseInt(radio.value, 10);
             sendConfig();
@@ -138,7 +142,7 @@ function setupSizeSlider() {
     slider.value = parseFloat(config.hudSize);
 
     slider.addEventListener('input', () => {
-        config.hudSize = slider.value + 'px';
+        config.hudSize = `${slider.value}px`;
         sendConfig(0);
     });
 }
