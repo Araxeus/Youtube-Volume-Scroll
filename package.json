@@ -9,9 +9,8 @@
     "yarn": ">3"
   },
   "scripts": {
-    "check": "yarn copy_to_dist && yarn check_internal && del-cli dist",
-    "check_internal": "eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
-    "check_no_copy": "(yarn check_internal) || (del-cli dist && exit 1)",
+    "check": "yarn copy_to_dist && ((yarn check_no_copy) || (del-cli dist && exit 1)) && del-cli dist",
+    "check_no_copy": "eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
     "format": "eslint . --fix && rome format . --write",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
