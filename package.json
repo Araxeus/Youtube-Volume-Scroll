@@ -54,8 +54,7 @@
     "vendorFolder": "./unpacked/popup/vendors"
   },
   "vendorDependencies": {
-    "Cooltipz.css": {
-      "name": "Cooltipz.css",
+    "Cooltipz": {
       "version": "v2.2.1",
       "repository": "https://github.com/jackdomleo7/Cooltipz.css",
       "files": [
@@ -64,7 +63,6 @@
       ]
     },
     "Coloris": {
-      "name": "Coloris",
       "version": "v0.18.0",
       "repository": "https://github.com/mdbassit/Coloris",
       "files": [
