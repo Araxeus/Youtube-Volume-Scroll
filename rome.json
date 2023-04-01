@@ -1,6 +1,6 @@
 {
   "files": {
-    "ignore": ["**/popup/vendors/*", "./.pnp.*"]
+    "ignore": ["**/popup/vendors/*", "./.pnp.*", "*.json"]
   },
   "javascript": {
     "formatter": {
@@ -21,7 +21,8 @@
         "noUnusedVariables": "error"
       },
       "nursery": {
-        "recommended": true
+        "recommended": true,
+        "noAssignInExpressions": "off"
       }
     }
   }
