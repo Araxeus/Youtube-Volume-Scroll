@@ -23,7 +23,7 @@ const defaultConfig = {
     steps: 1,
     hud: hudTypes.native,
     hudSize: '50px',
-    hudColor: '#eee',
+    hudColor: '#eeeeee',
     hudPositionMode: false,
     activationModifier: activationModifiers.none,
     hudPosition: {
