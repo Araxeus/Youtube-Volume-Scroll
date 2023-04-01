@@ -7713,9 +7713,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vendorfiles@npm:^1.0.0-beta.6":
-  version: 1.0.0-beta.6
-  resolution: "vendorfiles@npm:1.0.0-beta.6"
+"vendorfiles@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "vendorfiles@npm:1.0.0"
   dependencies:
     "@commander-js/extra-typings": ^10.0.3
     "@ltd/j-toml": ^1.38.0
@@ -7732,7 +7732,7 @@ __metadata:
     yaml: ^2.2.1
   bin:
     vendor: ./dist/cli.js
-  checksum: 67122c9e2de5ce9f1e7b6000ed735c17e72a35f15e7637e30bfb3f05e4a492f71058f3e0c6784cc9e5daa3fe7a5ec7e092cc74b03a5698fc443b6fe26511859a
+  checksum: 4d399f6e47aeb21534ed4e39ab8dd788d349d9cbb1f5f9f375ec5453e0448117bf75b851e999ff0ef3555cee23e7ec07cbc949616d2a003e25c32455ad9c7e23
   languageName: node
   linkType: hard
 
@@ -8169,7 +8169,7 @@ __metadata:
     release-it: ^15.10.0
     rome: ^12.0.0
     sass: ^1.60.0
-    vendorfiles: ^1.0.0-beta.6
+    vendorfiles: ^1.0.0
     web-ext: ^7.6.0
     x-var: ^0.0.1
   languageName: unknown
