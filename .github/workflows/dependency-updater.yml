@@ -1,0 +1,48 @@
+name: Dependency Updater
+
+on:
+    schedule:
+        # every day at 07:33
+        - cron: '33 7 * * *'
+    workflow_dispatch: null # allow manual trigger
+
+jobs:
+    update-vendors:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Yarn PnP Setup
+              uses: Araxeus/setup-yarn-pnp-action@v1
+
+            - name: Run vendor update
+              id: vendor
+              run: |
+                  echo "PR_BODY<<EOF" >> $GITHUB_OUTPUT
+                  echo "$(yarn vendor update --pr)" >> $GITHUB_OUTPUT
+                  echo "EOF" >> $GITHUB_OUTPUT
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Show PR body
+              run: echo '${{ steps.vendor.outputs.PR_BODY}}\n\n>This PR was generated using [vendorfiles](https://www.github.com/Araxeus/vendorfiles)'
+
+            - name: Show git status
+              run: git status
+
+            - name: Check if PR body starts with "ERROR"
+              if: startsWith(steps.vendor.outputs.PR_BODY, 'ERROR:')
+              run: exit 1
+
+            - name: Create Pull Request
+              if: steps.vendor.outputs.PR_BODY != 0
+              uses: peter-evans/create-pull-request@v4
+              with:
+                  commit-message: '[vendorfiles] Bump vendors'
+                  committer: 'vendorfiles[bot]'
+                  author: 'vendorfiles[bot]'
+                  branch: bump-vendors
+                  title: '[vendorfiles] Bump vendors'
+                  body: '${{ steps.vendor.outputs.PR_BODY}}\n\n>This PR was generated using [vendorfiles](https://www.github.com/Araxeus/vendorfiles)'
+                  delete-branch: true
+                  labels: dependencies
+                  reviewers: ${{ github.repository_owner }}
+                  assignees: ${{ github.repository_owner }}

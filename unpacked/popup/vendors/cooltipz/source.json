@@ -1,9 +1,0 @@
-{
-    "name": "Cooltipz.css",
-    "version": "v2.2.0",
-    "url": "https://github.com/jackdomleo7/Cooltipz.css/tree/v2.2.0",
-    "description": "A tooltip library",
-    "files": [
-        "cooltipz.min.css"
-    ]
-}

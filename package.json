@@ -9,8 +9,8 @@
     "yarn": ">3"
   },
   "scripts": {
-    "check": "yarn copy_to_dist && ((yarn check_no_copy) || (del-cli dist && exit 1)) && del-cli dist",
-    "check_no_copy": "eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\"",
+    "check": "yarn copy_to_dist && yarn check_no_copy && del-cli dist",
+    "check_no_copy": "(eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
     "format": "eslint . --fix && rome format . --write",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
@@ -46,8 +46,33 @@
     "release-it": "^15.10.0",
     "rome": "^12.0.0",
     "sass": "^1.60.0",
+    "vendorfiles": "^1.0.0-beta.6",
     "web-ext": "^7.6.0",
     "x-var": "^0.0.1"
+  },
+  "vendorConfig": {
+    "vendorFolder": "./unpacked/popup/vendors"
+  },
+  "vendorDependencies": {
+    "Cooltipz.css": {
+      "name": "Cooltipz.css",
+      "version": "v2.2.1",
+      "repository": "https://github.com/jackdomleo7/Cooltipz.css",
+      "files": [
+        "cooltipz.min.css",
+        "LICENSE"
+      ]
+    },
+    "Coloris": {
+      "name": "Coloris",
+      "version": "v0.18.0",
+      "repository": "https://github.com/mdbassit/Coloris",
+      "files": [
+        "dist/coloris.min.js",
+        "dist/coloris.min.css",
+        "LICENSE"
+      ]
+    }
   },
   "webExt": {
     "sourceDir": "dist",

@@ -1,0 +1,11 @@
+{
+  "Coloris": {
+    "version": "v0.18.0",
+    "repository": "https://github.com/mdbassit/Coloris",
+    "files": {
+      "dist/coloris.min.js": "coloris.min.js",
+      "dist/coloris.min.css": "coloris.min.css",
+      "LICENSE": "LICENSE"
+    }
+  }
+}
