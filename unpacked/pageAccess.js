@@ -484,7 +484,9 @@ class YoutubeVolumeScroll {
             .getCookie('PREF')
             .replace(/volume=(\d+)/, `volume=${volume}`);
         if (pref) {
-            document.cookie = `${pref};domain=.youtube.com`;
+            document.cookie = `${pref};domain=.youtube.com;max-age=${
+                ytvs.oneMonth / 1000 // convert to seconds
+            }`;
         }
     }
 
@@ -585,6 +587,7 @@ class YoutubeVolumeScroll {
                     createNative();
                 }
                 break;
+            // rome-ignore lint/nursery/noUselessSwitchCase: Just here for clarity
             case ytvs.hudTypes.custom:
             default:
                 if (!ytvs.$(`${this.hudContainer} .volume-hud-custom`)) {
