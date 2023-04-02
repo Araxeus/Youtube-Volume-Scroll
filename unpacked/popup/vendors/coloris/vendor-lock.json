@@ -1,6 +1,6 @@
 {
   "coloris": {
-    "version": "v0.17.0",
+    "version": "v0.18.0",
     "repository": "https://github.com/mdbassit/Coloris",
     "files": {
       "dist/coloris.min.js": "coloris.min.js",
