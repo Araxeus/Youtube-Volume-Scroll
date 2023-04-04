@@ -43,7 +43,7 @@
     "del-cli": "^5.0.0",
     "dot-json": "^1.2.2",
     "eslint": "^8.37.0",
-    "release-it": "^15.10.0",
+    "release-it": "^15.10.1",
     "rome": "^12.0.0",
     "sass": "^1.60.0",
     "vendorfiles": "^1.1.0",
