@@ -44,7 +44,7 @@
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk.svg?label=%20">][link-chrome] Chrome and other Chromium browsers
 
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="48" alt="Chrome" valign="middle">][link-edge] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/agadcopafaojndinhloilcanpfpbonbk.svg?label=%20">][link-edge] Microsoft Edge
+[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/edge/edge.svg" width="48" alt="Chrome" valign="middle">][link-edge] [<img valign="middle" src="https://img.shields.io/badge/dynamic/json?prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fkigkklogdpgeomdollklnlfgglnkgenb&label=%20">][link-edge] Microsoft Edge
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/firefox/firefox.svg" width="48" alt="Firefox" valign="middle">][link-firefox] [<img valign="middle" src="https://img.shields.io/amo/v/youtube-volume-scroll.svg?label=%20">][link-firefox] Manifest V3 only
 
