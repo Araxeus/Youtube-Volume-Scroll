@@ -2175,16 +2175,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dot-json@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "dot-json@npm:1.2.2"
+"dot-json@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "dot-json@npm:1.3.0"
   dependencies:
     detect-indent: ~6.0.0
     docopt: ~0.6.2
     underscore-keypath: ~0.0.22
   bin:
     dot-json: bin/dot-json.js
-  checksum: fcd74777eeb2f81e7b86366df0b45da878498cdfcdf4958825b8dccaf377e2717bb6c2b75ab9f273de3f38364072a201e3fb538e6e4c29788b81323621e3cf4a
+  checksum: 8b41f29be4c4fd0dc8b50eb2e86a843bf999a27386e706dcd1426e52c2a478858752b5897ba02c512d7bb19098232049a214c96baf7ced02163178d666de08b6
   languageName: node
   linkType: hard
 
@@ -8210,7 +8210,7 @@ __metadata:
     auto-changelog: ^2.4.0
     cpy-cli: ^4.2.0
     del-cli: ^5.0.0
-    dot-json: ^1.2.2
+    dot-json: ^1.3.0
     eslint: ^8.39.0
     release-it: ^15.10.1
     rome: ^12.0.0
