@@ -6668,16 +6668,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.62.0":
-  version: 1.62.0
-  resolution: "sass@npm:1.62.0"
+"sass@npm:^1.63.5":
+  version: 1.63.5
+  resolution: "sass@npm:1.63.5"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: d5f606aa25afdf3ed9f316602811a40cf3b29f64cb70ea02f4198ae4288f9687de6fcef9f4fd2d58e06c28282d859aa249bdbf7d7d97a3a6a582eeaa8e5607fa
+  checksum: eee6a1b5f2bd85c464daa51aca11bd5d8086592099ff3a3a8286f92fafc0ab02edf5aaf781d8e53e446353beff15eff8cdf52052c232ece18efd7945d59172af
   languageName: node
   linkType: hard
 
@@ -8214,7 +8214,7 @@ __metadata:
     eslint: ^8.39.0
     release-it: ^15.10.1
     rome: ^12.0.0
-    sass: ^1.62.0
+    sass: ^1.63.5
     vendorfiles: ^1.1.1
     web-ext: ^7.6.2
     x-var: ^0.0.1
