@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "npm": "please-use-yarnv3+",
-    "yarn": ">3"
+    "npm": "please-use-yarnv4+",
+    "yarn": ">4"
   },
+  "packageManager": "yarn@4.0.1",
   "scripts": {
     "check": "yarn copy_to_dist && yarn check_no_copy && del-cli dist",
     "check_no_copy": "(eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",

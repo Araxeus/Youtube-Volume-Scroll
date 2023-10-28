@@ -10,7 +10,8 @@ __pycache__
 *.pyc
 **/.peru/*
 .pnp.*
-.yarn
+.yarn/*
 
 # Ignore the .vscode recommended extensions file
 !.vscode/extensions.json
+!.yarn/releases
