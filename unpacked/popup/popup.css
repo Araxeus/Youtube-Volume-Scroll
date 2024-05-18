@@ -134,7 +134,7 @@ body {
   min-width: 350px;
   overflow: hidden;
   display: grid;
-  place-content: space-evenly;
+  place-content: center;
   grid-row-gap: 5px;
   place-items: center;
 }
