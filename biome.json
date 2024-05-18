@@ -1,0 +1,39 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+    "files": {
+        "ignore": ["**/popup/vendors/*", "./.pnp.*", "*.json"]
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single"
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "correctness": {
+                "noUndeclaredVariables": "error",
+                "noUnusedVariables": "error"
+            },
+            "complexity": {
+                "noThisInStatic": "off",
+                "noForEach": "off"
+            },
+            "suspicious": {
+                "noAssignInExpressions": "off"
+            },
+            "style": {
+                "useNumberNamespace": "off"
+            },
+            "nursery": {
+                "recommended": true
+            }
+        }
+    }
+}

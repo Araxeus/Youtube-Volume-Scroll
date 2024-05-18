@@ -1,6 +1,7 @@
 customElements.define(
     'tooltip-icon',
     class Tooltip extends HTMLElement {
+        // biome-ignore lint/complexity/noUselessConstructor: for clarity
         constructor() {
             super();
         }
