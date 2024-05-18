@@ -1,6 +1,6 @@
 {
   "name": "youtube-volume-scroll",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
   "type": "module",
