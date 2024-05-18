@@ -11,8 +11,8 @@
   "packageManager": "yarn@4.0.1",
   "scripts": {
     "check": "yarn copy_to_dist && yarn check_no_copy && del-cli dist",
-    "check_no_copy": "(eslint . && rome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
-    "format": "eslint . --fix && rome format . --write",
+    "check_no_copy": "(eslint . && biome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
+    "format": "eslint . --fix && biome format . --write",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
     "@release-it/bumper": "^4.0.2",
     "auto-changelog": "^2.4.0",
     "cpy-cli": "^4.2.0",
@@ -45,7 +46,6 @@
     "dot-json": "^1.2.2",
     "eslint": "^8.39.0",
     "release-it": "^15.10.1",
-    "rome": "^12.0.0",
     "sass": "^1.62.0",
     "vendorfiles": "^1.1.1",
     "web-ext": "^7.6.2",

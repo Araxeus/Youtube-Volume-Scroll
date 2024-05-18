@@ -40,6 +40,7 @@ customElements.define(
             return this.getAttribute('value') || '1';
         }
 
+        // biome-ignore lint/complexity/noUselessConstructor: for clarity
         constructor() {
             super();
         }

@@ -1,6 +1,7 @@
 // set last active time to now every 15min (blocks "are you there?" popup)
 setInterval(() => (window._lact = Date.now()), 9e5);
 
+// biome-ignore lint/complexity/noStaticOnlyClass: this is a class to hide private variables and avoid page pollution
 class ytvs {
     static #$ = document.querySelector.bind(document);
     static get $() {
@@ -587,7 +588,7 @@ class YoutubeVolumeScroll {
                     createNative();
                 }
                 break;
-            // rome-ignore lint/nursery/noUselessSwitchCase: Just here for clarity
+            // biome-ignore lint/complexity/noUselessSwitchCase: Just here for clarity
             case ytvs.hudTypes.custom:
             default:
                 if (!ytvs.$(`${this.hudContainer} .volume-hud-custom`)) {
@@ -735,7 +736,7 @@ class YoutubeVolumeScroll {
             const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
 
             const padding =
-                parseFloat(
+                Number.parseFloat(
                     window.getComputedStyle(draggedElement, undefined).padding,
                 ) - 2;
 
