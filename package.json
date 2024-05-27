@@ -51,7 +51,7 @@
     "release-it": "^17.2.1",
     "sass": "^1.77.2",
     "vendorfiles": "^1.1.2",
-    "web-ext": "^7.11.0",
+    "web-ext": "^7.12.0",
     "x-var": "^2.0.1"
   },
   "vendorConfig": {
