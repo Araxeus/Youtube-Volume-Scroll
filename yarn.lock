@@ -161,12 +161,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commander-js/extra-typings@npm:^12.0.1":
-  version: 12.0.1
-  resolution: "@commander-js/extra-typings@npm:12.0.1"
+"@commander-js/extra-typings@npm:^12.1.0":
+  version: 12.1.0
+  resolution: "@commander-js/extra-typings@npm:12.1.0"
   peerDependencies:
-    commander: ~12.0.0
-  checksum: 10/cd094ec7fa789dd91e20942727f18811b05bdd0006dfeefddbd3054e4ef89592bb20b7a1e93edfa86a77603045c714231a8ae7804ad153775258e74f9f378208
+    commander: ~12.1.0
+  checksum: 10/489ef40dcf18508da5d8db288fa1536e294773b8d07e4c1edee6709972fe4310e3713819ef10bdc1d234615c5cf42df6acf9ddce0b31c6c8114be704fd626971
   languageName: node
   linkType: hard
 
@@ -1962,9 +1962,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compressing@npm:^1.8.0":
-  version: 1.9.0
-  resolution: "compressing@npm:1.9.0"
+"compressing@npm:^1.10.0":
+  version: 1.10.1
+  resolution: "compressing@npm:1.10.1"
   dependencies:
     "@eggjs/yauzl": "npm:^2.11.0"
     flushwritable: "npm:^1.0.0"
@@ -1975,7 +1975,7 @@ __metadata:
     streamifier: "npm:^0.1.1"
     tar-stream: "npm:^1.5.2"
     yazl: "npm:^2.4.2"
-  checksum: 10/ddaec9cc1a6a7eef4b3f35fea28ebf6434b88398bcdb492d44fbb2b7a7bb6386a866d13a954df21f23a50f73c81bc561395a71fa1b4ab62ae5fd0a9a3403ec19
+  checksum: 10/40b716f5abbdda7e8b348f074fbb9b7677c364ca37da4d4c610ec33dcd8478bbc30e59ecb44c4c8ad9b64651c6ed485f9d6e74ce77235bd5e01adff862ee0c77
   languageName: node
   linkType: hard
 
@@ -3328,14 +3328,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-type@npm:^18.2.1":
-  version: 18.2.1
-  resolution: "file-type@npm:18.2.1"
+"file-type@npm:^19.0.0":
+  version: 19.0.0
+  resolution: "file-type@npm:19.0.0"
   dependencies:
     readable-web-to-node-stream: "npm:^3.0.2"
     strtok3: "npm:^7.0.0"
     token-types: "npm:^5.0.1"
-  checksum: 10/9580707585f9bb026ccf2d5a7dca711e0939e7385aca70e93c316fdb4fe2066356a6ff6bf4b5837effe4a41015ad49544223fde46311d0e72bd151b7fe569a4e
+  checksum: 10/8befa58f769b19d4a72c214694906b83b584310575300e63c08c48f9f2cfa6cb57fb4e1d08325961938d9dde3ecc4f5737b1604ddedfd759f5a1e65e5b0ca577
   languageName: node
   linkType: hard
 
@@ -8379,13 +8379,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unarchive@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "unarchive@npm:1.1.1"
+"unarchive@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "unarchive@npm:1.1.2"
   dependencies:
-    compressing: "npm:^1.8.0"
-    file-type: "npm:^18.2.1"
-  checksum: 10/268063bb5535e35242f48a1a838a9020302be52de21e44797063025381f55a1fb194328dc1ff75d01133ace8bc6146ac5111bc1efe24908ef717f132d18e7881
+    compressing: "npm:^1.10.0"
+    file-type: "npm:^19.0.0"
+  checksum: 10/71e03c741a7d0f4c9a75086335f22c8da45f7a661eb9dee829f18b12801cf7ae59bdd79b3fa99973431b58e4e248bee057cf9a503c1ff70b4801ead9b4a4728a
   languageName: node
   linkType: hard
 
@@ -8597,11 +8597,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vendorfiles@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "vendorfiles@npm:1.1.2"
+"vendorfiles@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "vendorfiles@npm:1.2.0"
   dependencies:
-    "@commander-js/extra-typings": "npm:^12.0.1"
+    "@commander-js/extra-typings": "npm:^12.1.0"
     "@ltd/j-toml": "npm:^1.38.0"
     "@octokit/auth-oauth-device": "npm:^7.1.1"
     "@octokit/rest": "npm:^20.1.1"
@@ -8612,11 +8612,11 @@ __metadata:
     make-fetch-happen: "npm:^13.0.1"
     open: "npm:^10.1.0"
     parse-json: "npm:^8.1.0"
-    unarchive: "npm:^1.1.1"
+    unarchive: "npm:^1.1.2"
     yaml: "npm:^2.4.2"
   bin:
     vendor: ./dist/cli.js
-  checksum: 10/3f4f76f2388a85c533f6ca84f90b24174aef2bbcb1dceacd99355eabf80e1b676fd5c75709c0ad4749b524bcf945720162caa1664840601f084537da24ce4253
+  checksum: 10/353977de5280a47ce11d79bba67ebfaf9922f6958e81690c6b9c4f3959fcb245ec73240861dd4e4f9818e69776e789498ae11f9f72171253a1b28c1c0c7eb304
   languageName: node
   linkType: hard
 
@@ -9060,7 +9060,7 @@ __metadata:
     globals: "npm:^15.2.0"
     release-it: "npm:^17.2.1"
     sass: "npm:^1.77.2"
-    vendorfiles: "npm:^1.1.2"
+    vendorfiles: "npm:^1.2.0"
     web-ext: "npm:^7.11.0"
     x-var: "npm:^2.0.1"
   languageName: unknown
