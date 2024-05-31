@@ -341,10 +341,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inquirer/figures@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "@inquirer/figures@npm:1.0.2"
-  checksum: 10/70124fa1b42bab5789adfa9db21da4f2089b5958827ea979ace2df1c03737e34df2eeeec9fc133a934a3b9bcb392e842f547db35ec52e13362cb43cf0a631c86
+"@inquirer/figures@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "@inquirer/figures@npm:1.0.3"
+  checksum: 10/fa5c46527580c64ba151e1399f91772670f5f59e47045a3d2366188ed4cab1b63b7fb2a6d40d340f622cb174ca6dd3d5e22b962811c00548f9a9b4024b105dce
   languageName: node
   linkType: hard
 
@@ -538,13 +538,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-types@npm:^20.0.0":
-  version: 20.0.0
-  resolution: "@octokit/openapi-types@npm:20.0.0"
-  checksum: 10/9f60572af1201dd92626c412253d83d986b8ab1956250b95f417013ee8e7baf25870eeb801d16672cabc2c420544bc9c2f0a979e07603ff5997eff038c71a8c3
-  languageName: node
-  linkType: hard
-
 "@octokit/openapi-types@npm:^22.2.0":
   version: 22.2.0
   resolution: "@octokit/openapi-types@npm:22.2.0"
@@ -560,17 +553,6 @@ __metadata:
   peerDependencies:
     "@octokit/core": 5
   checksum: 10/82f5bcc3a536a44bed0a205c8301176c0d210b7a1c6d035a79b31a102e2e02f46234a38629cc984a21be544194ac69151814e9a909416aa7389cdffd1297bcd9
-  languageName: node
-  linkType: hard
-
-"@octokit/plugin-paginate-rest@npm:^9.1.5":
-  version: 9.2.1
-  resolution: "@octokit/plugin-paginate-rest@npm:9.2.1"
-  dependencies:
-    "@octokit/types": "npm:^12.6.0"
-  peerDependencies:
-    "@octokit/core": 5
-  checksum: 10/1528ab17eedb6705e30ad8576493f06b40f29a87c920a4affeb9715fe5f386e064b79eadd401c0cd1e7ec22287a461da4f5353a4ee57bc614fd890b0aa139d77
   languageName: node
   linkType: hard
 
@@ -591,17 +573,6 @@ __metadata:
   peerDependencies:
     "@octokit/core": ^5
   checksum: 10/9eccc1a22aa0b65f3f9378f26a74c386683db420c33202998918df1eef492e93212e1849e1d85530f425602663cfc2bfbf385a30991b8a04470334c74ba2386b
-  languageName: node
-  linkType: hard
-
-"@octokit/plugin-rest-endpoint-methods@npm:^10.2.0":
-  version: 10.4.1
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:10.4.1"
-  dependencies:
-    "@octokit/types": "npm:^12.6.0"
-  peerDependencies:
-    "@octokit/core": 5
-  checksum: 10/1090fc5a1bebb7b48c512e178f8ad69a3ef8332e583274972f3a3035e9be9200093e22a5dbfe0f71aa1a7a8817e54bb915af3c2a3f88db1311a2873cef176552
   languageName: node
   linkType: hard
 
@@ -649,19 +620,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:20.1.0":
-  version: 20.1.0
-  resolution: "@octokit/rest@npm:20.1.0"
-  dependencies:
-    "@octokit/core": "npm:^5.0.2"
-    "@octokit/plugin-paginate-rest": "npm:^9.1.5"
-    "@octokit/plugin-request-log": "npm:^4.0.0"
-    "@octokit/plugin-rest-endpoint-methods": "npm:^10.2.0"
-  checksum: 10/a34ef12f066128dcac2680ba3a3fad8b2eb1ce0f278b613bf4497310701a752148c0a9703a6fb35326dcfb9a1958c541a6722d5c6eaf2e1612c8b935dfed8eb3
-  languageName: node
-  linkType: hard
-
-"@octokit/rest@npm:^20.1.1":
+"@octokit/rest@npm:20.1.1, @octokit/rest@npm:^20.1.1":
   version: 20.1.1
   resolution: "@octokit/rest@npm:20.1.1"
   dependencies:
@@ -670,15 +629,6 @@ __metadata:
     "@octokit/plugin-request-log": "npm:^4.0.0"
     "@octokit/plugin-rest-endpoint-methods": "npm:13.2.2"
   checksum: 10/a5d557323f3ebcf813bf0965f04084dc52e71525315f865646e084713099a2baa340752caebafb17595b31c5011df0f42a15359e145046d85b5051af37a516f9
-  languageName: node
-  linkType: hard
-
-"@octokit/types@npm:^12.6.0":
-  version: 12.6.0
-  resolution: "@octokit/types@npm:12.6.0"
-  dependencies:
-    "@octokit/openapi-types": "npm:^20.0.0"
-  checksum: 10/19b77a8d25af2a5df4561f8750f807edfc9fca5b07cfa9fb21dce4665e1b188c966688f5ed5e08089404428100dfe44ad353f8d8532f1d30fe47e61c5faa1440
   languageName: node
   linkType: hard
 
@@ -4451,11 +4401,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:9.2.19":
-  version: 9.2.19
-  resolution: "inquirer@npm:9.2.19"
+"inquirer@npm:9.2.22":
+  version: 9.2.22
+  resolution: "inquirer@npm:9.2.22"
   dependencies:
-    "@inquirer/figures": "npm:^1.0.1"
+    "@inquirer/figures": "npm:^1.0.2"
     "@ljharb/through": "npm:^2.3.13"
     ansi-escapes: "npm:^4.3.2"
     chalk: "npm:^5.3.0"
@@ -4470,7 +4420,7 @@ __metadata:
     string-width: "npm:^4.2.3"
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^6.2.0"
-  checksum: 10/034fc65c583d61579cb8b86630a53a6a812279daf3cd004d090caf8583f5909e5ce192d230a24d0c4bff7c02adf3d1a4c5c36bf6fa16b117b0e6dca6d47a0972
+  checksum: 10/469e43df81e6d7cb067c6551876633c58b763f22d1aab5d5fd62bc87234a3474e0f5ab5bc92bbc08590bb305031a6af3f1912b28aa3becf7b0caf457ad9bdd17
   languageName: node
   linkType: hard
 
@@ -7078,12 +7028,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:^17.2.1":
-  version: 17.2.1
-  resolution: "release-it@npm:17.2.1"
+"release-it@npm:^17.3.0":
+  version: 17.3.0
+  resolution: "release-it@npm:17.3.0"
   dependencies:
     "@iarna/toml": "npm:2.2.5"
-    "@octokit/rest": "npm:20.1.0"
+    "@octokit/rest": "npm:20.1.1"
     async-retry: "npm:1.3.3"
     chalk: "npm:5.3.0"
     cosmiconfig: "npm:9.0.0"
@@ -7091,7 +7041,7 @@ __metadata:
     git-url-parse: "npm:14.0.0"
     globby: "npm:14.0.1"
     got: "npm:13.0.0"
-    inquirer: "npm:9.2.19"
+    inquirer: "npm:9.2.22"
     is-ci: "npm:3.0.1"
     issue-parser: "npm:7.0.0"
     lodash: "npm:4.17.21"
@@ -7103,7 +7053,7 @@ __metadata:
     os-name: "npm:5.1.0"
     promise.allsettled: "npm:1.0.7"
     proxy-agent: "npm:6.4.0"
-    semver: "npm:7.6.0"
+    semver: "npm:7.6.2"
     shelljs: "npm:0.8.5"
     update-notifier: "npm:7.0.0"
     url-join: "npm:5.0.0"
@@ -7111,7 +7061,7 @@ __metadata:
     yargs-parser: "npm:21.1.1"
   bin:
     release-it: bin/release-it.js
-  checksum: 10/ab02ed73c948a96c74002145c91674590780a446ee5f643b98c3d71e0df577e6eda10ab09e67648a483ae02b56de3ef080642ce26ef2bfe2fc2b104d94431523
+  checksum: 10/ef5ec02e3ce36f8d1ab795972ba6140a383a37122543f10af30e16410c87bc250197605f8ca57b1bdba045872011f8fc701ae52850a7a2d67ba4bb30b62f9d7b
   languageName: node
   linkType: hard
 
@@ -7410,14 +7360,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.6.0":
-  version: 7.6.0
-  resolution: "semver@npm:7.6.0"
-  dependencies:
-    lru-cache: "npm:^6.0.0"
+"semver@npm:7.6.2, semver@npm:^7.5.4":
+  version: 7.6.2
+  resolution: "semver@npm:7.6.2"
   bin:
     semver: bin/semver.js
-  checksum: 10/1b41018df2d8aca5a1db4729985e8e20428c650daea60fcd16e926e9383217d00f574fab92d79612771884a98d2ee2a1973f49d630829a8d54d6570defe62535
+  checksum: 10/296b17d027f57a87ef645e9c725bff4865a38dfc9caf29b26aa084b85820972fbe7372caea1ba6857162fa990702c6d9c1d82297cecb72d56c78ab29070d2ca2
   languageName: node
   linkType: hard
 
@@ -7438,15 +7386,6 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10/c8c04a4d41d30cffa7277904e0ad6998623dd61e36bca9578b0128d8c683b705a3924beada55eae7fa004fb30a9359a53a4ead2b68468d778b602f3b1a28f8e3
-  languageName: node
-  linkType: hard
-
-"semver@npm:^7.5.4":
-  version: 7.6.2
-  resolution: "semver@npm:7.6.2"
-  bin:
-    semver: bin/semver.js
-  checksum: 10/296b17d027f57a87ef645e9c725bff4865a38dfc9caf29b26aa084b85820972fbe7372caea1ba6857162fa990702c6d9c1d82297cecb72d56c78ab29070d2ca2
   languageName: node
   linkType: hard
 
@@ -9058,7 +8997,7 @@ __metadata:
     dot-json: "npm:^1.3.0"
     eslint: "npm:^9.3.0"
     globals: "npm:^15.2.0"
-    release-it: "npm:^17.2.1"
+    release-it: "npm:^17.3.0"
     sass: "npm:^1.77.2"
     vendorfiles: "npm:^1.2.0"
     web-ext: "npm:^7.11.0"
