@@ -3919,10 +3919,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.2.0":
-  version: 15.2.0
-  resolution: "globals@npm:15.2.0"
-  checksum: 10/a3cb67b037c84bfae1a6bedbe316a392a0e40a602b7730fe846312bcc460dd7b08059210762ae6f0e4343259334d473a821d537246983399b10c30c6911b7f9c
+"globals@npm:^15.6.0":
+  version: 15.6.0
+  resolution: "globals@npm:15.6.0"
+  checksum: 10/9b522b1eff444acaf331b0da7f072d5ef75b1cde02d89b3656039252f01b6bcda7a9ea42128e8644117c0ede9116249b1bcf830458b7dbe19fafd4de916a3dc0
   languageName: node
   linkType: hard
 
@@ -9091,7 +9091,7 @@ __metadata:
     del-cli: "npm:^5.1.0"
     dot-json: "npm:^1.3.0"
     eslint: "npm:^9.6.0"
-    globals: "npm:^15.2.0"
+    globals: "npm:^15.6.0"
     release-it: "npm:^17.2.1"
     sass: "npm:^1.77.2"
     vendorfiles: "npm:^1.2.0"
