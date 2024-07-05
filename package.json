@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
+    "@biomejs/biome": "^1.8.3",
     "@eslint/js": "^9.3.0",
     "@release-it/bumper": "^6.0.1",
     "auto-changelog": "^2.4.0",
