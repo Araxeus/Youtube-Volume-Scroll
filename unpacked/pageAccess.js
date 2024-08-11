@@ -162,7 +162,7 @@ class ytvs {
             .find((row) => row.startsWith(`${n}=`));
     }
 
-    static #setupMouseObserver = () => {
+    static #setupMouseObserver() {
         let changedVolumeWhileRightMouseDown = false;
 
         document.addEventListener('mousedown', (e) => {
@@ -205,9 +205,9 @@ class ytvs {
                 }
             }
         });
-    };
+    }
 
-    static #handleDataChange = (config) => {
+    static #handleDataChange(config) {
         this.#config.steps = config.steps;
         if (this.hud !== config.hud) {
             this.#config.hud = config.hud;
@@ -250,7 +250,7 @@ class ytvs {
             this.#config.hudPosition = config.hudPosition;
             this.activeInstances.forEach((obj) => obj.updateHudPosition());
         }
-    };
+    }
 
     static #initDone = false;
     static init() {
@@ -454,6 +454,7 @@ class YoutubeVolumeScroll {
         };
     }
 
+    #hudCheckTimeout = undefined;
     changeVolume(toIncrease, multiplier) {
         const newVolume = Math.round(
             toIncrease
@@ -476,6 +477,21 @@ class YoutubeVolumeScroll {
             { type: 'YoutubeVolumeScroll-volume', newVolume },
             window.location.origin,
         );
+
+        if (ytvs.hud !== ytvs.hudTypes.none) {
+            this.#hudCheckTimeout ??= setTimeout(() => {
+                if (this.getVolumeHud()?.style.opacity !== '1') {
+                    console.debug(
+                        'YTVS: video onvolumechange was not triggered, setting it again',
+                    );
+                    this.showVolume();
+                    this.setupHudOnVolume();
+                }
+                setTimeout(() => {
+                    this.#hudCheckTimeout = undefined;
+                }, 5000);
+            }, 50);
+        }
     }
 
     saveNativeVolume(volume) {
@@ -622,8 +638,8 @@ class YoutubeVolumeScroll {
 
         const hudTimes = {
             [ytvs.hudTypes.none]: 0,
-            [ytvs.hudTypes.native]: 1e3,
-            [ytvs.hudTypes.custom]: 1.5e3,
+            [ytvs.hudTypes.native]: 1000,
+            [ytvs.hudTypes.custom]: 1500,
         };
 
         const setOpacity = (opacity) => {
@@ -816,9 +832,10 @@ if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
         }
     });
 
-    documentObserver.observe(ytvs.$('ytd-page-manager'), {
-        childList: true,
-        subtree: true,
+    setTimeout(() => {
+        const pageManager = ytvs.$('ytd-page-manager');
+        if (!pageManager) return;
+        documentObserver.observe(pageManager, { childList: true });
     });
 }
 
@@ -844,6 +861,10 @@ if (!ytvs.isMusic) {
                 );
             }
         });
-        shortsListener.observe(ytvs.$('ytd-page-manager'), { childList: true });
+        setTimeout(() => {
+            const pageManager = ytvs.$('ytd-page-manager');
+            if (!pageManager) return;
+            shortsListener.observe(pageManager, { childList: true });
+        });
     }
 }
