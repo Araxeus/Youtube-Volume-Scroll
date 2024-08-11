@@ -7,14 +7,13 @@ jobs:
   Publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Yarn PnP Setup
-        uses: Araxeus/setup-yarn-pnp-action@v1
-
-      - name: Build
-        run: yarn build
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun b
 
       - name: Publish to Chrome/Edge/Firefox stores
-        uses: PlasmoHQ/bpp@v3
+        uses: PlasmoHQ/bpp@main
         with:
           keys: ${{ secrets.BPP_KEYS }}
           edge-notes: "Submitted using https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/.github/workflows/publish.yml"

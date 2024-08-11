@@ -4,29 +4,24 @@
   "description": "Browser Extension that enables scrolling mousewheel to control volume on Youtube and Youtube Music",
   "main": "index.js",
   "type": "module",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": "please-use-yarnv4+",
-    "yarn": ">4"
-  },
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "bun@1.1.22",
   "scripts": {
-    "check": "yarn copy_to_dist && yarn check_no_copy && del-cli dist",
-    "check_no_copy": "(eslint . && biome ci . && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
-    "format": "eslint . --fix && biome format . --write",
+    "check": "bun copy_to_dist && bun check_no_copy && del-cli dist",
+    "check_no_copy": "(bun biome check && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
+    "lint": "bun biome check --write",
     "sas": "sass --update unpacked/popup",
     "release": "release-it",
     "publish": "gh workflow run publish.yml",
-    "build": "yarn sas && yarn copy_to_dist && yarn check_no_copy && yarn build:firefox && yarn build:chromium && del-cli dist",
+    "b": "bun sas && bun copy_to_dist && bun check_no_copy && bun build:firefox && bun build:chromium && del-cli dist",
     "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
-    "build:chromium": "yarn manifest:chromium && x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
-    "manifest:firefox": "yarn manifest:add:gecko.id && yarn manifest:add:background-script",
-    "manifest:chromium": "yarn manifest:remove:gecko.id && yarn manifest:remove:background-script",
-    "manifest:add:gecko.id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
-    "manifest:remove:gecko.id": "dot-json dist/manifest.json -d browser_specific_settings",
+    "build:chromium": "bun manifest:chromium && x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_chromium.zip\"",
+    "manifest:firefox": "bun manifest:add:gecko-id && bun manifest:add:background-script",
+    "manifest:chromium": "bun manifest:remove:gecko-id && bun manifest:remove:background-script",
+    "manifest:add:gecko-id": "dot-json dist/manifest.json browser_specific_settings.gecko.id youtube-volume-scroll@github.com",
+    "manifest:remove:gecko-id": "dot-json dist/manifest.json -d browser_specific_settings",
     "manifest:add:background-script": "dot-json dist/manifest.json background.scripts.0 background-script.js && cpy background-script.js ../dist --cwd=unpacked",
     "manifest:remove:background-script": "dot-json dist/manifest.json -d background && del-cli dist/background-script.js",
-    "copy_to_dist": "cpy . ../dist --cwd=unpacked --dot && yarn manifest:firefox"
+    "copy_to_dist": "cpy . ../dist --cwd=unpacked --dot && bun manifest:firefox"
   },
   "repository": {
     "type": "git",
@@ -39,19 +34,17 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
-    "@eslint/js": "^9.3.0",
+    "@biomejs/biome": "^1.8.3",
     "@release-it/bumper": "^6.0.1",
     "auto-changelog": "^2.4.0",
     "cpy-cli": "=4.2.0",
     "del-cli": "^5.1.0",
     "dot-json": "^1.3.0",
-    "eslint": "^9.6.0",
-    "globals": "^15.2.0",
-    "release-it": "^17.4.1",
-    "sass": "^1.77.2",
-    "vendorfiles": "^1.2.0",
-    "web-ext": "^7.11.0",
+    "globals": "^15.9.0",
+    "release-it": "^17.6.0",
+    "sass": "^1.77.8",
+    "vendorfiles": "^1.2.2",
+    "web-ext": "^8.2.0",
     "x-var": "^2.0.1"
   },
   "vendorConfig": {
@@ -61,27 +54,17 @@
     "cooltipz": {
       "version": "v2.3.0",
       "repository": "https://github.com/jackdomleo7/Cooltipz.css",
-      "files": [
-        "cooltipz.min.css",
-        "LICENSE"
-      ]
+      "files": ["cooltipz.min.css", "LICENSE"]
     },
     "coloris": {
       "version": "v0.24.0",
       "repository": "https://github.com/mdbassit/Coloris",
-      "files": [
-        "dist/coloris.min.js",
-        "dist/coloris.min.css",
-        "LICENSE"
-      ]
+      "files": ["dist/coloris.min.js", "dist/coloris.min.css", "LICENSE"]
     }
   },
   "webExt": {
     "sourceDir": "dist",
-    "ignoreFiles": [
-      "./popup/*.scss",
-      "./popup/*.map"
-    ],
+    "ignoreFiles": ["./popup/*.scss", "./popup/*.map"],
     "run": {
       "firefox": "nightly"
     },
@@ -99,8 +82,8 @@
       }
     },
     "hooks": {
-      "before:init": "yarn check",
-      "after:bump": "yarn build",
+      "before:init": "bun check",
+      "after:bump": "bun b",
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     },
     "git": {
@@ -115,5 +98,6 @@
     "npm": {
       "publish": false
     }
-  }
+  },
+  "trustedDependencies": ["@biomejs/biome"]
 }

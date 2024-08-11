@@ -1,39 +1,68 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
-    "files": {
-        "ignore": ["**/popup/vendors/*", "./.pnp.*", "*.json"]
-    },
-    "javascript": {
-        "formatter": {
-            "quoteStyle": "single"
-        }
-    },
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "ignore": [
+      "**/popup/vendors/*",
+      "./node_modules/**",
+      "./dist/**",
+      "./unpacked/popup/popup.css"
+    ]
+  },
+  "javascript": {
     "formatter": {
-        "enabled": true,
-        "indentStyle": "space",
-        "indentWidth": 4
+      "quoteStyle": "single"
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 4
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2
     },
     "linter": {
-        "enabled": true,
-        "rules": {
-            "recommended": true,
-            "correctness": {
-                "noUndeclaredVariables": "error",
-                "noUnusedVariables": "error"
-            },
-            "complexity": {
-                "noThisInStatic": "off",
-                "noForEach": "off"
-            },
-            "suspicious": {
-                "noAssignInExpressions": "off"
-            },
-            "style": {
-                "useNumberNamespace": "off"
-            },
-            "nursery": {
-                "recommended": true
-            }
-        }
+      "enabled": true
     }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 200
+    },
+    "linter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUndeclaredVariables": "error",
+        "noUnusedVariables": "error"
+      },
+      "complexity": {
+        "noThisInStatic": "off",
+        "noForEach": "off"
+      },
+      "suspicious": {
+        "noAssignInExpressions": "off"
+      },
+      "style": {
+        "useNumberNamespace": "off"
+      },
+      "nursery": {
+        "recommended": true
+      }
+    }
+  }
 }
