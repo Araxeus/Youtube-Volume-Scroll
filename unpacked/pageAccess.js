@@ -832,11 +832,18 @@ if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
         }
     });
 
-    setTimeout(() => {
-        const pageManager = ytvs.$('ytd-page-manager');
-        if (!pageManager) return;
-        documentObserver.observe(pageManager, { childList: true });
-    });
+    const moviePlayer = ytvs.$('#movie_player');
+    if (moviePlayer) {
+        documentObserver.observe(moviePlayer, { attributes: true });
+    } else {
+        setTimeout(() =>
+            documentObserver.observe(
+                ytvs.$('ytd-page-manager'),
+                { childList: true },
+                ytvs.$('ytd-page-manager') ? 0 : 200,
+            ),
+        );
+    }
 }
 
 if (!ytvs.isMusic) {
@@ -862,9 +869,11 @@ if (!ytvs.isMusic) {
             }
         });
         setTimeout(() => {
-            const pageManager = ytvs.$('ytd-page-manager');
-            if (!pageManager) return;
-            shortsListener.observe(pageManager, { childList: true });
+            shortsListener.observe(
+                ytvs.$('ytd-page-manager'),
+                { childList: true },
+                ytvs.$('ytd-page-manager') ? 0 : 200,
+            );
         });
     }
 }
