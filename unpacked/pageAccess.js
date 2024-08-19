@@ -836,13 +836,26 @@ if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
     if (moviePlayer) {
         documentObserver.observe(moviePlayer, { attributes: true });
     } else {
-        setTimeout(() =>
-            documentObserver.observe(
-                ytvs.$('ytd-page-manager'),
-                { childList: true },
-                ytvs.$('ytd-page-manager') ? 0 : 200,
-            ),
-        );
+        const pageManager = ytvs.$('ytd-page-manager');
+        if (pageManager) {
+            documentObserver.observe(pageManager, {
+                childList: true,
+                subtree: true,
+            });
+        } else {
+            new MutationObserver((_, observer) => {
+                if (ytvs.$('ytd-page-manager')) {
+                    observer.disconnect();
+                    documentObserver.observe(ytvs.$('ytd-page-manager'), {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
+            }).observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+            });
+        }
     }
 }
 
@@ -868,12 +881,22 @@ if (!ytvs.isMusic) {
                 );
             }
         });
-        setTimeout(() => {
-            shortsListener.observe(
-                ytvs.$('ytd-page-manager'),
-                { childList: true },
-                ytvs.$('ytd-page-manager') ? 0 : 200,
-            );
-        });
+        const pageManager = ytvs.$('ytd-page-manager');
+        if (pageManager) {
+            shortsListener.observe(pageManager, { childList: true });
+        } else {
+            new MutationObserver((_, observer) => {
+                if (ytvs.$('ytd-page-manager')) {
+                    observer.disconnect();
+                    shortsListener.observe(ytvs.$('ytd-page-manager'), {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
+            }).observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+            });
+        }
     }
 }
