@@ -825,20 +825,20 @@ ytvs.init();
 if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
     YoutubeVolumeScroll.run();
 } else {
-    const documentObserver = new MutationObserver(() => {
+    const videoObserver = new MutationObserver(() => {
         if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
-            documentObserver.disconnect();
+            videoObserver.disconnect();
             YoutubeVolumeScroll.run();
         }
     });
 
     const moviePlayer = ytvs.$('#movie_player');
     if (moviePlayer) {
-        documentObserver.observe(moviePlayer, { attributes: true });
+        videoObserver.observe(moviePlayer, { attributes: true });
     } else {
         const pageManager = ytvs.$('ytd-page-manager');
         if (pageManager) {
-            documentObserver.observe(pageManager, {
+            videoObserver.observe(pageManager, {
                 childList: true,
                 subtree: true,
             });
@@ -846,7 +846,7 @@ if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
             new MutationObserver((_, observer) => {
                 if (ytvs.$('ytd-page-manager')) {
                     observer.disconnect();
-                    documentObserver.observe(ytvs.$('ytd-page-manager'), {
+                    videoObserver.observe(ytvs.$('ytd-page-manager'), {
                         childList: true,
                         subtree: true,
                     });
@@ -863,34 +863,34 @@ if (!ytvs.isMusic) {
     if (ytvs.$('ytd-player.ytd-shorts video')) {
         YoutubeVolumeScroll.newYoutubeShorts();
     } else {
-        const shortsListener = new MutationObserver((m) => {
+        const shortsObserver = new MutationObserver((m) => {
             if (m[0].addedNodes[0].tagName === 'YTD-SHORTS') {
-                shortsListener.disconnect();
-                const shortsVideoListener = new MutationObserver(() => {
-                    if (ytvs.$('ytd-player.ytd-shorts video')) {
+                shortsObserver.disconnect();
+                const shortsContainer = m[0].addedNodes[0];
+                new MutationObserver((_, observer) => {
+                    if (
+                        shortsContainer.querySelector(
+                            'ytd-player.ytd-shorts video',
+                        )
+                    ) {
+                        observer.disconnect();
                         YoutubeVolumeScroll.newYoutubeShorts();
-                        shortsVideoListener.disconnect();
                     }
+                }).observe(shortsContainer, {
+                    childList: true,
+                    subtree: true,
                 });
-                shortsVideoListener.observe(
-                    ytvs.$('ytd-page-manager ytd-shorts'),
-                    {
-                        childList: true,
-                        subtree: true,
-                    },
-                );
             }
         });
         const pageManager = ytvs.$('ytd-page-manager');
         if (pageManager) {
-            shortsListener.observe(pageManager, { childList: true });
+            shortsObserver.observe(pageManager, { childList: true });
         } else {
             new MutationObserver((_, observer) => {
                 if (ytvs.$('ytd-page-manager')) {
                     observer.disconnect();
-                    shortsListener.observe(ytvs.$('ytd-page-manager'), {
+                    shortsObserver.observe(ytvs.$('ytd-page-manager'), {
                         childList: true,
-                        subtree: true,
                     });
                 }
             }).observe(document.documentElement, {
