@@ -6,7 +6,7 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"],
+      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*", "https://www.youtube-nocookie.com/embed/*"],
       "all_frames": true,
       "js": ["index.js"],
       "css": ["style.css"],
@@ -16,7 +16,7 @@
   "web_accessible_resources": [
     {
       "resources": ["pageAccess.js"],
-      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"]
+      "matches": ["https://www.youtube.com/*", "https://music.youtube.com/*", "https://www.youtube-nocookie.com/*"]
     }
   ],
   "icons": {
