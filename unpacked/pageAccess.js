@@ -499,7 +499,7 @@ class YoutubeVolumeScroll {
 
         const pref = ytvs
             .getCookie('PREF')
-            .replace(/volume=(\d+)/, `volume=${volume}`);
+            ?.replace(/volume=(\d+)/, `volume=${volume}`);
         if (pref) {
             document.cookie = `${pref};domain=.youtube.com;max-age=${
                 ytvs.oneMonth / 1000 // convert to seconds
