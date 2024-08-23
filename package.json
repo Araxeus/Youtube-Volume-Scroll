@@ -85,8 +85,7 @@
     "hooks": {
       "before:init": "bun check",
       "after:bump": "bun format",
-      "before:release": "bun b",
-      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+      "after:release": "bun b"
     },
     "git": {
       "requireBranch": "main",
