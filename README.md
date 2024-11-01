@@ -8,7 +8,7 @@
 
 <h1 <img width="45" align="left" src="https://github.com/Araxeus/Youtube-Volume-Scroll/raw/main/unpacked/icons/icon32x32.png" /> Youtube Volume Scroll </h1>
 
-[<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="for Firefox" height="60px">][link-firefox] [<img src="https://user-images.githubusercontent.com/78568641/212470539-dd4d22a0-3af8-4fa7-9671-6df5b2e26a70.png" alt="for Firefox" height="60px">][link-edge] [<img src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/HRs9MPufa1J1h5glNhut.png" alt="for Chrome" height="60px">][link-chrome]
+[<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="for Firefox" height="60px">][link-firefox] [<img src="https://user-images.githubusercontent.com/78568641/212470539-dd4d22a0-3af8-4fa7-9671-6df5b2e26a70.png" alt="for Firefox" height="60px">][link-edge] [<img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="for Chrome" height="60px">][link-chrome]
 
 > Browser Extension that enable scrolling mousewheel to control volume  on Youtube and Youtube Music
 
