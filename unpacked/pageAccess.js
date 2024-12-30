@@ -157,21 +157,19 @@ class ytvs {
     }
 
     static getCookie(n) {
-        return document.cookie
-            .split('; ')
-            .find((row) => row.startsWith(`${n}=`));
+        return document.cookie.split('; ').find(row => row.startsWith(`${n}=`));
     }
 
     static #setupMouseObserver() {
         let changedVolumeWhileRightMouseDown = false;
 
-        document.addEventListener('mousedown', (e) => {
+        document.addEventListener('mousedown', e => {
             if (e.button === 2) {
                 this.#isRightMouseDown = true;
             }
         });
 
-        document.addEventListener('mouseup', (e) => {
+        document.addEventListener('mouseup', e => {
             if (e.button === 2) {
                 this.#isRightMouseDown = false;
                 if (changedVolumeWhileRightMouseDown) {
@@ -196,7 +194,7 @@ class ytvs {
             }
         });
 
-        window.addEventListener('message', (e) => {
+        window.addEventListener('message', e => {
             if (e.origin !== window.location.origin) return;
             if (e.data.type === 'YoutubeVolumeScroll-volume') {
                 if (this.#isRightMouseDown) {
@@ -216,7 +214,7 @@ class ytvs {
                     'ytvs_type',
                     this.#reversedHudTypes[ytvs.hud],
                 );
-                this.#activeInstances.forEach((obj) => obj.showVolume());
+                this.#activeInstances.forEach(obj => obj.showVolume());
             }
         }
 
@@ -227,7 +225,7 @@ class ytvs {
         if (config.hudPositionMode !== this.hudPositionMode) {
             this.#config.hudPositionMode = config.hudPositionMode;
             if (this.hud === this.hudTypes.custom) {
-                this.#activeInstances.forEach((obj) =>
+                this.#activeInstances.forEach(obj =>
                     obj.updateHudPositionMode(),
                 );
             }
@@ -235,12 +233,12 @@ class ytvs {
 
         if (config.hudSize && config.hudSize !== this.hudSize) {
             this.#config.hudSize = config.hudSize;
-            this.#activeInstances.forEach((obj) => obj.updateHudSize());
+            this.#activeInstances.forEach(obj => obj.updateHudSize());
         }
 
         if (config.hudColor && config.hudColor !== this.hudColor) {
             this.#config.hudColor = config.hudColor;
-            this.#activeInstances.forEach((obj) => obj.updateHudColor());
+            this.#activeInstances.forEach(obj => obj.updateHudColor());
         }
 
         if (
@@ -248,7 +246,7 @@ class ytvs {
             !this.simpleAreEqual(config.hudPosition, this.hudPosition)
         ) {
             this.#config.hudPosition = config.hudPosition;
-            this.activeInstances.forEach((obj) => obj.updateHudPosition());
+            this.activeInstances.forEach(obj => obj.updateHudPosition());
         }
     }
 
@@ -256,7 +254,7 @@ class ytvs {
     static init() {
         window.addEventListener(
             'message',
-            (e) => {
+            e => {
                 if (e.origin !== window.location.origin) return;
                 if (
                     e.data.type === 'YoutubeVolumeScroll-config-change' &&
@@ -427,7 +425,7 @@ class YoutubeVolumeScroll {
     }
 
     setupOnWheel() {
-        ytvs.$(this.scrollTarget).onwheel = (event) => {
+        ytvs.$(this.scrollTarget).onwheel = event => {
             if (
                 ytvs.activationModifier === ytvs.activationModifiers.shift &&
                 !event.shiftKey
@@ -642,7 +640,7 @@ class YoutubeVolumeScroll {
             [ytvs.hudTypes.custom]: 1500,
         };
 
-        const setOpacity = (opacity) => {
+        const setOpacity = opacity => {
             if (
                 ytvs.hudPositionMode &&
                 opacity === 0 &&
@@ -687,7 +685,7 @@ class YoutubeVolumeScroll {
         const newHudPosition = ytvs.hudPosition[this.type];
 
         Object.keys(newHudPosition).forEach(
-            (key) => (volumeHud.style[key] = newHudPosition[key]),
+            key => (volumeHud.style[key] = newHudPosition[key]),
         );
     }
 
@@ -717,11 +715,11 @@ class YoutubeVolumeScroll {
         let dragOffsetX;
         let dragOffsetY;
 
-        const setShortsControlsPointerEvents = (value) => {
+        const setShortsControlsPointerEvents = value => {
             const shortsControls = [
                 ytvs.$('.player-controls.ytd-reel-video-renderer'),
             ];
-            shortsControls.forEach((c) => {
+            shortsControls.forEach(c => {
                 if (c) c.style.pointerEvents = value;
             });
         };
@@ -732,7 +730,7 @@ class YoutubeVolumeScroll {
         draggedElement.style.opacity = 1;
         draggedElement.textContent ||= `${Math.round(this.api.getVolume())}%`;
 
-        draggedElement.ondragstart = (ev) => {
+        draggedElement.ondragstart = ev => {
             const rect = ev.target.getBoundingClientRect();
 
             dragOffsetX = ev.clientX - rect.x;
@@ -741,7 +739,7 @@ class YoutubeVolumeScroll {
             setShortsControlsPointerEvents('none');
         };
 
-        dragTarget.ondrop = (ev) => {
+        dragTarget.ondrop = ev => {
             ev.preventDefault();
 
             const dragTargetRect = dragTarget.getBoundingClientRect();
@@ -759,8 +757,8 @@ class YoutubeVolumeScroll {
             const controlsHeight =
                 ytvs.$('.ytp-chrome-bottom')?.clientHeight || 0;
 
-            const pxToPercent_width = (x) => (x / dragTargetRect.width) * 100;
-            const pxToPercent_height = (y) => (y / dragTargetRect.height) * 100;
+            const pxToPercent_width = x => (x / dragTargetRect.width) * 100;
+            const pxToPercent_height = y => (y / dragTargetRect.height) * 100;
 
             const ogStyle = draggedElement.style;
             const hudPosition = {
@@ -797,7 +795,7 @@ class YoutubeVolumeScroll {
             }
 
             Object.keys(hudPosition).forEach(
-                (pos) => (draggedElement.style[pos] = hudPosition[pos]),
+                pos => (draggedElement.style[pos] = hudPosition[pos]),
             );
 
             const hudPositionToSend = {};
@@ -807,7 +805,7 @@ class YoutubeVolumeScroll {
             setShortsControlsPointerEvents('auto');
         };
 
-        dragTarget.ondragover = (ev) => {
+        dragTarget.ondragover = ev => {
             ev.preventDefault();
             ev.dataTransfer.dropEffect = 'move';
         };
@@ -863,7 +861,7 @@ if (!ytvs.isMusic) {
     if (ytvs.$('ytd-player.ytd-shorts video')) {
         YoutubeVolumeScroll.newYoutubeShorts();
     } else {
-        const shortsObserver = new MutationObserver((m) => {
+        const shortsObserver = new MutationObserver(m => {
             if (m[0].addedNodes[0].tagName === 'YTD-SHORTS') {
                 shortsObserver.disconnect();
                 const shortsContainer = m[0].addedNodes[0];

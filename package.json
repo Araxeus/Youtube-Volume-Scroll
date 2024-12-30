@@ -7,11 +7,11 @@
   "packageManager": "bun@1.1.22",
   "scripts": {
     "check": "bun copy_to_dist && bun check_no_copy && del-cli dist",
-    "check_no_copy": "(bun biome check && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
-    "lint": "bun biome check --write",
-    "format": "bun biome format --write",
+    "check_no_copy": "(biome check && web-ext lint -w --ignore-files \"./popup/vendors/*\") || (del-cli dist && exit 1)",
+    "lint": "biome check --write",
+    "format": "biome format --write",
     "sas": "sass --update unpacked/popup",
-    "release": "release-it",
+    "release": "release-it && bun b",
     "publish": "gh workflow run publish.yml",
     "b": "bun sas && bun copy_to_dist && bun check_no_copy && bun build:firefox && bun build:chromium && del-cli dist",
     "build:firefox": "x-var web-ext build --filename=\"youtube-volume-scroll_%npm_package_version%_firefox.xpi\"",
@@ -85,7 +85,7 @@
     "hooks": {
       "before:init": "bun check",
       "after:bump": "bun format",
-      "after:release": "bun b"
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     },
     "git": {
       "requireBranch": "main",

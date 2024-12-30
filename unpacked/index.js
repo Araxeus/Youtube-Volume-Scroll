@@ -74,7 +74,7 @@ function checkOverlay() {
 function init() {
     loadPageAccess();
 
-    window.addEventListener('message', (e) => {
+    window.addEventListener('message', e => {
         if (e.origin !== window.location.origin) return;
         if (
             e.data.type === 'YoutubeVolumeScroll-volume' &&
@@ -98,7 +98,7 @@ function loadPageAccess() {
     pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
     pageAccess.onload = function () {
         this.remove();
-        browserApi.storage.sync.get('config', (data) => {
+        browserApi.storage.sync.get('config', data => {
             if (data.config) sendConfig(data.config);
         });
     };
@@ -114,7 +114,7 @@ function sendConfig(config) {
 }
 
 function setupIncognito() {
-    browserApi.storage.sync.get('savedVolume', (data) => {
+    browserApi.storage.sync.get('savedVolume', data => {
         if (data?.savedVolume !== undefined) {
             try {
                 // indicate to pageAccess that we are in incognito

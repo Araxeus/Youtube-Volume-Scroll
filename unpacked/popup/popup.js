@@ -60,7 +60,7 @@ function sendConfig(timeout = 0) {
     }, timeout);
 }
 
-browserApi.storage.sync.get('config', (data) => {
+browserApi.storage.sync.get('config', data => {
     config = { ...defaultConfig, ...(data?.config || {}) };
     if ($('#steps_slider')) init();
     else {
@@ -85,11 +85,11 @@ function init() {
     const permissions = {
         origins: ['https://www.youtube.com/*', 'https://music.youtube.com/*'],
     };
-    browserApi.permissions.contains(permissions, (result) => {
+    browserApi.permissions.contains(permissions, result => {
         if (!result) {
             $('body').classList.add('permissions-mode');
             $('#permissions_button').onclick = () => {
-                browserApi.permissions.request(permissions, (granted) => {
+                browserApi.permissions.request(permissions, granted => {
                     if (granted) {
                         $('body').classList.remove('permissions-mode');
                     }
@@ -100,12 +100,12 @@ function init() {
     });
 }
 
-const setCustomOptionsEnabled = (b) =>
+const setCustomOptionsEnabled = b =>
     $('body').classList[b ? 'add' : 'remove']('custom-options-enabled');
 
 function setupHudRadio() {
     const radios = $$('input[name="hud"]');
-    radios.forEach((radio) => {
+    radios.forEach(radio => {
         radio.onchange = () => {
             config.hud = parseInt(radio.value, 10);
             setCustomOptionsEnabled(config.hud === hudTypes.custom);
@@ -118,7 +118,7 @@ function setupHudRadio() {
 
 function setupActivationModifierRadio() {
     const radios = $$('input[name="activation_modifier"]');
-    radios.forEach((radio) => {
+    radios.forEach(radio => {
         radio.onchange = () => {
             config.activationModifier = parseInt(radio.value, 10);
             sendConfig();

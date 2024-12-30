@@ -77,11 +77,11 @@ customElements.define(
                 this.value = input.value;
             });
 
-            const inc = (n) =>
+            const inc = n =>
                 (input.value =
                     parseFloat(input.value) + parseFloat(this.step) * n);
 
-            input.addEventListener('wheel', (e) => {
+            input.addEventListener('wheel', e => {
                 // Event.deltaY < 0 means wheel-up (increase), > 0 means wheel-down (decrease)
                 if (e.deltaY !== 0) inc(e.deltaY < 0 ? 1 : -1);
                 // Event.deltaX < 0 means wheel-left (decrease), > 0 means wheel-right (increase)
