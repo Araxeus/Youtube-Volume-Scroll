@@ -53,19 +53,29 @@
   },
   "vendorDependencies": {
     "cooltipz": {
-      "version": "v2.3.0",
+      "version": "v2.3.1",
       "repository": "https://github.com/jackdomleo7/Cooltipz.css",
-      "files": ["cooltipz.min.css", "LICENSE"]
+      "files": [
+        "cooltipz.min.css",
+        "LICENSE"
+      ]
     },
     "coloris": {
       "version": "v0.24.0",
       "repository": "https://github.com/mdbassit/Coloris",
-      "files": ["dist/coloris.min.js", "dist/coloris.min.css", "LICENSE"]
+      "files": [
+        "dist/coloris.min.js",
+        "dist/coloris.min.css",
+        "LICENSE"
+      ]
     }
   },
   "webExt": {
     "sourceDir": "dist",
-    "ignoreFiles": ["./popup/*.scss", "./popup/*.map"],
+    "ignoreFiles": [
+      "./popup/*.scss",
+      "./popup/*.map"
+    ],
     "run": {
       "firefox": "nightly"
     },
@@ -100,5 +110,7 @@
       "publish": false
     }
   },
-  "trustedDependencies": ["@biomejs/biome"]
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }
