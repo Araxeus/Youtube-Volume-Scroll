@@ -437,6 +437,8 @@ class YoutubeVolumeScroll {
                 !ytvs.isRightMouseDown
             )
                 return;
+            // settings menu should be scrollable
+            if (event.target.matches('.ytp-settings-menu *')) return;
             const multiplier =
                 event.shiftKey &&
                 ytvs.activationModifier !== ytvs.activationModifiers.shift
