@@ -1,7 +1,7 @@
 {
   "cooltipz": {
     "repository": "https://github.com/jackdomleo7/Cooltipz.css",
-    "version": "v2.3.1",
+    "version": "v2.4.0",
     "files": {
       "cooltipz.min.css": "cooltipz.min.css",
       "LICENSE": "LICENSE"
