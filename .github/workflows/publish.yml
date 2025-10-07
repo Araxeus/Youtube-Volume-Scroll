@@ -13,7 +13,7 @@ jobs:
       - run: bun b
 
       - name: Publish to Chrome/Edge/Firefox stores
-        uses: PlasmoHQ/bpp@main
+        uses: PlasmoHQ/bpp@v3.8.0
         with:
           keys: ${{ secrets.BPP_KEYS }}
           edge-notes: "Submitted using https://github.com/Araxeus/Youtube-Volume-Scroll/blob/main/.github/workflows/publish.yml"
