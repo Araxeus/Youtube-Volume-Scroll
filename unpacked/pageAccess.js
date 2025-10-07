@@ -341,6 +341,19 @@ class YoutubeVolumeScroll {
                         : 1;
                 });
                 observer.observe(bezelText, { childList: true });
+
+                // disable the new experimental ytp-fullscreen-grid
+                if (ytvs.$('div.ytp-fullscreen-grid')) {
+                    const fsGridClass = 'ytp-fullscreen-grid-peeking';
+                    const api = ytvs.$('#movie_player');
+                    const removeFsGrid = () => {
+                        if (api.classList.contains(fsGridClass)) {
+                            api.classList.remove(fsGridClass);
+                        }
+                    };
+                    removeFsGrid();
+                    document.addEventListener('fullscreenchange', removeFsGrid);
+                }
             },
         });
     }
