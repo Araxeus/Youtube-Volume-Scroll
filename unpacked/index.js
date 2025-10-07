@@ -8,7 +8,7 @@ const $ = document.querySelector.bind(document);
 const oneMonth = 2592e6;
 const isMusic = window.location.href.includes('music.youtube');
 
-let configFromPageAccess = undefined;
+let configFromPageAccess;
 
 if (browserApi.extension.inIncognitoContext) {
     setupIncognito();

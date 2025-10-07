@@ -1,14 +1,13 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "files": {
-    "ignore": [
-      "**/popup/vendors/*",
-      "./node_modules/**",
-      "./dist/**",
-      "./unpacked/popup/popup.css"
+    "includes": [
+      "**",
+      "!**/popup/vendors",
+      "!node_modules",
+      "!dist",
+      "!unpacked/popup/popup.css"
     ]
   },
   "javascript": {
@@ -53,10 +52,13 @@
       },
       "complexity": {
         "noThisInStatic": "off",
-        "noForEach": "off"
+        "noForEach": "off",
+        "noImportantStyles": "off"
       },
       "suspicious": {
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noDocumentCookie": "off",
+        "useIterableCallbackReturn": "off"
       },
       "style": {
         "useNumberNamespace": "off"
