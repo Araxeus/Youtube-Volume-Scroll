@@ -452,9 +452,9 @@ class YoutubeVolumeScroll {
                 return;
             // check if scrolltarget is inside the settings menu
             if (!ytvs.isMusic && event.target.matches('.ytp-settings-menu *')) {
-                const menu = ytvs.$('.ytp-settings-menu>.ytp-panel');
+                const menu = ytvs.$('.ytp-settings-menu div.ytp-panel');
                 // if the menu has a scrollbar, don't change the volume
-                if (menu.scrollHeight > menu.clientHeight) return;
+                if (menu && menu.scrollHeight > menu.clientHeight) return;
             }
             const multiplier =
                 event.shiftKey &&
