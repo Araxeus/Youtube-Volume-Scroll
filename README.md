@@ -34,7 +34,7 @@
 
 ★ Remember volume even in incognito mode
 
-★ Works on [youtube.com](youtube.com) and [music.youtube.com](music.youtube.com)
+★ Works on [youtube.com](https://youtube.com) and [music.youtube.com](https://music.youtube.com)
 
 ★ Works in embedded videos (Like in Reddit, WhatsApp, etc.)
 
@@ -52,7 +52,7 @@
 
 ## Build it yourself
 
-Requires [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
+Requires [Bun](https://bun.com/)
 
 ```sh
 # Clone the repo and cd to it
