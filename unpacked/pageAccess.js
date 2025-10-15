@@ -669,7 +669,11 @@ class YoutubeVolumeScroll {
                 return;
             volumeHud.style.opacity = opacity;
             if (ytvs.hud === ytvs.hudTypes.native) {
-                volumeHud.parentElement.style.opacity = opacity;
+                volumeHud.parentElement.style.setProperty(
+                    'opacity',
+                    opacity,
+                    'important',
+                );
             }
         };
 
