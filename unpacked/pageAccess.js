@@ -343,16 +343,35 @@ class YoutubeVolumeScroll {
                 observer.observe(bezelText, { childList: true });
 
                 // disable the new experimental ytp-fullscreen-grid
-                if (ytvs.$('div.ytp-fullscreen-grid')) {
-                    const fsGridClass = 'ytp-fullscreen-grid-peeking';
+                const fullscreenGrid = ytvs.$('div.ytp-fullscreen-grid');
+                if (fullscreenGrid) {
+                    const fsGridPeekingClass = 'ytp-fullscreen-grid-peeking';
+                    const fdGridActiveClass = 'ytp-fullscreen-grid-active';
                     const api = ytvs.$('#movie_player');
                     const removeFsGrid = () => {
-                        if (api.classList.contains(fsGridClass)) {
-                            api.classList.remove(fsGridClass);
+                        if (fullscreenGrid.style.display !== 'none') {
+                            fullscreenGrid.style.display = 'none';
+                        }
+                        if (api.classList.contains(fsGridPeekingClass)) {
+                            api.classList.remove(fsGridPeekingClass);
+                        }
+                        if (api.classList.contains(fdGridActiveClass)) {
+                            api.classList.remove(fdGridActiveClass);
                         }
                     };
                     removeFsGrid();
-                    document.addEventListener('fullscreenchange', removeFsGrid);
+                    new MutationObserver(mutations => {
+                        const classList = mutations[0].target.classList;
+                        if (
+                            classList.contains(fdGridActiveClass) ||
+                            classList.contains(fsGridPeekingClass)
+                        ) {
+                            removeFsGrid();
+                        }
+                    }).observe(api, {
+                        attributes: true,
+                        attributeFilter: ['class'],
+                    });
                 }
             },
         });
