@@ -345,28 +345,30 @@ class YoutubeVolumeScroll {
                 // disable the new experimental ytp-fullscreen-grid
                 const fullscreenGrid = ytvs.$('div.ytp-fullscreen-grid');
                 if (fullscreenGrid) {
-                    const fsGridPeekingClass = 'ytp-fullscreen-grid-peeking';
-                    const fdGridActiveClass = 'ytp-fullscreen-grid-active';
+                    const classesToRemove = [
+                        'ytp-fullscreen-grid-peeking',
+                        'ytp-fullscreen-grid-active',
+                        'ytp-grid-scrolling',
+                    ];
                     const api = ytvs.$('#movie_player');
                     const removeFsGrid = () => {
                         if (fullscreenGrid.style.display !== 'none') {
                             fullscreenGrid.style.display = 'none';
                         }
-                        if (api.classList.contains(fsGridPeekingClass)) {
-                            api.classList.remove(fsGridPeekingClass);
-                        }
-                        if (api.classList.contains(fdGridActiveClass)) {
-                            api.classList.remove(fdGridActiveClass);
+                        for (const cls of classesToRemove) {
+                            if (api.classList.contains(cls)) {
+                                api.classList.remove(cls);
+                            }
                         }
                     };
                     removeFsGrid();
                     new MutationObserver(mutations => {
                         const classList = mutations[0].target.classList;
-                        if (
-                            classList.contains(fdGridActiveClass) ||
-                            classList.contains(fsGridPeekingClass)
-                        ) {
-                            removeFsGrid();
+                        for (const cls of classesToRemove) {
+                            if (classList.contains(cls)) {
+                                removeFsGrid();
+                                break;
+                            }
                         }
                     }).observe(api, {
                         attributes: true,
