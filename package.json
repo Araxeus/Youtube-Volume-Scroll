@@ -54,7 +54,7 @@
   },
   "vendorDependencies": {
     "cooltipz": {
-      "version": "v2.4.0",
+      "version": "v2.5.1",
       "repository": "https://github.com/jackdomleo7/Cooltipz.css",
       "files": [
         "cooltipz.min.css",
