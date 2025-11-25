@@ -21,7 +21,7 @@ const activationModifiers = {
 
 const defaultConfig = {
     steps: 1,
-    hud: hudTypes.native,
+    hud: hudTypes.custom,
     hudSize: '50px',
     hudColor: '#eeeeee',
     hudPositionMode: false,
