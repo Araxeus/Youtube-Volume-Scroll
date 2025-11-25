@@ -99,7 +99,7 @@ function loadPageAccess() {
     pageAccess.onload = function () {
         this.remove();
         browserApi.storage.sync.get('config', data => {
-            if (data.config) sendConfig(data.config);
+            if (data?.config) sendConfig(data.config);
         });
     };
     (document.head || document.documentElement).appendChild(pageAccess);

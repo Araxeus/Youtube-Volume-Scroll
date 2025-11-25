@@ -187,7 +187,7 @@ class ytvs {
                                     cancelable: true,
                                 }),
                             );
-                        });
+                        }, 4);
                     }
                     return false;
                 }
