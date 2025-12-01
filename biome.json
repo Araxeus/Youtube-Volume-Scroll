@@ -7,7 +7,8 @@
       "!**/popup/vendors",
       "!node_modules",
       "!dist",
-      "!unpacked/popup/popup.css"
+      "!unpacked/popup/popup.css",
+      "!key.json"
     ]
   },
   "javascript": {

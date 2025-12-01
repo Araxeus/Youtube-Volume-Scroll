@@ -8,3 +8,4 @@ keys.json
 
 # Ignore the .vscode recommended extensions file
 !.vscode/extensions.json
+key.json
