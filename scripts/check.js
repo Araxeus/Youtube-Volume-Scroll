@@ -13,7 +13,7 @@ async function checkInternal(quiet = false) {
         const { exitCode } = await $`biome check --colors=force`
             .nothrow()
             .quiet(quiet);
-        if (exitCode !== 0) throw 'biome check failed';
+        if (exitCode !== 0) throw new Error('biome check failed');
         await $`web-ext lint -w --ignore-files "./popup/vendors/*"`.quiet(
             quiet,
         );

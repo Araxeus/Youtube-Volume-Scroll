@@ -52,6 +52,6 @@ export async function makeChromiumManifest() {
     const manifest = await getManifest();
     delete manifest.data.browser_specific_settings;
     delete manifest.data.background;
-    await unlink(paths.DIST_BG_SCRIPT);
+    await unlink(paths.DIST_BG_SCRIPT).catch(() => {});
     await manifest.save();
 }

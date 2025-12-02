@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { $, file } from 'bun';
-import { paths } from './provider';
+import { paths } from './provider.js';
 
 $.cwd(paths.PKG);
 
