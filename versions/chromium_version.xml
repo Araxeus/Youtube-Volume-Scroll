@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+    <app appid='agadcopafaojndinhloilcanpfpbonbk'>
+        <updatecheck
+            codebase='https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.5/youtube-volume-scroll_3.3.5_chromium.crx'
+            version='3.3.5'
+        />
+    </app>
+</gupdate>
