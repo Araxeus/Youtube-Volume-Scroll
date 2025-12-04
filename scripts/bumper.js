@@ -4,13 +4,14 @@ import { writeFile } from 'node:fs/promises';
 import { select } from '@inquirer/prompts';
 import { $ } from 'bun';
 import semver from 'semver';
-
 import {
     chromiumExtensionID,
     firefoxExtensionID,
     getFile,
     paths,
 } from './provider.js';
+
+$.cwd(paths.PKG);
 
 const packageJson = await getFile(paths.PKG_JSON);
 const manifestJson = await getFile(paths.UNPACKED_MANIFEST);
