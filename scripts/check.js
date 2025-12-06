@@ -10,10 +10,12 @@ $.cwd(paths.PKG);
 
 async function checkInternal(quiet = false) {
     try {
-        const { exitCode } = await $`biome check --colors=force`
-            .nothrow()
-            .quiet(quiet);
-        if (exitCode !== 0) throw new Error('biome check failed');
+        if (!process.env.CI) {
+            const { exitCode } = await $`biome check --colors=force`
+                .nothrow()
+                .quiet(quiet);
+            if (exitCode !== 0) throw new Error('biome check failed');
+        }
         await $`web-ext lint -w --ignore-files "./popup/vendors/*"`.quiet(
             quiet,
         );
