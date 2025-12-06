@@ -5,8 +5,8 @@ import { select } from '@inquirer/prompts';
 import { $ } from 'bun';
 import semver from 'semver';
 import {
-    chromiumExtensionID,
-    firefoxExtensionID,
+    CHROMIUM_EXTENSION_ID,
+    FIREFOX_EXTENSION_ID,
     getFile,
     paths,
 } from './provider.js';
@@ -82,15 +82,15 @@ await writeFile(
 );
 console.log(`Updated manifest.json to version ${newVersion}`);
 
-const DOWNLOAD_LINK_PT1 = `https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v${newVersion}/youtube-volume-scroll_${newVersion}`;
+const downloadLinkWithoutBrowser = `https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v${newVersion}/youtube-volume-scroll_${newVersion}`;
 
 // Update versions/chromium_version.xml
 const chromiumXML = `\
 <?xml version='1.0' encoding='UTF-8'?>
 <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
-    <app appid='${chromiumExtensionID}'>
+    <app appid='${CHROMIUM_EXTENSION_ID}'>
         <updatecheck
-            codebase='${DOWNLOAD_LINK_PT1}_chromium.crx'
+            codebase='${downloadLinkWithoutBrowser}_chromium.crx'
             version='${newVersion}'
         />
     </app>
@@ -103,16 +103,16 @@ console.log(`Updated chromium_version.xml to version ${newVersion}`);
 const firefoxUpdater = await getFile(paths.FIREFOX_UPDATER);
 
 if (
-    firefoxUpdater.data.addons[firefoxExtensionID].updates[0].version ===
+    firefoxUpdater.data.addons[FIREFOX_EXTENSION_ID].updates[0].version ===
     newVersion
 ) {
     console.warn(
         `firefox_versions.json is already up to date with version ${newVersion}`,
     );
 } else {
-    firefoxUpdater.data.addons[firefoxExtensionID].updates.unshift({
+    firefoxUpdater.data.addons[FIREFOX_EXTENSION_ID].updates.unshift({
         version: newVersion,
-        update_link: `${DOWNLOAD_LINK_PT1}_firefox.xpi`,
+        update_link: `${downloadLinkWithoutBrowser}_firefox.xpi`,
     });
 
     await writeFile(

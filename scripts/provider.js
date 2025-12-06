@@ -17,8 +17,8 @@ export const paths = {
     DIST_BG_SCRIPT: resolve(PKG, 'dist', 'background-script.js'),
 };
 
-export const firefoxExtensionID = 'youtube-volume-scroll@github.com';
-export const chromiumExtensionID = 'agadcopafaojndinhloilcanpfpbonbk';
+export const FIREFOX_EXTENSION_ID = 'youtube-volume-scroll@github.com';
+export const CHROMIUM_EXTENSION_ID = 'agadcopafaojndinhloilcanpfpbonbk';
 
 export async function getFile(path) {
     const raw = await readFile(path, 'utf-8');

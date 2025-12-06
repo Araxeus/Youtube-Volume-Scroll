@@ -1,5 +1,5 @@
 import { copyFile, unlink, writeFile } from 'node:fs/promises';
-import { firefoxExtensionID, getFile, paths } from './provider.js';
+import { FIREFOX_EXTENSION_ID, getFile, paths } from './provider.js';
 
 if (import.meta.main) {
     const args = process.argv.slice(2);
@@ -33,7 +33,7 @@ export async function makeFirefoxManifest() {
     const manifest = await getManifest();
     manifest.data.browser_specific_settings = {
         gecko: {
-            id: firefoxExtensionID,
+            id: FIREFOX_EXTENSION_ID,
             data_collection_permissions: {
                 required: ['none'],
             },
