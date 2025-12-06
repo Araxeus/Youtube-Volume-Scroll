@@ -103,9 +103,13 @@ console.log(`Updated chromium_version.xml to version ${newVersion}`);
 const firefoxUpdater = await getFile(paths.FIREFOX_UPDATER);
 
 if (
-    firefoxUpdater.data.addons[firefoxExtensionID].updates[0].version !==
+    firefoxUpdater.data.addons[firefoxExtensionID].updates[0].version ===
     newVersion
 ) {
+    console.warn(
+        `firefox_versions.json is already up to date with version ${newVersion}`,
+    );
+} else {
     firefoxUpdater.data.addons[firefoxExtensionID].updates.unshift({
         version: newVersion,
         update_link: `${DOWNLOAD_LINK_PT1}_firefox.xpi`,
@@ -117,10 +121,6 @@ if (
         'utf-8',
     );
     console.log(`Updated firefox_versions.json to version ${newVersion}`);
-} else {
-    console.warn(
-        `firefox_versions.json is already up to date with version ${newVersion}`,
-    );
 }
 
 await $`bun format`.quiet();
