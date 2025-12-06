@@ -1,14 +1,13 @@
 #!/usr/bin/env bun
 
-import { $, file } from 'bun';
+import { $ } from 'bun';
+import { version } from '../package.json' with { type: 'json' };
 import { paths } from './provider.js';
 
 $.cwd(paths.PKG);
 
-const pkg = await file(paths.PKG_JSON).json();
-
 await $`git add .`;
-await $`git commit -m "v${pkg.version}"`;
-await $`git tag v${pkg.version}`;
+await $`git commit -m "v${version}"`;
+await $`git tag v${version}`;
 
-console.log(`Committed and tagged version v${pkg.version} successfully.`);
+console.log(`Committed and tagged version v${version} successfully.`);

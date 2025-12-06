@@ -2,6 +2,7 @@
 
 import { cp } from 'node:fs/promises';
 import { $ } from 'bun';
+import { version } from '../package.json' with { type: 'json' };
 import { check, deleteDist } from './check.js';
 import { makeChromiumManifest } from './edit-manifest.js';
 import { paths } from './provider.js';
@@ -15,9 +16,9 @@ export async function copyToDist() {
 
 async function build() {
     await check();
-    await $`web-ext build --filename="youtube-volume-scroll_${process.env.npm_package_version}_firefox.xpi"`;
+    await $`web-ext build --filename="youtube-volume-scroll_${version}_firefox.xpi"`;
     await makeChromiumManifest();
-    await $`web-ext build --filename="youtube-volume-scroll_${process.env.npm_package_version}_chromium.zip"`;
+    await $`web-ext build --filename="youtube-volume-scroll_${version}_chromium.zip"`;
     await deleteDist();
 }
 
