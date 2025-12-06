@@ -11,7 +11,6 @@ if (import.meta.main) {
 
     if (browserType === 'firefox') await makeFirefoxManifest();
     else if (browserType === 'chromium') await makeChromiumManifest();
-    else console.error('FATAL ERROR: Unsupported browser type');
 
     console.log(`Manifest updated for ${browserType} successfully.`);
 }

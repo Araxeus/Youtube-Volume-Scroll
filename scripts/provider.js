@@ -25,6 +25,6 @@ export async function getFile(path) {
     return {
         raw,
         data: JSON.parse(raw),
-        indent: detectIndent(raw).indent || 2,
+        indent: detectIndent(raw).indent || '  ',
     };
 }
