@@ -19,7 +19,7 @@ async function checkInternal(quiet = false) {
         await $`web-ext lint -w --ignore-files "./popup/vendors/*"`.quiet(
             quiet,
         );
-    } catch (_) {
+    } catch {
         console.error(
             'Errors found during checks. Cleaning up dist/ directory.',
         );
