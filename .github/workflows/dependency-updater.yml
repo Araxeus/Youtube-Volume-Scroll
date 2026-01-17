@@ -1,21 +1,25 @@
 name: Dependency Updater
 
+permissions:
+  contents: read
+  pull-requests: write
+
 on:
-    schedule:
-        # every day at 07:33
-        - cron: '33 7 * * *'
-    workflow_dispatch: null # allow manual trigger
+  schedule:
+    # every day at 07:33
+    - cron: '33 7 * * *'
+  workflow_dispatch: null # allow manual trigger
 
 jobs:
-    update-vendors:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v6
-            - uses: oven-sh/setup-bun@v2
-            - run: bun install
+  update-vendors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun ci
 
-            - name: Run vendor update
-              uses: Araxeus/vendorfiles-action@v1
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  package-manager: bun
+      - name: Run vendor update
+        uses: Araxeus/vendorfiles-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: bun

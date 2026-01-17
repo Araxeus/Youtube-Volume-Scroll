@@ -1,0 +1,126 @@
+#!/usr/bin/env bun
+
+import { writeFile } from 'node:fs/promises';
+import { select } from '@inquirer/prompts';
+import { $ } from 'bun';
+import semver from 'semver';
+import {
+    CHROMIUM_EXTENSION_ID,
+    FIREFOX_EXTENSION_ID,
+    getFile,
+    paths,
+} from './provider.js';
+
+$.cwd(paths.PKG);
+
+const packageJson = await getFile(paths.PKG_JSON);
+const manifestJson = await getFile(paths.UNPACKED_MANIFEST);
+
+if (packageJson.data.version !== manifestJson.data.version) {
+    console.error(
+        `Version mismatch: package.json (${packageJson.data.version}) vs manifest.json (${manifestJson.data.version})`,
+    );
+    process.exit(1);
+}
+
+// check that git working directory is clean
+const gitStatus = await $`git status --porcelain`.text();
+if (gitStatus !== '') {
+    console.error(
+        'Git working directory is not clean. Please commit changes before bumping version.',
+    );
+    process.exit(1);
+}
+
+const versions = {
+    patch: semver.inc(packageJson.data.version, 'patch'),
+    minor: semver.inc(packageJson.data.version, 'minor'),
+    major: semver.inc(packageJson.data.version, 'major'),
+};
+const bumpType = await select({
+    message: `current: ${packageJson.data.version} bump to:`,
+    choices: [
+        {
+            name: `Patch - (${versions.patch})`,
+            value: 'patch',
+            description: 'x.y.Z',
+        },
+        {
+            name: `Minor - (${versions.minor})`,
+            value: 'minor',
+            description: 'x.Y.z',
+        },
+        {
+            name: `Major - (${versions.major})`,
+            value: 'major',
+            description: 'X.y.z',
+        },
+    ],
+}).catch(() => process.exit(1));
+
+const newVersion = versions[bumpType];
+if (!newVersion) {
+    console.error('Failed to increment version.');
+    process.exit(1);
+}
+
+// Update package.json
+packageJson.data.version = newVersion;
+await writeFile(
+    paths.PKG_JSON,
+    JSON.stringify(packageJson.data, null, packageJson.indent),
+    'utf-8',
+);
+console.log(`Updated package.json to version ${newVersion}`);
+
+// Update unpacked/manifest.json
+manifestJson.data.version = newVersion;
+await writeFile(
+    paths.UNPACKED_MANIFEST,
+    JSON.stringify(manifestJson.data, null, manifestJson.indent),
+    'utf-8',
+);
+console.log(`Updated manifest.json to version ${newVersion}`);
+
+const downloadLinkWithoutBrowser = `https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v${newVersion}/youtube-volume-scroll_${newVersion}`;
+
+// Update versions/chromium_version.xml
+const chromiumXML = `\
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+    <app appid='${CHROMIUM_EXTENSION_ID}'>
+        <updatecheck
+            codebase='${downloadLinkWithoutBrowser}_chromium.crx'
+            version='${newVersion}'
+        />
+    </app>
+</gupdate>`;
+
+await writeFile(paths.CHROMIUM_UPDATER, chromiumXML, 'utf-8');
+console.log(`Updated chromium_version.xml to version ${newVersion}`);
+
+// Update versions/firefox_versions.json
+const firefoxUpdater = await getFile(paths.FIREFOX_UPDATER);
+
+if (
+    firefoxUpdater.data.addons[FIREFOX_EXTENSION_ID].updates[0].version ===
+    newVersion
+) {
+    console.warn(
+        `firefox_versions.json is already up to date with version ${newVersion}`,
+    );
+} else {
+    firefoxUpdater.data.addons[FIREFOX_EXTENSION_ID].updates.unshift({
+        version: newVersion,
+        update_link: `${downloadLinkWithoutBrowser}_firefox.xpi`,
+    });
+
+    await writeFile(
+        paths.FIREFOX_UPDATER,
+        JSON.stringify(firefoxUpdater.data, null, firefoxUpdater.indent),
+        'utf-8',
+    );
+    console.log(`Updated firefox_versions.json to version ${newVersion}`);
+}
+
+await $`bun format`.quiet();

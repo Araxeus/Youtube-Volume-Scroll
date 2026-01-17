@@ -1,0 +1,84 @@
+{
+  "addons": {
+    "youtube-volume-scroll@github.com": {
+      "updates": [
+        {
+          "version": "3.3.5",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.5/youtube-volume-scroll_3.3.5_firefox.xpi"
+        },
+        {
+          "version": "3.3.4",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.4/youtube-volume-scroll_3.3.4_firefox.xpi"
+        },
+        {
+          "version": "3.3.3",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.3/youtube-volume-scroll_3.3.3_firefox.xpi"
+        },
+        {
+          "version": "3.3.2",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.2/youtube-volume-scroll_3.3.2_firefox.xpi"
+        },
+        {
+          "version": "3.3.1",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.1/youtube-volume-scroll_3.3.1_firefox.xpi"
+        },
+        {
+          "version": "3.3.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.0/youtube_volume_scroll_3.3.0_firefox.xpi"
+        },
+        {
+          "version": "3.2.2",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.2.2/youtube-volume-scroll_3.2.2_firefox.xpi"
+        },
+        {
+          "version": "3.2.1",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.2.1/youtube-volume-scroll_3.2.1_firefox.xpi"
+        },
+        {
+          "version": "3.2.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.2.0/youtube-volume-scroll_3.2.0_firefox.xpi"
+        },
+        {
+          "version": "3.1.4",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.1.4/youtube-volume-scroll_3.1.4_firefox.xpi"
+        },
+        {
+          "version": "3.1.3",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.1.3/youtube_volume_scroll_3.1.3_firefox.xpi"
+        },
+        {
+          "version": "3.1.2",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.1.2/youtube_volume_scroll_3.1.2_firefox.xpi"
+        },
+        {
+          "version": "3.1.1",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.1.1/youtube-volume-scroll_3.1.1_firefox.xpi"
+        },
+        {
+          "version": "3.1.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.1.0/youtube-volume-scroll_3.1.0_firefox.xpi"
+        },
+        {
+          "version": "3.0.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.0.0/youtube-volume-scroll_3.0.0_firefox.xpi"
+        },
+        {
+          "version": "2.1.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v2.1.0/youtube-volume-scroll_2.1.0_firefox.xpi"
+        },
+        {
+          "version": "2.0.1",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v2.0.1/youtube-volume-scroll_2.0.1_firefox.xpi"
+        },
+        {
+          "version": "2.0.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v2.0.0/youtube-volume-scroll_2.0.0_firefox.xpi"
+        },
+        {
+          "version": "1.6.1",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v1.6.1/youtube_volume_scroll-1.6.1_firefox.xpi"
+        }
+      ]
+    }
+  }
+}
