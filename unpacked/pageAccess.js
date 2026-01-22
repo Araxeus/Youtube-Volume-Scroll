@@ -404,13 +404,18 @@ class YoutubeVolumeScroll {
 
     static newMusic() {
         const bar = ytvs.$('ytmusic-player-bar');
-        const volumeSlider = bar?.querySelector('#volume-slider');
         const api = ytvs.$('#movie_player');
         if (!bar) {
             console.error(
                 'Youtube-Volume-Scroll: Could not find ytmusic-player-bar element',
             );
         }
+        const setMuted = isMuted => {
+            bar.playerController.store.dispatch({
+                type: 'SET_MUTED',
+                payload: isMuted,
+            });
+        };
         return new this({
             type: this.types.music,
             scrollTarget: '#main-panel',
@@ -422,13 +427,16 @@ class YoutubeVolumeScroll {
                 setVolume: v => {
                     const unmuting = api.getVolume() === 0 && v > 0;
                     api.setVolume(v);
-                    const sliderValue = ytvs.isLogarithmic
+                    const updatedVolume = ytvs.isLogarithmic
                         ? ytvs.toLogarithmic(v)
                         : v;
-                    volumeSlider.value = sliderValue;
-                    volumeSlider.setAttribute('aria-valuenow', sliderValue);
-                    if (unmuting) bar?.updateVolume();
-                    else if (v === 0) bar?.updateVolume(0);
+                    // this event update the volume slider AND saves volume to PREF cookie
+                    bar.playerController.store.dispatch({
+                        type: 'SET_VOLUME',
+                        payload: updatedVolume,
+                    });
+                    if (unmuting) setMuted(false);
+                    else if (v === 0) setMuted(true);
                 },
             },
         });
@@ -569,15 +577,13 @@ class YoutubeVolumeScroll {
     }
 
     saveNativeVolume(volume) {
-        if (!ytvs.isMusic) this.saveVolumeToStorage(volume);
+        if (ytvs.isMusic) return;
 
-        const newVolume = ytvs.isLogarithmic
-            ? ytvs.toLogarithmic(volume)
-            : volume;
+        this.saveVolumeToStorage(volume);
 
         const pref = ytvs
             .getCookie('PREF')
-            ?.replace(/volume=(\d+)/, `volume=${newVolume}`);
+            ?.replace(/volume=(\d+)/, `volume=${volume}`);
         if (pref) {
             document.cookie = `${pref};domain=.youtube.com;max-age=${
                 ytvs.oneMonth / 1000 // convert to seconds
