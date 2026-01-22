@@ -390,12 +390,31 @@ class YoutubeVolumeScroll {
     }
 
     static newMusic() {
+        const bar = ytvs.$('ytmusic-player-bar');
+        const volumeSlider = bar?.querySelector('#volume-slider');
+        const api = ytvs.$('#movie_player');
+        if (!bar) {
+            console.error(
+                'Youtube-Volume-Scroll: Could not find ytmusic-player-bar element',
+            );
+        }
         return new this({
             type: this.types.music,
-            api: ytvs.$('#movie_player'),
             scrollTarget: '#main-panel',
             hudContainer: 'ytmusic-player',
             hudAfter: '#song-video',
+            api: {
+                getVolume: api.getVolume.bind(api),
+                isMuted: api.isMuted.bind(api),
+                setVolume: v => {
+                    const unmuting = api.getVolume() === 0 && v > 0;
+                    api.setVolume(v);
+                    volumeSlider.value = v;
+                    volumeSlider.setAttribute('aria-valuenow', v);
+                    if (unmuting) bar?.updateVolume();
+                    else if (v === 0) bar?.updateVolume(0);
+                },
+            },
         });
     }
 
