@@ -292,6 +292,19 @@ class ytvs {
 
         return true;
     }
+
+    static isLogarithmic =
+        window.yt?.config_?.EXPERIMENT_FLAGS
+            ?.music_web_enable_exponential_volume_control;
+    static toLogarithmic(vol) {
+        return Math.min(
+            Math.max(
+                Math.round(25.52556 * Math.log2(vol + 7.13431) - 72.19224),
+                0,
+            ),
+            100,
+        );
+    }
 }
 
 class YoutubeVolumeScroll {
@@ -390,12 +403,42 @@ class YoutubeVolumeScroll {
     }
 
     static newMusic() {
+        const bar = ytvs.$('ytmusic-player-bar');
+        const api = ytvs.$('#movie_player');
+        if (!bar) {
+            console.error(
+                'Youtube-Volume-Scroll: Could not find ytmusic-player-bar element',
+            );
+        }
+        const setMuted = isMuted => {
+            bar.playerController.store.dispatch({
+                type: 'SET_MUTED',
+                payload: isMuted,
+            });
+        };
         return new this({
             type: this.types.music,
-            api: ytvs.$('#movie_player'),
             scrollTarget: '#main-panel',
             hudContainer: 'ytmusic-player',
             hudAfter: '#song-video',
+            api: {
+                getVolume: api.getVolume.bind(api),
+                isMuted: api.isMuted.bind(api),
+                setVolume: v => {
+                    const unmuting = api.getVolume() === 0 && v > 0;
+                    api.setVolume(v);
+                    const updatedVolume = ytvs.isLogarithmic
+                        ? ytvs.toLogarithmic(v)
+                        : v;
+                    // this event update the volume slider AND saves volume to PREF cookie
+                    bar.playerController.store.dispatch({
+                        type: 'SET_VOLUME',
+                        payload: updatedVolume,
+                    });
+                    if (unmuting) setMuted(false);
+                    else if (v === 0) setMuted(true);
+                },
+            },
         });
     }
 
@@ -534,7 +577,9 @@ class YoutubeVolumeScroll {
     }
 
     saveNativeVolume(volume) {
-        if (!ytvs.isMusic) this.saveVolumeToStorage(volume);
+        if (ytvs.isMusic) return;
+
+        this.saveVolumeToStorage(volume);
 
         const pref = ytvs
             .getCookie('PREF')
