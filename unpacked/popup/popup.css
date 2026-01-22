@@ -229,8 +229,6 @@ label[dir=rtl] .range-slider {
   width: 60px;
   height: 34px;
   /* Hide default HTML checkbox */
-  /* The slider */
-  /* Rounded sliders */
 }
 .switch input {
   opacity: 0;
@@ -424,7 +422,7 @@ h2.hud {
   left: -9999px;
 }
 .radio-container label input:checked + span {
-  background-color: #f2dadb;
+  background-color: rgb(242.04, 218.04, 218.84);
 }
 .radio-container label input:checked + span:before {
   box-shadow: inset 0 0 0 0.4375em #ae181d;
@@ -440,7 +438,7 @@ h2.hud {
   transition: 0.25s ease;
 }
 .radio-container label span:hover {
-  background-color: #f2dadb;
+  background-color: rgb(242.04, 218.04, 218.84);
 }
 .radio-container label span:before {
   display: flex;
@@ -476,6 +474,20 @@ h2.hud {
   --min-max-opacity: 0.5;
   --min-max-x-offset: 10%;
   --thumb-size: 22px;
+}
+@media (prefers-color-scheme: dark) {
+  .range-slider {
+    --primary-color: #ae181d;
+    --thumb-color: #bd003f;
+  }
+}
+@media (prefers-color-scheme: light) {
+  .range-slider {
+    --primary-color: #ae181d;
+    --thumb-color: white;
+  }
+}
+.range-slider {
   --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px var(--thumb-color) inset;
   --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset var(--thumb-color),
     0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
@@ -517,18 +529,6 @@ h2.hud {
   margin-top: 13px;
   position: relative;
   z-index: 1;
-}
-@media (prefers-color-scheme: dark) {
-  .range-slider {
-    --primary-color: #ae181d;
-    --thumb-color: #bd003f;
-  }
-}
-@media (prefers-color-scheme: light) {
-  .range-slider {
-    --primary-color: #ae181d;
-    --thumb-color: white;
-  }
 }
 .range-slider[data-ticks-position=top] {
   --flip-y: 1;
@@ -685,12 +685,12 @@ h2.hud {
 .range-slider > input:nth-of-type(1) {
   --is-left-most: Clamp(0, (var(--value-a) - var(--value-b)) * 99999, 1);
 }
+.range-slider > input:nth-of-type(1) + output:not(:only-of-type) {
+  --flip: calc(var(--thumbs-too-close) * -1);
+}
 .range-slider > input:nth-of-type(1) + output {
   --value: var(--value-a);
   --x-offset: calc(var(--completed-a) * -1%);
-}
-.range-slider > input:nth-of-type(1) + output:not(:only-of-type) {
-  --flip: calc(var(--thumbs-too-close) * -1);
 }
 .range-slider > input:nth-of-type(1) + output::after {
   content: var(--prefix, "") var(--text-value-a) var(--suffix, "");
