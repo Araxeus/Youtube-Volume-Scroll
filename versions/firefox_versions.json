@@ -3,6 +3,10 @@
     "youtube-volume-scroll@github.com": {
       "updates": [
         {
+          "version": "3.4.0",
+          "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.4.0/youtube-volume-scroll_3.4.0_firefox.xpi"
+        },
+        {
           "version": "3.3.5",
           "update_link": "https://github.com/Araxeus/Youtube-Volume-Scroll/releases/download/v3.3.5/youtube-volume-scroll_3.3.5_firefox.xpi"
         },
