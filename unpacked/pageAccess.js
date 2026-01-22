@@ -292,6 +292,19 @@ class ytvs {
 
         return true;
     }
+
+    static isLogarithmic =
+        window.yt?.config_?.EXPERIMENT_FLAGS
+            ?.music_web_enable_exponential_volume_control;
+    static toLogarithmic(vol) {
+        return Math.min(
+            Math.max(
+                Math.round(25.52556 * Math.log2(vol + 7.13431) - 72.19224),
+                0,
+            ),
+            100,
+        );
+    }
 }
 
 class YoutubeVolumeScroll {
@@ -409,8 +422,11 @@ class YoutubeVolumeScroll {
                 setVolume: v => {
                     const unmuting = api.getVolume() === 0 && v > 0;
                     api.setVolume(v);
-                    volumeSlider.value = v;
-                    volumeSlider.setAttribute('aria-valuenow', v);
+                    const sliderValue = ytvs.isLogarithmic
+                        ? ytvs.toLogarithmic(v)
+                        : v;
+                    volumeSlider.value = sliderValue;
+                    volumeSlider.setAttribute('aria-valuenow', sliderValue);
                     if (unmuting) bar?.updateVolume();
                     else if (v === 0) bar?.updateVolume(0);
                 },
@@ -555,9 +571,13 @@ class YoutubeVolumeScroll {
     saveNativeVolume(volume) {
         if (!ytvs.isMusic) this.saveVolumeToStorage(volume);
 
+        const newVolume = ytvs.isLogarithmic
+            ? ytvs.toLogarithmic(volume)
+            : volume;
+
         const pref = ytvs
             .getCookie('PREF')
-            ?.replace(/volume=(\d+)/, `volume=${volume}`);
+            ?.replace(/volume=(\d+)/, `volume=${newVolume}`);
         if (pref) {
             document.cookie = `${pref};domain=.youtube.com;max-age=${
                 ytvs.oneMonth / 1000 // convert to seconds
