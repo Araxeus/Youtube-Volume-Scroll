@@ -342,18 +342,25 @@ class YoutubeVolumeScroll {
             hudContainer: '#movie_player',
             hudAfter: '#movie_player .html5-video-container',
             customFunction: () => {
-                ytvs.$('.ytp-cards-button-icon').style.display = 'none';
-                ytvs.$('.ytp-chrome-top-buttons').style.display = 'none';
+                const disableDisplay = element => {
+                    if (element) element.style.display = 'none';
+                };
+                disableDisplay(ytvs.$('.ytp-cards-button-icon'));
+                disableDisplay(ytvs.$('.ytp-chrome-top-buttons'));
 
                 // hide the real native volume hud when its in volume mode - aka text ends with %
                 const bezelText = ytvs.$('.ytp-bezel-text');
-                const parent = bezelText.parentElement.parentElement;
-                const observer = new MutationObserver(() => {
-                    parent.style.opacity = bezelText.textContent.endsWith('%')
-                        ? 0
-                        : 1;
-                });
-                observer.observe(bezelText, { childList: true });
+                if (bezelText) {
+                    const parent = bezelText.parentElement.parentElement;
+                    const observer = new MutationObserver(() => {
+                        parent.style.opacity = bezelText.textContent.endsWith(
+                            '%',
+                        )
+                            ? 0
+                            : 1;
+                    });
+                    observer.observe(bezelText, { childList: true });
+                }
 
                 // disable the new experimental ytp-fullscreen-grid
                 const fullscreenGrid = ytvs.$('div.ytp-fullscreen-grid');
