@@ -322,6 +322,7 @@ class YoutubeVolumeScroll {
 
     api = undefined;
     scrollTarget = undefined;
+    scrollTargetAlt = undefined;
     hudContainer = undefined;
     hudAfter = undefined;
 
@@ -339,6 +340,8 @@ class YoutubeVolumeScroll {
             type: this.types.youtube,
             api: ytvs.$('#movie_player'),
             scrollTarget: '#movie_player',
+            scrollTargetAlt:
+                'div#player-controls.ytPlayerControlsContainerHost.ytPlayerControlsContainerRendered',
             hudContainer: '#movie_player',
             hudAfter: '#movie_player .html5-video-container',
             customFunction: () => {
@@ -453,6 +456,7 @@ class YoutubeVolumeScroll {
         type,
         api,
         scrollTarget,
+        scrollTargetAlt,
         hudContainer,
         hudAfter,
         customFunction,
@@ -467,10 +471,14 @@ class YoutubeVolumeScroll {
         }
 
         this.scrollTarget = scrollTarget;
+        this.scrollTargetAlt = scrollTargetAlt;
         this.hudContainer = hudContainer;
         this.hudAfter = hudAfter;
 
-        this.setupOnWheel();
+        this.setupOnWheel(this.scrollTarget);
+        if (this.scrollTargetAlt) {
+            this.setupOnWheel(this.scrollTargetAlt);
+        }
         customFunction?.(this);
 
         this.setupHudOnVolume();
@@ -508,8 +516,10 @@ class YoutubeVolumeScroll {
         }
     }
 
-    setupOnWheel() {
-        ytvs.$(this.scrollTarget).onwheel = event => {
+    setupOnWheel(element = this.scrollTarget) {
+        const targetElement = ytvs.$(element);
+        if (!targetElement) return;
+        targetElement.onwheel = event => {
             if (
                 ytvs.activationModifier === ytvs.activationModifiers.shift &&
                 !event.shiftKey
