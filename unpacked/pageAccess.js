@@ -927,11 +927,11 @@ class YoutubeVolumeScroll {
 
 ytvs.init();
 
-if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
+if (ytvs.$('#movie_player video')) {
     YoutubeVolumeScroll.run();
 } else {
     const videoObserver = new MutationObserver(() => {
-        if (ytvs.$('#movie_player:not(.unstarted-mode) video')) {
+        if (ytvs.$('#movie_player video')) {
             videoObserver.disconnect();
             YoutubeVolumeScroll.run();
         }

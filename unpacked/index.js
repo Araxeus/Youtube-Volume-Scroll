@@ -14,8 +14,11 @@ if (browserApi.extension.inIncognitoContext) {
     setupIncognito();
 }
 
-window.addEventListener('load', start, { once: true });
-
+if (document.readyState === 'complete') {
+    start();
+} else {
+    window.addEventListener('load', start, { once: true });
+}
 // keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
     // sync is the main storage, local is used for instant changes
@@ -31,13 +34,13 @@ browserApi.storage.onChanged.addListener((changes, area) => {
 });
 
 function start() {
-    if ($('.html5-video-player:not(.unstarted-mode)')) {
+    if ($('.html5-video-player')) {
         checkOverlay();
         return;
     }
 
     const documentObserver = new MutationObserver(() => {
-        if ($('.html5-video-player:not(.unstarted-mode)')) {
+        if ($('.html5-video-player')) {
             documentObserver.disconnect();
             checkOverlay();
         }
@@ -51,10 +54,14 @@ function start() {
 
 // check if the extension is inside a youtube embedded iframe that isn't active yet
 function checkOverlay() {
-    const overlay = $('.ytp-cued-thumbnail-overlay-image');
+    const oldOverlay = $('.ytp-cued-thumbnail-overlay-image');
+    const newOverlay = $('cued-overlay');
     const noOverlay = () =>
-        !overlay?.style.backgroundImage ||
-        overlay.parentNode.style.display === 'none';
+        newOverlay?.classList.contains('ytmCuedOverlayHidden') ||
+        (oldOverlay &&
+            (!oldOverlay.style.backgroundImage ||
+                oldOverlay.parentNode.style.display === 'none')) ||
+        (!newOverlay && !oldOverlay);
     if (noOverlay()) {
         init();
     } else {
@@ -64,10 +71,15 @@ function checkOverlay() {
                 init();
             }
         });
-
-        overlayObserver.observe(overlay.parentNode, {
-            attributeFilter: ['style'],
-        });
+        if (newOverlay) {
+            overlayObserver.observe(newOverlay, {
+                attributeFilter: ['class'],
+            });
+        } else if (oldOverlay?.parentNode) {
+            overlayObserver.observe(oldOverlay.parentNode, {
+                attributeFilter: ['style'],
+            });
+        }
     }
 }
 
