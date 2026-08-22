@@ -14,8 +14,11 @@ if (browserApi.extension.inIncognitoContext) {
     setupIncognito();
 }
 
-window.addEventListener('load', start, { once: true });
-
+if (document.readyState === 'complete') {
+    start();
+} else {
+    window.addEventListener('load', start, { once: true });
+}
 // keep config in sync with extension popup
 browserApi.storage.onChanged.addListener((changes, area) => {
     // sync is the main storage, local is used for instant changes
