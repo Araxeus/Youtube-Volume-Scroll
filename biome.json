@@ -46,7 +46,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUndeclaredVariables": "error",
         "noUnusedVariables": "error"
@@ -65,7 +65,7 @@
         "useNumberNamespace": "off"
       },
       "nursery": {
-        "recommended": true
+        "preset": "recommended"
       }
     }
   }
