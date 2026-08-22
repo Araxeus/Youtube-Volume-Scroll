@@ -34,13 +34,13 @@ browserApi.storage.onChanged.addListener((changes, area) => {
 });
 
 function start() {
-    if ($('.html5-video-player:not(.unstarted-mode)')) {
+    if ($('.html5-video-player')) {
         checkOverlay();
         return;
     }
 
     const documentObserver = new MutationObserver(() => {
-        if ($('.html5-video-player:not(.unstarted-mode)')) {
+        if ($('.html5-video-player')) {
             documentObserver.disconnect();
             checkOverlay();
         }
