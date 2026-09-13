@@ -537,6 +537,7 @@ class YoutubeVolumeScroll {
                 // if the menu has a scrollbar, don't change the volume
                 if (menu && menu.scrollHeight > menu.clientHeight) return;
             }
+            if (ytvs.$('video-cover.ended')) return;
             const multiplier =
                 event.shiftKey &&
                 ytvs.activationModifier !== ytvs.activationModifiers.shift
