@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
-    "@biomejs/biome": "^2.5.12",
-    "@inquirer/prompts": "^8.7.1",
+    "@biomejs/biome": "^2.5.13",
+    "@inquirer/prompts": "^8.7.2",
     "@types/semver": "^7.8.0",
     "detect-indent": "^7.0.2",
     "globals": "^17.12.0",
