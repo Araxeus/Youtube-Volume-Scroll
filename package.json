@@ -24,15 +24,15 @@
   },
   "homepage": "https://github.com/Araxeus/Youtube-Volume-Scroll#readme",
   "devDependencies": {
-    "@biomejs/biome": "^2.5.12",
-    "@inquirer/prompts": "^8.7.1",
+    "@biomejs/biome": "^2.5.14",
+    "@inquirer/prompts": "^8.7.2",
     "@types/semver": "^7.8.0",
     "detect-indent": "^7.0.2",
     "globals": "^17.12.0",
-    "sass": "^1.104.0",
+    "sass": "^1.105.0",
     "semver": "^7.8.5",
     "vendorfiles": "^1.4.2",
-    "web-ext": "^10.6.0"
+    "web-ext": "^10.7.0"
   },
   "vendorConfig": {
     "vendorFolder": "./unpacked/popup/vendors"
