@@ -73,10 +73,12 @@ function checkOverlay() {
         });
         if (newOverlay) {
             overlayObserver.observe(newOverlay, {
+                attributes: true,
                 attributeFilter: ['class'],
             });
         } else if (oldOverlay?.parentNode) {
             overlayObserver.observe(oldOverlay.parentNode, {
+                attributes: true,
                 attributeFilter: ['style'],
             });
         }
