@@ -422,7 +422,7 @@ h2.hud {
   left: -9999px;
 }
 .radio-container label input:checked + span {
-  background-color: rgb(242.04, 218.04, 218.84);
+  background-color: rgb(94.9176470588%, 85.5058823529%, 85.8196078431%);
 }
 .radio-container label input:checked + span:before {
   box-shadow: inset 0 0 0 0.4375em #ae181d;
@@ -438,7 +438,7 @@ h2.hud {
   transition: 0.25s ease;
 }
 .radio-container label span:hover {
-  background-color: rgb(242.04, 218.04, 218.84);
+  background-color: rgb(94.9176470588%, 85.5058823529%, 85.8196078431%);
 }
 .radio-container label span:before {
   display: flex;
