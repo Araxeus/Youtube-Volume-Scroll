@@ -376,7 +376,7 @@ class ytvs {
         return true;
     }
 
-    static isLogarithmic =
+    static isLogarithmic = () =>
         window.yt?.config_?.EXPERIMENT_FLAGS
             ?.music_web_enable_exponential_volume_control;
     static toLogarithmic(vol) {
@@ -522,7 +522,7 @@ class YoutubeVolumeScroll {
                 setVolume: v => {
                     const unmuting = api.getVolume() === 0 && v > 0;
                     api.setVolume(v);
-                    const updatedVolume = ytvs.isLogarithmic
+                    const updatedVolume = ytvs.isLogarithmic()
                         ? ytvs.toLogarithmic(v)
                         : v;
                     // this event update the volume slider AND saves volume to PREF cookie
