@@ -12,19 +12,20 @@
         "https://www.youtube-nocookie.com/embed/*"
       ],
       "all_frames": true,
-      "js": ["index.js"],
-      "css": ["style.css"],
-      "run_at": "document_end"
-    }
-  ],
-  "web_accessible_resources": [
+      "js": ["pageAccess.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
     {
-      "resources": ["pageAccess.js"],
       "matches": [
         "https://www.youtube.com/*",
         "https://music.youtube.com/*",
-        "https://www.youtube-nocookie.com/*"
-      ]
+        "https://www.youtube-nocookie.com/embed/*"
+      ],
+      "all_frames": true,
+      "js": ["index.js"],
+      "css": ["style.css"],
+      "run_at": "document_end"
     }
   ],
   "icons": {

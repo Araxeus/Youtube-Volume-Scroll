@@ -268,6 +268,89 @@ class ytvs {
         );
 
         this.#setupMouseObserver();
+
+        this.#inject();
+    }
+
+    static #inject() {
+        if (ytvs.$('#movie_player video')) {
+            YoutubeVolumeScroll.run();
+        } else {
+            const videoObserver = new MutationObserver(() => {
+                if (ytvs.$('#movie_player video')) {
+                    videoObserver.disconnect();
+                    YoutubeVolumeScroll.run();
+                }
+            });
+
+            const moviePlayer = ytvs.$('#movie_player');
+            if (moviePlayer) {
+                videoObserver.observe(moviePlayer, { attributes: true });
+            } else {
+                const pageManager = ytvs.$('ytd-page-manager');
+                if (pageManager) {
+                    videoObserver.observe(pageManager, {
+                        childList: true,
+                        subtree: true,
+                    });
+                } else {
+                    new MutationObserver((_, observer) => {
+                        if (ytvs.$('ytd-page-manager')) {
+                            observer.disconnect();
+                            videoObserver.observe(ytvs.$('ytd-page-manager'), {
+                                childList: true,
+                                subtree: true,
+                            });
+                        }
+                    }).observe(document.documentElement, {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
+            }
+        }
+
+        if (!ytvs.isMusic) {
+            if (ytvs.$('ytd-player.ytd-shorts video')) {
+                YoutubeVolumeScroll.newYoutubeShorts();
+            } else {
+                const shortsObserver = new MutationObserver(m => {
+                    if (m[0].addedNodes[0].tagName === 'YTD-SHORTS') {
+                        shortsObserver.disconnect();
+                        const shortsContainer = m[0].addedNodes[0];
+                        new MutationObserver((_, observer) => {
+                            if (
+                                shortsContainer.querySelector(
+                                    'ytd-player.ytd-shorts video',
+                                )
+                            ) {
+                                observer.disconnect();
+                                YoutubeVolumeScroll.newYoutubeShorts();
+                            }
+                        }).observe(shortsContainer, {
+                            childList: true,
+                            subtree: true,
+                        });
+                    }
+                });
+                const pageManager = ytvs.$('ytd-page-manager');
+                if (pageManager) {
+                    shortsObserver.observe(pageManager, { childList: true });
+                } else {
+                    new MutationObserver((_, observer) => {
+                        if (ytvs.$('ytd-page-manager')) {
+                            observer.disconnect();
+                            shortsObserver.observe(ytvs.$('ytd-page-manager'), {
+                                childList: true,
+                            });
+                        }
+                    }).observe(document.documentElement, {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
+            }
+        }
     }
 
     static simpleAreEqual(obj1, obj2) {
@@ -928,83 +1011,15 @@ class YoutubeVolumeScroll {
     }
 }
 
-ytvs.init();
-
-if (ytvs.$('#movie_player video')) {
-    YoutubeVolumeScroll.run();
-} else {
-    const videoObserver = new MutationObserver(() => {
-        if (ytvs.$('#movie_player video')) {
-            videoObserver.disconnect();
-            YoutubeVolumeScroll.run();
-        }
-    });
-
-    const moviePlayer = ytvs.$('#movie_player');
-    if (moviePlayer) {
-        videoObserver.observe(moviePlayer, { attributes: true });
-    } else {
-        const pageManager = ytvs.$('ytd-page-manager');
-        if (pageManager) {
-            videoObserver.observe(pageManager, {
-                childList: true,
-                subtree: true,
-            });
-        } else {
-            new MutationObserver((_, observer) => {
-                if (ytvs.$('ytd-page-manager')) {
-                    observer.disconnect();
-                    videoObserver.observe(ytvs.$('ytd-page-manager'), {
-                        childList: true,
-                        subtree: true,
-                    });
-                }
-            }).observe(document.documentElement, {
-                childList: true,
-                subtree: true,
-            });
-        }
+// started by the content script (index.js) once the player is ready
+let ytvsStarted = false;
+window.addEventListener('message', e => {
+    if (
+        e.origin === window.location.origin &&
+        e.data?.type === 'YoutubeVolumeScroll-init' &&
+        !ytvsStarted
+    ) {
+        ytvsStarted = true;
+        ytvs.init();
     }
-}
-
-if (!ytvs.isMusic) {
-    if (ytvs.$('ytd-player.ytd-shorts video')) {
-        YoutubeVolumeScroll.newYoutubeShorts();
-    } else {
-        const shortsObserver = new MutationObserver(m => {
-            if (m[0].addedNodes[0].tagName === 'YTD-SHORTS') {
-                shortsObserver.disconnect();
-                const shortsContainer = m[0].addedNodes[0];
-                new MutationObserver((_, observer) => {
-                    if (
-                        shortsContainer.querySelector(
-                            'ytd-player.ytd-shorts video',
-                        )
-                    ) {
-                        observer.disconnect();
-                        YoutubeVolumeScroll.newYoutubeShorts();
-                    }
-                }).observe(shortsContainer, {
-                    childList: true,
-                    subtree: true,
-                });
-            }
-        });
-        const pageManager = ytvs.$('ytd-page-manager');
-        if (pageManager) {
-            shortsObserver.observe(pageManager, { childList: true });
-        } else {
-            new MutationObserver((_, observer) => {
-                if (ytvs.$('ytd-page-manager')) {
-                    observer.disconnect();
-                    shortsObserver.observe(ytvs.$('ytd-page-manager'), {
-                        childList: true,
-                    });
-                }
-            }).observe(document.documentElement, {
-                childList: true,
-                subtree: true,
-            });
-        }
-    }
-}
+});

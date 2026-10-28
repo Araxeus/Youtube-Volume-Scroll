@@ -108,15 +108,14 @@ function init() {
 }
 
 function loadPageAccess() {
-    const pageAccess = document.createElement('script');
-    pageAccess.src = browserApi.runtime.getURL('pageAccess.js');
-    pageAccess.onload = function () {
-        this.remove();
-        browserApi.storage.sync.get('config', data => {
-            if (data?.config) sendConfig(data.config);
-        });
-    };
-    (document.head || document.documentElement).appendChild(pageAccess);
+    // pageAccess.js is injected into the page by the manifest (world: MAIN)
+    window.postMessage(
+        { type: 'YoutubeVolumeScroll-init' },
+        window.location.origin,
+    );
+    browserApi.storage.sync.get('config', data => {
+        if (data?.config) sendConfig(data.config);
+    });
 }
 
 function sendConfig(config) {
