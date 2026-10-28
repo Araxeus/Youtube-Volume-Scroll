@@ -420,8 +420,10 @@ class YoutubeVolumeScroll {
                 'Youtube-Volume-Scroll: Could not find ytmusic-player-bar element',
             );
         }
+        const playerController = bar.playerController ?? bar.controllerProxy;
+
         const setMuted = isMuted => {
-            bar.playerController.store.dispatch({
+            playerController.store.dispatch({
                 type: 'SET_MUTED',
                 payload: isMuted,
             });
@@ -441,7 +443,7 @@ class YoutubeVolumeScroll {
                         ? ytvs.toLogarithmic(v)
                         : v;
                     // this event update the volume slider AND saves volume to PREF cookie
-                    bar.playerController.store.dispatch({
+                    playerController.store.dispatch({
                         type: 'SET_VOLUME',
                         payload: updatedVolume,
                     });
