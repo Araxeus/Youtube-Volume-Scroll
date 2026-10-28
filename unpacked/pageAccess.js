@@ -272,85 +272,93 @@ class ytvs {
         this.#inject();
     }
 
-    static #inject() {
-        if (ytvs.$('#movie_player video')) {
+    /**
+     * Calls `callback` with the result of `check()` when its truthy
+     */
+    static #waitFor(check, targetElement, observerOptions, callback) {
+        const result = check();
+        if (result) {
+            callback(result);
+            return;
+        }
+
+        const observer = new MutationObserver(() => {
+            const found = check();
+            if (!found) return;
+            observer.disconnect();
+            callback(found);
+        });
+        observer.observe(targetElement, observerOptions);
+    }
+
+    static #waitForPageManager(callback) {
+        this.#waitFor(
+            () => ytvs.$('ytd-page-manager'),
+            document.documentElement,
+            { childList: true, subtree: true },
+            callback,
+        );
+    }
+
+    static #injectYoutube() {
+        const hasVideo = () => ytvs.$('#movie_player video');
+
+        if (hasVideo()) {
             YoutubeVolumeScroll.run();
-        } else {
-            const videoObserver = new MutationObserver(() => {
-                if (ytvs.$('#movie_player video')) {
-                    videoObserver.disconnect();
-                    YoutubeVolumeScroll.run();
-                }
+            return;
+        }
+
+        const moviePlayer = ytvs.$('#movie_player');
+        if (moviePlayer) {
+            this.#waitFor(
+                hasVideo,
+                moviePlayer,
+                { attributes: true },
+                YoutubeVolumeScroll.run,
+            );
+            return;
+        }
+
+        this.#waitForPageManager(pageManager =>
+            this.#waitFor(
+                hasVideo,
+                pageManager,
+                { childList: true, subtree: true },
+                YoutubeVolumeScroll.run,
+            ),
+        );
+    }
+
+    static #injectShorts() {
+        const selector = 'ytd-player.ytd-shorts video';
+
+        if (ytvs.$(selector)) {
+            YoutubeVolumeScroll.newYoutubeShorts();
+            return;
+        }
+
+        this.#waitForPageManager(pageManager => {
+            const shortsObserver = new MutationObserver(mutations => {
+                const shortsContainer = mutations
+                    .flatMap(m => [...m.addedNodes])
+                    .find(node => node.tagName === 'YTD-SHORTS');
+                if (!shortsContainer) return;
+
+                shortsObserver.disconnect();
+                this.#waitFor(
+                    () => shortsContainer.querySelector(selector),
+                    shortsContainer,
+                    { childList: true, subtree: true },
+                    () => YoutubeVolumeScroll.newYoutubeShorts(),
+                );
             });
+            shortsObserver.observe(pageManager, { childList: true });
+        });
+    }
 
-            const moviePlayer = ytvs.$('#movie_player');
-            if (moviePlayer) {
-                videoObserver.observe(moviePlayer, { attributes: true });
-            } else {
-                const pageManager = ytvs.$('ytd-page-manager');
-                if (pageManager) {
-                    videoObserver.observe(pageManager, {
-                        childList: true,
-                        subtree: true,
-                    });
-                } else {
-                    new MutationObserver((_, observer) => {
-                        if (ytvs.$('ytd-page-manager')) {
-                            observer.disconnect();
-                            videoObserver.observe(ytvs.$('ytd-page-manager'), {
-                                childList: true,
-                                subtree: true,
-                            });
-                        }
-                    }).observe(document.documentElement, {
-                        childList: true,
-                        subtree: true,
-                    });
-                }
-            }
-        }
-
-        if (!ytvs.isMusic) {
-            if (ytvs.$('ytd-player.ytd-shorts video')) {
-                YoutubeVolumeScroll.newYoutubeShorts();
-            } else {
-                const shortsObserver = new MutationObserver(m => {
-                    if (m[0].addedNodes[0].tagName === 'YTD-SHORTS') {
-                        shortsObserver.disconnect();
-                        const shortsContainer = m[0].addedNodes[0];
-                        new MutationObserver((_, observer) => {
-                            if (
-                                shortsContainer.querySelector(
-                                    'ytd-player.ytd-shorts video',
-                                )
-                            ) {
-                                observer.disconnect();
-                                YoutubeVolumeScroll.newYoutubeShorts();
-                            }
-                        }).observe(shortsContainer, {
-                            childList: true,
-                            subtree: true,
-                        });
-                    }
-                });
-                const pageManager = ytvs.$('ytd-page-manager');
-                if (pageManager) {
-                    shortsObserver.observe(pageManager, { childList: true });
-                } else {
-                    new MutationObserver((_, observer) => {
-                        if (ytvs.$('ytd-page-manager')) {
-                            observer.disconnect();
-                            shortsObserver.observe(ytvs.$('ytd-page-manager'), {
-                                childList: true,
-                            });
-                        }
-                    }).observe(document.documentElement, {
-                        childList: true,
-                        subtree: true,
-                    });
-                }
-            }
-        }
+    static #inject() {
+        this.#injectYoutube();
+        if (!ytvs.isMusic) this.#injectShorts();
     }
 
     static simpleAreEqual(obj1, obj2) {
