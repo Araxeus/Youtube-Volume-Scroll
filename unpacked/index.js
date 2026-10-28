@@ -54,35 +54,38 @@ function start() {
 
 // check if the extension is inside a youtube embedded iframe that isn't active yet
 function checkOverlay() {
-    const oldOverlay = $('.ytp-cued-thumbnail-overlay-image');
-    const newOverlay = $('cued-overlay');
-    const noOverlay = () =>
-        newOverlay?.classList.contains('ytmCuedOverlayHidden') ||
-        (oldOverlay &&
-            (!oldOverlay.style.backgroundImage ||
-                oldOverlay.parentNode.style.display === 'none')) ||
-        (!newOverlay && !oldOverlay);
+    const noOverlay = () => {
+        const newOverlay = $('cued-overlay');
+        const oldOverlay = $('.ytp-cued-thumbnail-overlay-image');
+
+        return (
+            newOverlay?.classList.contains('ytmCuedOverlayHidden') ||
+            (oldOverlay &&
+                (!oldOverlay.style.backgroundImage ||
+                    oldOverlay.parentNode.style.display === 'none')) ||
+            (!newOverlay && !oldOverlay)
+        );
+    };
+
     if (noOverlay()) {
         init();
-    } else {
-        const overlayObserver = new MutationObserver(() => {
-            if (noOverlay()) {
-                overlayObserver.disconnect();
-                init();
-            }
-        });
-        if (newOverlay) {
-            overlayObserver.observe(newOverlay, {
-                attributes: true,
-                attributeFilter: ['class'],
-            });
-        } else if (oldOverlay?.parentNode) {
-            overlayObserver.observe(oldOverlay.parentNode, {
-                attributes: true,
-                attributeFilter: ['style'],
-            });
-        }
+        return;
     }
+
+    // This is done this way because youtube started replacing the overlay element instead of just modifying it
+    const overlayObserver = new MutationObserver(() => {
+        if (noOverlay()) {
+            overlayObserver.disconnect();
+            init();
+        }
+    });
+
+    overlayObserver.observe($('.html5-video-player'), {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+    });
 }
 
 function init() {
