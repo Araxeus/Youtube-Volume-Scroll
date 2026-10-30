@@ -430,9 +430,9 @@ class YoutubeVolumeScroll {
     static run() {
         if (ytvs.isLoaded) return;
         if (ytvs.isMusic) {
-            this.newMusic();
+            YoutubeVolumeScroll.newMusic();
         } else {
-            this.newYoutube();
+            YoutubeVolumeScroll.newYoutube();
         }
     }
 
