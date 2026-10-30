@@ -337,7 +337,22 @@ class ytvs {
             return;
         }
 
+        const waitForShortsVideo = shortsContainer =>
+            this.#waitFor(
+                () => shortsContainer.querySelector(selector),
+                shortsContainer,
+                { childList: true, subtree: true },
+                () => YoutubeVolumeScroll.newYoutubeShorts(),
+            );
+
         this.#waitForPageManager(pageManager => {
+            // ytd-shorts may already be attached (e.g. page opened on a short), so no node would be added
+            const existing = pageManager.querySelector('ytd-shorts');
+            if (existing) {
+                waitForShortsVideo(existing);
+                return;
+            }
+
             const shortsObserver = new MutationObserver(mutations => {
                 const shortsContainer = mutations
                     .flatMap(m => [...m.addedNodes])
@@ -345,12 +360,7 @@ class ytvs {
                 if (!shortsContainer) return;
 
                 shortsObserver.disconnect();
-                this.#waitFor(
-                    () => shortsContainer.querySelector(selector),
-                    shortsContainer,
-                    { childList: true, subtree: true },
-                    () => YoutubeVolumeScroll.newYoutubeShorts(),
-                );
+                waitForShortsVideo(shortsContainer);
             });
             shortsObserver.observe(pageManager, { childList: true });
         });
@@ -510,6 +520,7 @@ class YoutubeVolumeScroll {
             console.error(
                 'Youtube-Volume-Scroll: Could not find ytmusic-player-bar element',
             );
+            return;
         }
         const playerController = bar.playerController ?? bar.controllerProxy;
 
@@ -812,8 +823,12 @@ class YoutubeVolumeScroll {
         }
     }
 
+    hudVideo = undefined;
     setupHudOnVolume() {
         const video = ytvs.$(`${this.hudContainer} video`);
+        // re-called as a fallback; only (re)attach when the video element changed
+        if (!video || video === this.hudVideo) return;
+        this.hudVideo = video;
         setTimeout(() => {
             video.addEventListener('volumechange', () => {
                 if (
@@ -906,7 +921,7 @@ class YoutubeVolumeScroll {
         if (ytvs.hudPositionMode) {
             this.#enablePositionMode(draggedElement, dragTarget);
         } else {
-            this.#disablePositionMode(draggedElement);
+            this.#disablePositionMode(draggedElement, dragTarget);
         }
 
         this.hudPositionMode = ytvs.hudPositionMode;
@@ -944,8 +959,6 @@ class YoutubeVolumeScroll {
             ev.preventDefault();
 
             const dragTargetRect = dragTarget.getBoundingClientRect();
-
-            draggedElement.style.hudPosition = 'absolute';
 
             const newLeft = ev.clientX - dragTargetRect.x - dragOffsetX;
             const newTop = ev.clientY - dragTargetRect.y - dragOffsetY;
@@ -1012,7 +1025,10 @@ class YoutubeVolumeScroll {
         };
     }
 
-    #disablePositionMode(draggedElement) {
+    #disablePositionMode(draggedElement, dragTarget) {
+        // otherwise any later drop on the player (e.g. a file) would be saved as a bogus position
+        dragTarget.ondrop = null;
+        dragTarget.ondragover = null;
         draggedElement.draggable = false;
         draggedElement.style.pointerEvents = 'none';
         setTimeout(() => (draggedElement.style.opacity = 0), 50);
