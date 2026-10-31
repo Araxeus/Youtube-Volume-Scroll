@@ -616,7 +616,6 @@ h2.hud {
   position: absolute;
   left: 0;
   top: calc(50% - max(var(--track-height), var(--thumb-size)) / 2 + var(--ticks-gap) / 2 * var(--flip-y, -1));
-  cursor: -webkit-grab;
   cursor: grab;
   outline: none;
   background: none;

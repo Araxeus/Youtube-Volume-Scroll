@@ -657,7 +657,6 @@ class YoutubeVolumeScroll {
         };
     }
 
-    // biome-ignore lint/correctness/noUnusedPrivateClassMembers: it is actually used
     #hudCheckTimeout = undefined;
     changeVolume(toIncrease, multiplier) {
         const newVolume = Math.round(

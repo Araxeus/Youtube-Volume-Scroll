@@ -74,5 +74,17 @@
         "preset": "recommended"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.scss"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDescendingSpecificity": "off"
+          }
+        }
+      }
+    }
+  ]
 }
