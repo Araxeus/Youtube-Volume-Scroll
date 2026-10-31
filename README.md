@@ -1,9 +1,6 @@
 [link-chrome]: https://chrome.google.com/webstore/detail/youtube-volume-scroll/agadcopafaojndinhloilcanpfpbonbk "Version published on Chrome Web Store"
-
 [link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/youtube-volume-scroll "Version published on Mozilla Add-ons"
-
 [link-edge]: https://microsoftedge.microsoft.com/addons/detail/kigkklogdpgeomdollklnlfgglnkgenb "Version published on Edge Add-ons"
-
 [link-releases]: https://github.com/Araxeus/Youtube-Volume-Scroll/releases/latest "Latest release"
 
 <h1 <img width="45" align="left" src="https://github.com/Araxeus/Youtube-Volume-Scroll/raw/main/unpacked/icons/icon32x32.png" /> Youtube Volume Scroll </h1>
@@ -71,16 +68,16 @@ The resulting unsigned xpi/zip file will be in the `web-ext-artifacts` folder.
 
 ## Known Issues
 
-*   To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
+-   To work in incognito, permission needs to be explicitly set in the [extension settings](https://user-images.githubusercontent.com/78568641/155850125-4b98e01c-f55d-4747-89c5-25ecd792f025.png)
 
-*   If you experience embedded videos in incognito mode not saving volume:<br />
+-   If you experience embedded videos in incognito mode not saving volume:<br />
     disable `Block third-party cookies in incognito` ([1](https://i.stack.imgur.com/mEidB.png)/[2](https://user-images.githubusercontent.com/78568641/155897465-08876dc9-48c2-4f7a-a95a-e39522e99f03.png))
 
 ## Author
 
 👤 **Araxeus**
 
-*   Github: [@Araxeus](https://github.com/Araxeus)
+-   Github: [@Araxeus](https://github.com/Araxeus)
 
 ## 🤝 Contributing
 

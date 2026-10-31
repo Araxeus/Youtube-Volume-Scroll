@@ -32,6 +32,12 @@
       "enabled": true
     }
   },
+  "yaml": {
+    "formatter": {
+      "indentWidth": 2,
+      "quoteStyle": "single"
+    }
+  },
   "css": {
     "formatter": {
       "enabled": true,

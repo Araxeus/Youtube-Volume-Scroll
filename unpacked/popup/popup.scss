@@ -33,9 +33,14 @@ $drk_background: #0d1117;
   // slider background
   .range-slider__progress,
   // hover background on radio buttons
-  .radio-container label span:hover,
+    .radio-container
+    label
+    span:hover,
   // background of selected radio button
-  .radio-container label input:checked + span {
+    .radio-container
+    label
+    input:checked
+    + span {
     background-color: $red_deep !important;
   }
 
@@ -162,8 +167,7 @@ tooltip-icon {
     font-family: Courier, "Courier New", monospace;
     font-weight: 600;
     font-size: 24px;
-    text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px,
-      rgb(0, 0, 0) -1px -1px 0px;
+    text-shadow: rgb(0, 0, 0) -1px 1px 2px, rgb(0, 0, 0) 1px 1px 2px, rgb(0, 0, 0) 1px -1px 0px, rgb(0, 0, 0) -1px -1px 0px;
     text-indent: 11px;
   }
 
@@ -601,7 +605,7 @@ h2.hud {
   --thumb-shadow: 0 0 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 99px var(--thumb-color) inset;
 
   --thumb-shadow-active: 0 0 0 calc(var(--thumb-size) / 4) inset var(--thumb-color),
-    0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
+  0 0 0 99px var(--primary-color) inset, 0 0 3px rgba(0, 0, 0, 0.4);
 
   --thumb-shadow-hover: var(--thumb-shadow);
 
@@ -615,14 +619,9 @@ h2.hud {
   --ticks-count: Calc(var(--max) - var(--min)) / var(--step);
   --maxTicksAllowed: 30;
   --too-many-ticks: Min(1, Max(var(--ticks-count) - var(--maxTicksAllowed), 0));
-  --x-step: Max(
-    var(--step),
-    var(--too-many-ticks) * (var(--max) - var(--min))
-  ); // manipulate the number of steps if too many ticks exist, so there would only be 2
+  --x-step: Max(var(--step), var(--too-many-ticks) * (var(--max) - var(--min))); // manipulate the number of steps if too many ticks exist, so there would only be 2
   --tickInterval: 100/ ((var(--max) - var(--min)) / var(--step)) * var(--tickEvery, 1);
-  --tickIntervalPerc: calc(
-    (100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) * var(--tickEvery, 1)
-  );
+  --tickIntervalPerc: calc((100% - var(--thumb-size)) / ((var(--max) - var(--min)) / var(--x-step)) * var(--tickEvery, 1));
 
   --value-a: Clamp(var(--min), var(--value, 0), var(--max)); // default value ("--value" is used in single-range markup)
   --value-b: var(--value, 0); // default value
@@ -857,10 +856,7 @@ h2.hud {
       border-radius: 10px;
       padding: 2px 4px;
       left: var(--pos);
-      transform: translate(
-        var(--x-offset),
-        calc(150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) * var(--flip))
-      );
+      transform: translate(var(--x-offset), calc(150% * var(--flip) - (var(--y-offset, 0px) + var(--value-offset-y)) * var(--flip)));
       transition: all 0.12s ease-out, left 0s;
 
       &::after {

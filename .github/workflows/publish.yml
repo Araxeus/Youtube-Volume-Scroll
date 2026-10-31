@@ -22,22 +22,22 @@ jobs:
         uses: creeperkatze/extension-publish@v1
         with:
           # Chrome Web Store
-          chrome-client-id:     ${{ secrets.CHROME_CLIENT_ID }}
+          chrome-client-id: ${{ secrets.CHROME_CLIENT_ID }}
           chrome-client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           chrome-refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          chrome-publisher-id:  ${{ secrets.CHROME_PUBLISHER_ID }}
-          chrome-extension-id:  ${{ secrets.CHROME_EXTENSION_ID }}
-          chrome-zip-path:      web-ext-artifacts/youtube-volume-scroll_{version}_chromium.zip
+          chrome-publisher-id: ${{ secrets.CHROME_PUBLISHER_ID }}
+          chrome-extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          chrome-zip-path: web-ext-artifacts/youtube-volume-scroll_{version}_chromium.zip
 
           # Firefox Add-ons
-          firefox-api-key:      ${{ secrets.FIREFOX_API_KEY }}
-          firefox-api-secret:   ${{ secrets.FIREFOX_API_SECRET }}
+          firefox-api-key: ${{ secrets.FIREFOX_API_KEY }}
+          firefox-api-secret: ${{ secrets.FIREFOX_API_SECRET }}
           firefox-extension-id: ${{ secrets.FIREFOX_EXTENSION_ID }}
-          firefox-xpi-path:     web-ext-artifacts/youtube-volume-scroll_{version}_firefox.xpi
-          firefox-license:      MIT
+          firefox-xpi-path: web-ext-artifacts/youtube-volume-scroll_{version}_firefox.xpi
+          firefox-license: MIT
 
           # Edge Add-ons
-          edge-api-key:         ${{ secrets.EDGE_API_KEY }}
-          edge-client-id:       ${{ secrets.EDGE_CLIENT_ID }}
-          edge-product-id:      ${{ secrets.EDGE_PRODUCT_ID }}
-          edge-zip-path:        web-ext-artifacts/youtube-volume-scroll_{version}_chromium.zip
+          edge-api-key: ${{ secrets.EDGE_API_KEY }}
+          edge-client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          edge-product-id: ${{ secrets.EDGE_PRODUCT_ID }}
+          edge-zip-path: web-ext-artifacts/youtube-volume-scroll_{version}_chromium.zip
