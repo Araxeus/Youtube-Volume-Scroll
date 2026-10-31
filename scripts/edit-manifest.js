@@ -34,6 +34,7 @@ export async function makeFirefoxManifest() {
     manifest.data.browser_specific_settings = {
         gecko: {
             id: FIREFOX_EXTENSION_ID,
+            strict_min_version: '128.0',
             data_collection_permissions: {
                 required: ['none'],
             },
