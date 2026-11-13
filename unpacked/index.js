@@ -10,7 +10,9 @@ const isMusic = window.location.href.includes('music.youtube');
 
 let configFromPageAccess;
 
-if (browserApi.extension.inIncognitoContext) {
+const isEmbedded = window.location.href.includes('youtube.com/embed');
+
+if (browserApi.extension.inIncognitoContext || isEmbedded) {
     setupIncognito();
 }
 
@@ -67,7 +69,7 @@ function checkOverlay() {
         );
     };
 
-    if (noOverlay()) {
+    if (!isEmbedded || noOverlay()) {
         init();
         return;
     }
