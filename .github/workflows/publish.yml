@@ -13,13 +13,13 @@ jobs:
     needs: [Check]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
       - run: bun ci
       - run: bun b
 
       - name: Publish to Chrome/Edge/Firefox stores
-        uses: creeperkatze/extension-publish@v1
+        uses: creeperkatze/extension-publish@797030bc8a9f26541989b92ee174151f36e12975 # v1.1.1
         with:
           # Chrome Web Store
           chrome-client-id: ${{ secrets.CHROME_CLIENT_ID }}
